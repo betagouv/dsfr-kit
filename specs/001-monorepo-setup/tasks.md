@@ -45,16 +45,16 @@
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create `packages/core/` directory for shared TypeScript utilities
-- [ ] T013 [US1] Initialize `packages/core/package.json` with name `@dsfr-kit/core`, version `0.1.0`, and basic TypeScript configuration
-- [ ] T014 [US1] Create `packages/core/tsconfig.json` with TypeScript compiler options
-- [ ] T015 [US1] Create `packages/core/src/index.ts` with a simple exported function (e.g., `export const hello = () => "Hello from core"`)
-- [ ] T016 [P] [US1] Create `packages/test-lib/` directory for testing workspace dependencies
-- [ ] T017 [US1] Initialize `packages/test-lib/package.json` with dependency on `@dsfr-kit/core` using `workspace:*` protocol
-- [ ] T018 [US1] Create `packages/test-lib/src/index.ts` that imports and uses the function from `@dsfr-kit/core`
-- [ ] T019 [US1] Run `pnpm install` to link workspace packages
-- [ ] T020 [US1] Verify workspace packages are recognized by running `pnpm list --depth 0`
-- [ ] T021 [US1] Verify local package resolution by checking that `packages/test-lib` can import from `@dsfr-kit/core` without errors
+- [x] T012 [P] [US1] Create `packages/core/` directory for shared TypeScript utilities
+- [x] T013 [US1] Initialize `packages/core/package.json` with name `@dsfr-kit/core`, version `0.1.0`, and basic TypeScript configuration
+- [x] T014 [US1] Create `packages/core/tsconfig.json` with TypeScript compiler options
+- [x] T015 [US1] Create `packages/core/src/index.ts` with a simple exported function (e.g., `export const hello = () => "Hello from core"`)
+- [x] T016 [P] [US1] Create `packages/test-lib/` directory for testing workspace dependencies
+- [x] T017 [US1] Initialize `packages/test-lib/package.json` with dependency on `@dsfr-kit/core` using `workspace:*` protocol
+- [x] T018 [US1] Create `packages/test-lib/src/index.ts` that imports and uses the function from `@dsfr-kit/core`
+- [x] T019 [US1] Run `pnpm install` to link workspace packages
+- [x] T020 [US1] Verify workspace packages are recognized by running `pnpm list --depth 0`
+- [x] T021 [US1] Verify local package resolution by checking that `packages/test-lib` can import from `@dsfr-kit/core` without errors
 
 **Checkpoint**: At this point, the monorepo structure is functional with workspace package linking working correctly.
 
