@@ -13,9 +13,9 @@
   "types": "./dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "clean": "rm -rf dist"
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "clean": "tsc --build --clean && rm -rf dist"
   },
   "keywords": ["dsfr", "design-system", "core"],
   "license": "MIT",
