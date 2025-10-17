@@ -1,13 +1,19 @@
 <!--
 Sync Impact Report:
-- Version: 1.1.0 (minor amendment - added 3 new principles)
-- Previous: 1.0.0 (2025-10-17)
+- Version: 1.1.1 (patch - clarified RGAA legal requirement)
+- Previous: 1.1.0 (2025-10-17) - Added 3 new principles
+- Previous: 1.0.0 (2025-10-17) - Initial constitution
 - Amended: 2025-10-17
-- Changes:
+- Changes in 1.1.1:
+  * Clarified Principle IX with RGAA 4 legal context and requirements
+  * Added RGAA reference URL (https://accessibilite.numerique.gouv.fr/)
+  * Specified RGAA 4 incorporates WCAG 2.1 Level AA
+  * Added requirement for RGAA-specific validators and criteria documentation
+- Changes in 1.1.0:
   * Added Principle VIII: Behavioral Fidelity (preserve DSFR JavaScript behavior)
   * Added Principle IX: Accessibility Compliance (NON-NEGOTIABLE - preserve DSFR a11y)
   * Added Principle X: Public Good Design System Inspiration (methodology reference)
-- Principles: 10 core principles (was 7)
+- Principles: 10 core principles (was 7 in v1.0.0)
 - Templates status:
   ✅ plan-template.md - Constitution Check section aligns with principles
   ✅ spec-template.md - Requirements structure supports multi-framework approach
@@ -123,19 +129,27 @@ All component implementations MUST preserve the JavaScript behaviors defined in 
 
 ### IX. Accessibility Compliance (NON-NEGOTIABLE)
 
-All component implementations MUST preserve and test the accessibility (a11y) practices encoded in DSFR, ensuring RGAA compliance and inclusive user experiences across all target frameworks.
+All component implementations MUST preserve and test the accessibility (a11y) practices encoded in DSFR, ensuring compliance with RGAA 4 (Référentiel Général d'Amélioration de l'Accessibilité) and inclusive user experiences across all target frameworks.
 
-**Rationale**: DSFR embeds accessibility best practices including ARIA attributes, keyboard navigation, screen reader support, and semantic HTML. These practices are non-negotiable requirements for government digital services and must be preserved in all implementations.
+**Rationale**: DSFR embeds accessibility best practices mandated by French law through RGAA 4, the official French accessibility standard published by DINUM (Direction Interministérielle du Numérique). RGAA 4 defines 106 criteria for digital accessibility compliance, incorporating WCAG 2.1 Level AA requirements adapted for French legal context. These practices include ARIA attributes, keyboard navigation, screen reader support, and semantic HTML, and are non-negotiable requirements for French government digital services.
+
+**Legal Context**:
+- RGAA 4 is the French legal framework for digital accessibility (published September 16, 2019, updated April 18, 2023)
+- Reference: https://accessibilite.numerique.gouv.fr/
+- RGAA 4 incorporates and extends WCAG 2.1 Level AA for French government requirements
+- All French public sector websites and services must comply with RGAA
 
 **Requirements**:
 - All DSFR accessibility features MUST be documented and preserved in generated components
 - Components MUST maintain ARIA roles, properties, and states as defined in DSFR
-- Keyboard navigation patterns MUST match DSFR specifications
+- Components MUST comply with RGAA 4 criteria applicable to their functionality
+- Keyboard navigation patterns MUST match DSFR specifications and RGAA requirements
 - Screen reader announcements MUST be tested and verified
-- Automated accessibility tests MUST be included for all components (e.g., axe-core, pa11y)
-- Manual accessibility testing MUST be performed for complex interactive components
+- Automated accessibility tests MUST be included for all components (e.g., axe-core, pa11y, RGAA-specific validators)
+- Manual accessibility testing MUST be performed for complex interactive components against RGAA criteria
 - Accessibility regressions MUST block releases
-- Documentation MUST include accessibility usage guidance for each component
+- Documentation MUST include accessibility usage guidance referencing relevant RGAA criteria for each component
+- Components SHOULD link to applicable RGAA 4 criteria in their documentation
 
 ### X. Public Good Design System Inspiration
 
@@ -228,4 +242,4 @@ This constitution supersedes all other development practices and guidelines. Any
 - Complexity that violates principles MUST be justified in implementation plans
 - Use `.specify/memory/constitution.md` as the authoritative reference
 
-**Version**: 1.1.0 | **Ratified**: 2025-10-17 | **Last Amended**: 2025-10-17
+**Version**: 1.1.1 | **Ratified**: 2025-10-17 | **Last Amended**: 2025-10-17
