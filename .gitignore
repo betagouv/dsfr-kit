@@ -21,6 +21,7 @@ build/
 out/
 .next/
 *.egg-info/
+*.tsbuildinfo
 
 # Turborepo
 .turbo/
