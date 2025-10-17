@@ -1,19 +1,24 @@
 <!--
 Sync Impact Report:
-- Version: 1.1.1 (patch - clarified RGAA legal requirement)
+- Version: 1.2.0 (minor - updated styling strategy with shadcn/ui principles)
+- Previous: 1.1.1 (2025-10-17) - Clarified RGAA legal requirement
 - Previous: 1.1.0 (2025-10-17) - Added 3 new principles
 - Previous: 1.0.0 (2025-10-17) - Initial constitution
 - Amended: 2025-10-17
+- Changes in 1.2.0:
+  * Updated Principle II (Extensibility Architecture) to reference shadcn/ui instead of Radix UI
+  * Expanded Principle III (Hybrid Styling Strategy) with shadcn/ui Open Code principles
+  * Added Open Code approach: components are copied into codebase for full customization
+  * Added Composition principle: common, composable interface across all components
+  * Removed DaisyUI as alternative approach (superseded by shadcn/ui methodology)
+  * Clarified Tailwind CSS as primary styling layer with DSFR CSS for base compliance
 - Changes in 1.1.1:
   * Clarified Principle IX with RGAA 4 legal context and requirements
-  * Added RGAA reference URL (https://accessibilite.numerique.gouv.fr/)
-  * Specified RGAA 4 incorporates WCAG 2.1 Level AA
-  * Added requirement for RGAA-specific validators and criteria documentation
 - Changes in 1.1.0:
   * Added Principle VIII: Behavioral Fidelity (preserve DSFR JavaScript behavior)
   * Added Principle IX: Accessibility Compliance (NON-NEGOTIABLE - preserve DSFR a11y)
   * Added Principle X: Public Good Design System Inspiration (methodology reference)
-- Principles: 10 core principles (was 7 in v1.0.0)
+- Principles: 10 core principles
 - Templates status:
   ✅ plan-template.md - Constitution Check section aligns with principles
   ✅ spec-template.md - Requirements structure supports multi-framework approach
@@ -38,30 +43,54 @@ The dsfr-kit project MUST generate DSFR-compliant components for multiple target
 - Component generators MUST be framework-agnostic in their core logic
 - Framework-specific adapters MUST handle target-specific rendering and behavior
 
-### II. Extensibility Architecture
+### II. Extensibility Architecture (Open Code)
 
-All generated components MUST be architected for extensibility, allowing developers to extend base DSFR components with custom functionality while maintaining design system compliance.
+All generated components MUST follow the shadcn/ui Open Code approach, where component source code is copied into the consuming project for full customization and extension while maintaining DSFR design system compliance.
 
-**Rationale**: Real-world applications require components that can be extended beyond standard DSFR specifications (e.g., custom icons, additional props, composed behaviors) without forking or duplicating component code.
+**Rationale**: Real-world applications require components that can be extended beyond standard DSFR specifications (e.g., custom icons, additional props, composed behaviors). Following shadcn/ui's Open Code model, components are not installed as dependencies but as source code that developers own and can modify directly, eliminating the need for workarounds, style overrides, or wrapper components.
+
+**Reference**: https://ui.shadcn.com/ - shadcn/ui demonstrates this approach with React components built on Radix UI primitives and Tailwind CSS.
+
+**Open Code Principles**:
+- **Full Transparency**: Developers see exactly how each component is built
+- **Direct Modification**: Components can be edited directly in the project without overrides
+- **No Black Boxes**: All component logic is visible and modifiable
+- **AI-Friendly**: Open code allows LLMs to read, understand, and improve components
 
 **Requirements**:
-- Components MUST follow composition patterns similar to Radix UI's extensible architecture
-- Components MUST expose extension points through well-defined props and slots
+- Components MUST be distributed as source code files, not as npm/PyPI packages (except for core utilities)
+- Components MUST follow a common, composable interface pattern across all frameworks
+- Components MUST expose extension points through well-defined props, slots, and composition patterns
+- Component APIs MUST be predictable and consistent across the design system
 - Custom extensions MUST NOT break DSFR compliance for core functionality
-- Documentation MUST provide clear examples of extension patterns for each framework
+- Documentation MUST provide clear examples of how to customize and extend each component
+- A CLI tool SHOULD be provided to copy components into projects (similar to `npx shadcn@latest add`)
 
-### III. Hybrid Styling Strategy
+### III. Styling Strategy (Tailwind-First with DSFR Compliance)
 
-Styling MUST leverage DSFR CSS as the foundation while supporting Tailwind CSS utility classes for extensions and customizations.
+Styling MUST follow the shadcn/ui approach: Tailwind CSS as the primary styling layer with DSFR design tokens mapped to Tailwind configuration, ensuring DSFR compliance through carefully chosen defaults while enabling full customization.
 
-**Rationale**: DSFR CSS ensures design system compliance, while Tailwind CSS provides a standardized approach for custom styling needs and rapid prototyping.
+**Rationale**: Following shadcn/ui's proven model, Tailwind CSS provides a utility-first approach that enables rapid customization without fighting against pre-built styles. DSFR design tokens (colors, spacing, typography, shadows) are mapped into Tailwind configuration, ensuring components are DSFR-compliant by default while remaining fully customizable.
+
+**Reference**: shadcn/ui demonstrates this approach with Tailwind CSS + CSS variables for theming, providing beautiful defaults that are easily customizable.
+
+**Styling Principles**:
+- **Tailwind-First**: All component styling uses Tailwind utility classes
+- **DSFR Token Mapping**: DSFR design tokens mapped to Tailwind theme configuration
+- **Beautiful Defaults**: Components look DSFR-compliant out-of-the-box
+- **Easy Customization**: Developers can override any style by editing component code
+- **CSS Variables for Theming**: Use CSS custom properties for dynamic theming (colors, spacing)
 
 **Requirements**:
-- Base components MUST use official DSFR CSS classes
-- Components MUST accept additional Tailwind CSS utility classes via className/class props
-- DSFR colors MUST be mapped to Tailwind color tokens for consistency
-- Alternative approach: DaisyUI components MAY be used as a starting point with Tailwind adjustments
-- Style conflicts between DSFR and Tailwind MUST be documented and resolved in favor of DSFR
+- Components MUST be styled primarily with Tailwind CSS utility classes
+- DSFR design tokens (colors, spacing, typography, shadows, borders) MUST be mapped to Tailwind theme configuration
+- DSFR color palette MUST be available as Tailwind color classes (e.g., `bg-dsfr-blue-france`, `text-dsfr-grey`)
+- Components MUST use CSS variables for theme values to enable dynamic theming
+- Components MUST accept additional Tailwind classes via `className`/`class` props for extension
+- Default component styles MUST produce DSFR-compliant visual output
+- Official DSFR CSS MAY be referenced for complex components but should be minimized
+- Style customizations MUST NOT break DSFR compliance for core visual identity (colors, typography, spacing)
+- Documentation MUST show how to customize component styles using Tailwind classes
 
 ### IV. Monorepo Architecture (NON-NEGOTIABLE)
 
@@ -190,20 +219,23 @@ The dsfr-kit project draws methodological inspiration from the Public Good Desig
 
 ### Styling Dependencies
 
-- DSFR CSS (official design system styles)
-- Tailwind CSS (utility classes for extensions)
-- Optional: DaisyUI (Tailwind component library as alternative starting point)
+- **Tailwind CSS** (primary styling layer, utility-first approach)
+- **DSFR Design Tokens** (mapped to Tailwind theme configuration)
+- **CSS Variables** (for dynamic theming and token values)
+- **DSFR CSS** (reference only, minimal usage for complex legacy components)
 
 ## Development Workflow
 
 ### Component Development Lifecycle
 
-1. **Research**: Identify DSFR component from official documentation
-2. **Specification**: Define component API and extension points
-3. **Core Implementation**: Build framework-agnostic component logic
-4. **Framework Adapters**: Implement framework-specific renderers
-5. **Testing**: Verify DSFR compliance and extensibility
-6. **Documentation**: Provide usage examples and extension patterns
+1. **Research**: Identify DSFR component from official documentation and analyze behavior/styling
+2. **Token Mapping**: Map DSFR design tokens to Tailwind configuration
+3. **Specification**: Define component API with composable interface and extension points
+4. **Core Implementation**: Build framework-agnostic component logic with Tailwind styling
+5. **Framework Adapters**: Implement framework-specific renderers following Open Code principles
+6. **Testing**: Verify DSFR compliance, extensibility, and customization capabilities
+7. **Documentation**: Provide usage examples, customization patterns, and extension guides
+8. **Distribution**: Package as copyable source code with CLI distribution support
 
 ### Package Structure
 
@@ -242,4 +274,4 @@ This constitution supersedes all other development practices and guidelines. Any
 - Complexity that violates principles MUST be justified in implementation plans
 - Use `.specify/memory/constitution.md` as the authoritative reference
 
-**Version**: 1.1.1 | **Ratified**: 2025-10-17 | **Last Amended**: 2025-10-17
+**Version**: 1.2.0 | **Ratified**: 2025-10-17 | **Last Amended**: 2025-10-17
