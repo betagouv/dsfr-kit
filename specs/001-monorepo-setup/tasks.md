@@ -23,17 +23,17 @@
 
 **Purpose**: Project initialization and basic monorepo structure
 
-- [ ] T001 Create `apps/` directory with `.gitkeep` file
-- [ ] T002 Create `packages/` directory with `.gitkeep` file
-- [ ] T003 [P] Copy `package.json` from `specs/001-monorepo-setup/contracts/package.json` to repository root
-- [ ] T004 [P] Copy `pnpm-workspace.yaml` from `specs/001-monorepo-setup/contracts/pnpm-workspace.yaml` to repository root
-- [ ] T005 [P] Copy `turbo.json` from `specs/001-monorepo-setup/contracts/turbo.json` to repository root
-- [ ] T006 [P] Copy `pyproject.toml` from `specs/001-monorepo-setup/contracts/pyproject.toml` to repository root
-- [ ] T007 [P] Copy `.npmrc` from `specs/001-monorepo-setup/contracts/.npmrc` to repository root
-- [ ] T008 [P] Copy `.gitignore` from `specs/001-monorepo-setup/contracts/.gitignore` to repository root (merge with existing if present)
-- [ ] T009 [P] Copy `justfile` from `specs/001-monorepo-setup/contracts/justfile` to repository root
-- [ ] T010 Install pnpm dependencies by running `pnpm install` at repository root
-- [ ] T011 Install Turborepo globally or verify it's available via `turbo --version`
+- [x] T001 Create `apps/` directory with `.gitkeep` file
+- [x] T002 Create `packages/` directory with `.gitkeep` file
+- [x] T003 [P] Copy `package.json` from `specs/001-monorepo-setup/contracts/package.json` to repository root
+- [x] T004 [P] Copy `pnpm-workspace.yaml` from `specs/001-monorepo-setup/contracts/pnpm-workspace.yaml` to repository root
+- [x] T005 [P] Copy `turbo.json` from `specs/001-monorepo-setup/contracts/turbo.json` to repository root
+- [x] T006 [P] Copy `pyproject.toml` from `specs/001-monorepo-setup/contracts/pyproject.toml` to repository root
+- [x] T007 [P] Copy `.npmrc` from `specs/001-monorepo-setup/contracts/.npmrc` to repository root
+- [x] T008 [P] Copy `.gitignore` from `specs/001-monorepo-setup/contracts/.gitignore` to repository root (merge with existing if present)
+- [x] T009 [P] Copy `justfile` from `specs/001-monorepo-setup/contracts/justfile` to repository root
+- [x] T010 Install pnpm dependencies by running `pnpm install` at repository root
+- [x] T011 Install Turborepo globally or verify it's available via `turbo --version`
 
 ---
 

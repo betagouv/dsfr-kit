@@ -1,0 +1,14 @@
+[project]
+name = "dsfr-kit"
+version = "0.1.0"
+description = "DSFR component library for multiple frameworks"
+requires-python = ">=3.12"
+
+[tool.uv.workspace]
+members = [
+    "apps/*/",
+    "packages/*/",
+]
+
+[tool.uv]
+dev-dependencies = []
