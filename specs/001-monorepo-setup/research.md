@@ -175,7 +175,63 @@ members = [
 - Adding custom tooling would duplicate package manager functionality
 - CI can run `pnpm dedupe --check` and `uv lock --check` to catch violations
 
-### 6. Circular Dependency Detection
+### 6. Command Runner (just)
+
+**Question**: How should `just` be integrated as a command runner for the monorepo?
+
+**Research Findings**:
+
+**What is just**:
+- A command runner similar to `make` but simpler and cross-platform
+- Uses a `justfile` with recipe-based commands
+- Supports variables, dependencies between recipes, and cross-platform commands
+- Written in Rust, single binary, no runtime dependencies
+
+**Integration Strategy**:
+- `justfile` at repository root provides common developer commands
+- Wraps Turborepo, pnpm, and uv commands for consistency
+- Provides discoverable commands via `just --list`
+- Simplifies onboarding (developers run `just` instead of remembering complex commands)
+
+**Example Recipes**:
+```justfile
+# Install all dependencies
+install:
+    pnpm install
+    uv sync
+
+# Build all packages
+build:
+    turbo run build
+
+# Run development mode
+dev:
+    turbo run dev
+
+# Lint and format
+lint:
+    turbo run lint
+
+format:
+    turbo run format
+```
+
+**Decision**: Use `just` as the primary command runner interface
+
+**Rationale**:
+- **Simplicity**: Single entry point for all common commands
+- **Discoverability**: `just --list` shows all available commands
+- **Cross-platform**: Works consistently on macOS, Linux, Windows
+- **Documentation as code**: Justfile serves as executable documentation
+- **Flexibility**: Easy to add custom scripts without modifying package.json
+- **Multi-language friendly**: Can orchestrate both Node.js and Python commands
+
+**Installation**:
+- Developers install via package manager (Homebrew, Cargo, etc.)
+- CI can install via GitHub Actions or direct download
+- Documented in quickstart guide
+
+### 7. Circular Dependency Detection
 
 **Question**: How to detect and prevent circular dependencies in the monorepo?
 
@@ -204,6 +260,7 @@ members = [
 |------|----------|-----------|
 | Remote Cache | Local-only initially, extensible to Vercel/S3 | Simplest start, easy to add later |
 | Task Organization | Consistent task names (`build`, `lint`, `test`) across all packages | Turborepo's language-agnostic design, unified execution pattern |
+| Command Runner | just with justfile at repository root | Simple, discoverable, cross-platform command interface |
 | pnpm Config | Strict workspace with controlled hoisting | Prevents phantom deps, enforces quality |
 | uv Config | Mirror pnpm structure for Python | Consistency across ecosystems |
 | Version Enforcement | Package manager native + CI checks | Leverages existing tooling |
@@ -217,6 +274,7 @@ members = [
 - [pnpm Workspaces](https://pnpm.io/workspaces) - pnpm workspace configuration and features
 - [uv Workspaces](https://docs.astral.sh/uv/concepts/workspaces/) - uv Python workspace documentation
 - [Turborepo Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) - Remote cache configuration options
+- [just Command Runner](https://just.systems/) - Official just documentation and installation guide
 
 ### Community Best Practices
 - [Monorepo Scripts Strategies & Naming Conventions](https://medium.com/disdj/monorepo-scripts-strategies-naming-conventions-691c64b51acb) by Kirill Konshin (RingCentral) - Comprehensive guide to monorepo task naming conventions emphasizing phase-based naming (`lint`, `test`, `build`) with modifiers (`:quick`, `:staged`)

@@ -6,6 +6,24 @@ This directory contains the configuration file schemas and examples for the mono
 
 ### Core Configuration
 
+#### `justfile`
+Command runner configuration providing simple, discoverable commands for common monorepo operations.
+
+**Key Features**:
+- **Discoverable commands**: Run `just --list` to see all available commands
+- **Simple interface**: `just install`, `just build`, `just dev`, etc.
+- **Cross-platform**: Works on macOS, Linux, Windows
+- **Documentation as code**: Comments explain what each command does
+- **Wraps complexity**: Abstracts Turborepo, pnpm, and uv commands
+
+**Common Commands**:
+- `just install` - Install all dependencies
+- `just build` - Build all packages
+- `just dev` - Start development mode
+- `just lint` / `just format` - Code quality
+- `just test` - Run tests
+- `just clean` - Clean build outputs
+
 #### `turbo.json`
 Turborepo pipeline configuration defining build orchestration, task dependencies, and caching rules.
 

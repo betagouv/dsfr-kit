@@ -11,8 +11,8 @@ Establish a Turborepo-based monorepo structure supporting both Node.js/TypeScrip
 
 ## Technical Context
 
-**Language/Version**: Node.js 22+ (TypeScript 5+), Python 3.11+  
-**Primary Dependencies**: Turborepo (build orchestration), pnpm (Node.js package manager), uv (Python package manager)  
+**Language/Version**: Node.js 22+ (TypeScript 5+), Python 3.12+  
+**Primary Dependencies**: Turborepo (build orchestration), pnpm (Node.js package manager), uv (Python package manager), just (command runner)  
 **Storage**: Local filesystem cache (.turbo/), designed for optional remote cache extension (Vercel or S3-compatible)  
 **Testing**: Workspace validation scripts, build verification tests  
 **Target Platform**: macOS, Linux, Windows (cross-platform development environments)  
