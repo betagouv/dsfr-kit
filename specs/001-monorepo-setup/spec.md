@@ -2,8 +2,18 @@
 
 **Feature Branch**: `001-monorepo-setup`  
 **Created**: October 17, 2025  
-**Status**: Draft  
+**Status**: Clarified  
 **Input**: User description: "I would like to begin monorepo setup (Turborepo, pnpm, uv)"
+
+## Clarifications
+
+### Session 2025-10-17
+
+- Q: What directory structure should the monorepo use for organizing packages? → A: Separate `apps/` and `packages/` directories (apps for deployable applications, packages for shared libraries)
+- Q: Where should build cache artifacts be stored? → A: Local cache with optional remote cache support (for CI/team sharing)
+- Q: How should the system handle circular dependencies between packages? → A: Detect and reject circular dependencies with clear error messages
+- Q: How should the system handle conflicting dependency versions across packages? → A: Enforce single version per dependency across all packages (strict mode)
+- Q: How should the build system behave when one package fails during a multi-package build? → A: Continue building independent packages, stop dependent packages
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -57,36 +67,36 @@ As a developer working with both JavaScript/TypeScript and Python packages, I ne
 
 ### Edge Cases
 
-- What happens when a package has circular dependencies?
-- How does the system handle packages with conflicting dependency versions?
-- What happens when a build fails in one package of a multi-package build?
-- How are workspace packages handled when they need to be published externally?
-- What happens when switching between branches with different workspace structures?
+- **Circular dependencies**: System detects and rejects with clear error messages indicating the cycle path
+- **Conflicting dependency versions**: System enforces single version per dependency across all packages, rejecting conflicts with clear error messages
+- **Build failures**: When one package fails, continue building independent packages but stop dependent packages to surface all errors while avoiding cascading failures
+- **Package publishing**: Workspace packages can be published externally using standard package manager publish commands, with version management handled per package
+- **Branch switching**: When switching branches with different workspace structures, package managers re-scan workspace configuration and update package registry accordingly
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: System MUST support workspace-based package management where multiple packages can coexist in a single repository
+- **FR-001**: System MUST support workspace-based package management where multiple packages can coexist in a single repository, organized in `apps/` (deployable applications) and `packages/` (shared libraries) directories
 - **FR-002**: System MUST enable local package references without requiring package publication
-- **FR-003**: System MUST provide dependency hoisting to reduce duplication of shared dependencies
-- **FR-004**: System MUST support build orchestration that respects package dependency graphs
-- **FR-005**: System MUST cache build outputs to avoid redundant rebuilds when source files haven't changed
+- **FR-003**: System MUST provide dependency hoisting to reduce duplication of shared dependencies and MUST enforce single version per dependency across all packages, rejecting version conflicts
+- **FR-004**: System MUST support build orchestration that respects package dependency graphs and MUST detect and reject circular dependencies with clear error messages
+- **FR-005**: System MUST cache build outputs locally to avoid redundant rebuilds when source files haven't changed, with optional remote cache support for sharing across CI and team members
 - **FR-006**: System MUST support incremental builds where only changed packages and their dependents are rebuilt
 - **FR-007**: System MUST support parallel execution of independent build tasks
 - **FR-008**: System MUST manage JavaScript/TypeScript packages using pnpm workspace features
 - **FR-009**: System MUST manage Python packages using uv for dependency management
 - **FR-010**: System MUST allow scripts to be run across all workspace packages or filtered subsets
-- **FR-011**: System MUST provide clear error messages when builds fail, indicating which package failed
+- **FR-011**: System MUST provide clear error messages when builds fail, indicating which package failed, and MUST continue building independent packages while stopping dependent packages to avoid cascading failures
 - **FR-012**: System MUST support development mode where changes in one package are immediately available to dependent packages
 
 ### Key Entities
 
-- **Workspace Root**: The repository root containing workspace configuration, defining which directories contain packages and global settings for the monorepo
+- **Workspace Root**: The repository root containing workspace configuration, defining which directories contain packages and global settings for the monorepo. Uses `apps/` directory for deployable applications and `packages/` directory for shared libraries
 - **Package**: An individual unit of code (library or application) with its own dependencies, build configuration, and version, managed as part of the workspace
 - **Build Pipeline**: The orchestrated sequence of build tasks across packages, respecting dependencies and utilizing caching
 - **Dependency Graph**: The relationship map between packages showing which packages depend on which others, used to determine build order
-- **Cache**: Storage of build outputs and intermediate artifacts keyed by input file hashes, enabling fast rebuilds
+- **Cache**: Storage of build outputs and intermediate artifacts keyed by input file hashes, enabling fast rebuilds. Stored locally with optional remote cache support for team-wide sharing across CI and developer machines
 
 ## Success Criteria *(mandatory)*
 
@@ -98,4 +108,4 @@ As a developer working with both JavaScript/TypeScript and Python packages, I ne
 - **SC-004**: When a single package is modified, only that package and its dependents are rebuilt (verified by build logs)
 - **SC-005**: Both JavaScript and Python packages can coexist in the workspace with their respective tooling functioning correctly
 - **SC-006**: Developers can run workspace-wide commands (like linting or testing) that execute across all packages
-- **SC-007**: The build system correctly identifies and reports dependency cycles if they exist
+- **SC-007**: The build system detects circular dependencies and provides clear error messages showing the cycle path, preventing builds from proceeding

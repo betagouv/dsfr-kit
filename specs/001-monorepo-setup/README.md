@@ -1,7 +1,7 @@
 # Feature 001: Monorepo Setup
 
 **Branch**: `001-monorepo-setup`  
-**Status**: Specification Complete  
+**Status**: Clarified  
 **Created**: October 17, 2025
 
 ## Overview
