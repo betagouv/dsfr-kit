@@ -80,6 +80,7 @@ run-in package command:
 # Add a new package
 # Usage: just add-package <type> <name>
 # Types: app (for apps/) or lib (for packages/)
+# TODO: Future enhancement - scaffold from templates (Node.js/TypeScript or Python)
 add-package type name:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -94,6 +95,7 @@ add-package type name:
     echo "📁 Creating package at $dir..."
     mkdir -p "$dir"
     echo "✅ Package directory created. Initialize with pnpm init or create pyproject.toml"
+    echo "💡 Future: This will scaffold from templates automatically"
 
 # Check for dependency updates
 check-updates:
