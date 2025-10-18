@@ -18,6 +18,10 @@ importers:
         specifier: ^5.0.0
         version: 5.9.3
 
+  packages/python-core: {}
+
+  packages/python-test: {}
+
   packages/test-lib:
     dependencies:
       '@dsfr-kit/core':

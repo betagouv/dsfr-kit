@@ -103,20 +103,20 @@
 
 ### Implementation for User Story 3
 
-- [ ] T033 [P] [US3] Create `packages/python-core/` directory for Python utilities
-- [ ] T034 [US3] Create `packages/python-core/pyproject.toml` with project name `dsfr-kit-python-core`, version `0.1.0`, and Python 3.12+ requirement
-- [ ] T035 [US3] Create `packages/python-core/package.json` with scripts for Turborepo integration (e.g., `"build": "uv run python -m build"`)
-- [ ] T036 [US3] Create `packages/python-core/src/dsfr_kit_python_core/__init__.py` with a simple function
-- [ ] T037 [P] [US3] Create `packages/python-test/` directory for testing Python workspace dependencies
-- [ ] T038 [US3] Create `packages/python-test/pyproject.toml` with workspace dependency on `dsfr-kit-python-core`
-- [ ] T039 [US3] Add `[tool.uv.sources]` section to `packages/python-test/pyproject.toml` to reference workspace package
-- [ ] T040 [US3] Create `packages/python-test/package.json` with scripts for Turborepo integration
-- [ ] T041 [US3] Run `uv sync` at repository root to install Python workspace dependencies
-- [ ] T042 [US3] Verify Python packages are recognized by running `uv tree`
-- [ ] T043 [US3] Verify both JavaScript and Python packages coexist by running `pnpm list --depth 0` and `uv tree`
-- [ ] T044 [US3] Run `turbo run build` and verify both JavaScript and Python packages build correctly
-- [ ] T045 [US3] Verify `just install` command installs dependencies for both ecosystems
-- [ ] T046 [US3] Verify `just build` command builds packages in both ecosystems
+- [x] T033 [P] [US3] Create `packages/python-core/` directory for Python utilities
+- [x] T034 [US3] Create `packages/python-core/pyproject.toml` with project name `dsfr-kit-python-core`, version `0.1.0`, and Python 3.12+ requirement
+- [x] T035 [US3] Create `packages/python-core/package.json` with scripts for Turborepo integration (e.g., `"build": "uv run python -m build"`)
+- [x] T036 [US3] Create `packages/python-core/src/dsfr_kit_python_core/__init__.py` with a simple function
+- [x] T037 [P] [US3] Create `packages/python-test/` directory for testing Python workspace dependencies
+- [x] T038 [US3] Create `packages/python-test/pyproject.toml` with workspace dependency on `dsfr-kit-python-core`
+- [x] T039 [US3] Add `[tool.uv.sources]` section to `packages/python-test/pyproject.toml` to reference workspace package
+- [x] T040 [US3] Create `packages/python-test/package.json` with scripts for Turborepo integration
+- [x] T041 [US3] Run `uv sync` at repository root to install Python workspace dependencies
+- [x] T042 [US3] Verify Python packages are recognized by running `uv tree`
+- [x] T043 [US3] Verify both JavaScript and Python packages coexist by running `pnpm list --depth 0` and `uv tree`
+- [x] T044 [US3] Run `turbo run build` and verify both JavaScript and Python packages build correctly
+- [x] T045 [US3] Verify `just install` command installs dependencies for both ecosystems
+- [x] T046 [US3] Verify `just build` command builds packages in both ecosystems
 
 **Checkpoint**: At this point, both JavaScript/TypeScript and Python ecosystems coexist and function independently in the monorepo.
 

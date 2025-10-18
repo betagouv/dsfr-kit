@@ -6,8 +6,8 @@ requires-python = ">=3.12"
 
 [tool.uv.workspace]
 members = [
-    "apps/*/",
-    "packages/*/",
+    "packages/python-core",
+    "packages/python-test",
 ]
 
 [tool.uv]

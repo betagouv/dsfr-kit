@@ -1,0 +1,36 @@
+version = 1
+revision = 2
+requires-python = ">=3.12"
+
+[manifest]
+members = [
+    "dsfr-kit",
+    "dsfr-kit-python-core",
+    "dsfr-kit-python-test",
+]
+
+[[package]]
+name = "dsfr-kit"
+version = "0.1.0"
+source = { virtual = "." }
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = []
+
+[[package]]
+name = "dsfr-kit-python-core"
+version = "0.1.0"
+source = { editable = "packages/python-core" }
+
+[[package]]
+name = "dsfr-kit-python-test"
+version = "0.1.0"
+source = { editable = "packages/python-test" }
+dependencies = [
+    { name = "dsfr-kit-python-core" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "dsfr-kit-python-core", editable = "packages/python-core" }]
