@@ -320,6 +320,102 @@ packages/
 3. Receives JSON behavior documentation as output
 4. Uses behavior docs to guide web component implementation
 
+**Fallback Strategy (P3 - TypeScript Analyzer Optional)**:
+- For P1 (Button component): Manual behavior documentation is acceptable
+- Generator checks if `dsfr-js-analyzer` is available in PATH
+- If not available: Logs warning, continues with manual behavior implementation
+- If available: Runs analyzer, uses output to enhance generated component
+- This allows P1-P2 implementation without TypeScript dependency
+
+## Data Flow Architecture
+
+### Generation Pipeline
+
+```
+1. FETCH PHASE
+   User Command → CLI (apps/dsfr-kit)
+   ├─→ Read config (DSFR version, component name)
+   └─→ fetcher/github.py
+       ├─→ GitHub API (GouvernementFR/dsfr v1.12.0)
+       ├─→ Download: button.html, button.css, button.js
+       └─→ cache.py (store in .dsfr-cache/)
+
+2. PARSE PHASE
+   Cached Assets → parsers/
+   ├─→ html_parser.py (Beautiful Soup 4)
+   │   └─→ Output: ComponentStructure (DOM tree, ARIA attrs, variants)
+   ├─→ css_parser.py (tinycss2)
+   │   └─→ Output: DesignTokens (colors, spacing, typography)
+   └─→ [Optional] dsfr-js-analyzer (TypeScript)
+       └─→ Output: BehaviorPatterns (events, state, DOM updates)
+
+3. MAP PHASE
+   DesignTokens → token_mapper/
+   ├─→ colors.py → TailwindColors
+   ├─→ spacing.py → TailwindSpacing
+   ├─→ typography.py → TailwindTypography
+   └─→ tailwind_config.py
+       └─→ Output: tailwind.config.js
+
+4. GENERATE PHASE
+   ComponentStructure + TailwindConfig + BehaviorPatterns → generator/
+   ├─→ web_component.py
+   │   ├─→ templates/web_component.j2
+   │   └─→ Output: dsfr-button.js (web component)
+   └─→ storybook.py
+       ├─→ templates/story.j2
+       └─→ Output: Button.stories.js
+
+5. VALIDATE PHASE
+   Generated Component → validator/
+   ├─→ accessibility.py (axe-core)
+   │   └─→ WCAG 2.1 AA compliance check
+   └─→ rgaa.py
+       ├─→ RGAA 4 compliance check
+       └─→ BLOCK if critical violations (FR-025)
+
+6. OUTPUT PHASE
+   ✓ Validated Component → User's project directory
+   ├─→ dsfr-button.js
+   ├─→ Button.stories.js
+   └─→ tailwind.config.js (if init)
+```
+
+## Error Handling Strategy
+
+### Fetch Phase Errors
+- **GitHub API failure**: Retry with exponential backoff (3 attempts), fallback to cached version if available, fail with clear message if no cache
+- **Rate limiting**: Wait for rate limit reset, show progress indicator, suggest GitHub token authentication
+- **Missing component**: List available DSFR components, suggest closest match
+- **Network timeout**: Retry once, fail with offline mode suggestion (use cached assets)
+
+### Parse Phase Errors
+- **Invalid HTML**: Log warning, attempt best-effort parsing, flag structural issues for manual review
+- **Invalid CSS**: Skip malformed rules, log warnings, continue with valid tokens
+- **Missing tokens**: Use DSFR defaults, log missing tokens, generate component with warnings
+- **JS analyzer failure**: Log warning, continue without behavior analysis (fallback mode)
+
+### Map Phase Errors
+- **Conflicting tokens**: Report conflict, use first occurrence, log warning with suggested resolution
+- **Unmappable CSS**: Generate custom CSS class, document in output, log Tailwind limitation
+- **Invalid color values**: Skip invalid colors, log error, continue with valid palette
+
+### Generate Phase Errors
+- **Template rendering failure**: Fail fast with template error details, suggest template variable issues
+- **File write failure**: Check permissions, suggest alternative output directory, fail with clear message
+- **Invalid component name**: Sanitize name, suggest valid alternative, fail if unsanitizable
+
+### Validate Phase Errors
+- **Accessibility violations (critical)**: Block generation, output detailed violation report with fix suggestions, exit with error code
+- **Accessibility violations (warnings)**: Generate component, output warning report, continue
+- **Validator unavailable**: Log warning, skip validation, generate component with disclaimer
+
+### General Error Principles
+- **Fail fast**: Stop at first critical error, don't cascade failures
+- **Clear messages**: Include error context, suggested fixes, relevant documentation links
+- **Graceful degradation**: Continue with warnings when possible, block only on critical issues
+- **Logging**: All errors logged to `.dsfr-kit/logs/` with timestamps and context
+
 ## Complexity Tracking
 
 *No complexity violations - all constitutional principles satisfied*
