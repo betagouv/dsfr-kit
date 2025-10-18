@@ -7,7 +7,7 @@
 
 ## Summary
 
-Establish a Turborepo-based monorepo structure supporting both Node.js/TypeScript (pnpm) and Python (uv) packages with automated build orchestration, caching, and multi-language ecosystem support. The workspace will use `apps/` for deployable applications and `packages/` for shared libraries, with strict dependency version enforcement and intelligent build failure handling.
+Establish a Turborepo-based monorepo structure supporting both Node.js/TypeScript (pnpm) and Python (uv) packages with automated build orchestration, caching, and multi-language ecosystem support. The workspace will use `apps/` for deployable applications, `packages/` for TypeScript/JavaScript libraries, and `libs/` for Python libraries, with strict dependency version enforcement and intelligent build failure handling.
 
 ## Technical Context
 
@@ -75,11 +75,11 @@ specs/[###-feature]/
 ├── pyproject.toml           # uv workspace root configuration (Python)
 ├── .gitignore               # Ignore node_modules, .turbo, dist, etc.
 │
-├── apps/                    # Deployable applications
+├── apps/                    # Deployable applications (any language)
 │   ├── (future apps will be added here)
 │   └── .gitkeep
 │
-├── packages/                # Shared libraries and utilities
+├── packages/                # TypeScript/JavaScript libraries
 │   ├── core/               # Shared TypeScript types and utilities
 │   │   ├── package.json
 │   │   ├── tsconfig.json
@@ -87,13 +87,21 @@ specs/[###-feature]/
 │   │
 │   └── (future packages will be added here)
 │
+├── libs/                    # Python libraries
+│   ├── core/               # Core Python utilities
+│   │   ├── pyproject.toml
+│   │   ├── package.json   # For Turborepo integration
+│   │   └── src/
+│   │
+│   └── (future libs will be added here)
+│
 ├── .turbo/                  # Local build cache (gitignored)
 │
 └── specs/                   # Feature specifications (already exists)
     └── 001-monorepo-setup/
 ```
 
-**Structure Decision**: Monorepo workspace structure with clear separation between deployable applications (`apps/`) and shared libraries (`packages/`). This aligns with constitutional Principle IV and clarification decisions from the specification phase. The structure supports both Node.js/TypeScript (via pnpm) and Python (via uv) packages in a unified workspace managed by Turborepo.
+**Structure Decision**: Monorepo workspace structure with three top-level directories for clear language separation: `apps/` (deployable applications), `packages/` (TypeScript/JavaScript libraries), and `libs/` (Python libraries). This aligns with constitutional Principle IV and industry best practices (Nx, Tweag). The structure enables clean workspace configurations with glob patterns and scales well for future languages.
 
 ## Complexity Tracking
 

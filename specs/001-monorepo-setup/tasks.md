@@ -14,8 +14,9 @@
 
 ## Path Conventions
 - **Monorepo root**: Configuration files at repository root
-- **Apps**: `apps/` directory for deployable applications
-- **Packages**: `packages/` directory for shared libraries
+- **Apps**: `apps/` directory for deployable applications (any language)
+- **Packages**: `packages/` directory for TypeScript/JavaScript libraries
+- **Libs**: `libs/` directory for Python libraries
 
 ---
 
@@ -103,14 +104,14 @@
 
 ### Implementation for User Story 3
 
-- [x] T033 [P] [US3] Create `packages/python-core/` directory for Python utilities
-- [x] T034 [US3] Create `packages/python-core/pyproject.toml` with project name `dsfr-kit-python-core`, version `0.1.0`, and Python 3.12+ requirement
-- [x] T035 [US3] Create `packages/python-core/package.json` with scripts for Turborepo integration (e.g., `"build": "uv run python -m build"`)
-- [x] T036 [US3] Create `packages/python-core/src/dsfr_kit_python_core/__init__.py` with a simple function
-- [x] T037 [P] [US3] Create `packages/python-test/` directory for testing Python workspace dependencies
-- [x] T038 [US3] Create `packages/python-test/pyproject.toml` with workspace dependency on `dsfr-kit-python-core`
-- [x] T039 [US3] Add `[tool.uv.sources]` section to `packages/python-test/pyproject.toml` to reference workspace package
-- [x] T040 [US3] Create `packages/python-test/package.json` with scripts for Turborepo integration
+- [x] T033 [P] [US3] Create `libs/core/` directory for Python utilities
+- [x] T034 [US3] Create `libs/core/pyproject.toml` with project name `dsfr-kit-core`, version `0.1.0`, and Python 3.12+ requirement
+- [x] T035 [US3] Create `libs/core/package.json` with scripts for Turborepo integration
+- [x] T036 [US3] Create `libs/core/src/dsfr_kit_python_core/__init__.py` with a simple function
+- [x] T037 [P] [US3] Create `libs/test/` directory for testing Python workspace dependencies
+- [x] T038 [US3] Create `libs/test/pyproject.toml` with workspace dependency on `dsfr-kit-core`
+- [x] T039 [US3] Add `[tool.uv.sources]` section to `libs/test/pyproject.toml` to reference workspace package
+- [x] T040 [US3] Create `libs/test/package.json` with scripts for Turborepo integration
 - [x] T041 [US3] Run `uv sync` at repository root to install Python workspace dependencies
 - [x] T042 [US3] Verify Python packages are recognized by running `uv tree`
 - [x] T043 [US3] Verify both JavaScript and Python packages coexist by running `pnpm list --depth 0` and `uv tree`
@@ -140,7 +141,7 @@
 - [ ] T052 Run `just verify` to validate workspace configuration
 - [ ] T053 Test circular dependency detection by temporarily creating a cycle and verifying error message
 - [ ] T054 Test version conflict detection by temporarily adding conflicting versions and verifying error message
-- [ ] T055 Decide on test packages: Keep `packages/test-lib/` and `packages/python-test/` as examples for documentation, or remove if they were only for validation (recommended: keep as working examples)
+- [ ] T055 Decide on test packages: Keep `packages/test-lib/` and `libs/test/` as examples for documentation, or remove if they were only for validation (recommended: keep as working examples)
 - [ ] T056 Update `.specify/memory/constitution.md` if any constitutional insights were gained during implementation
 
 ---

@@ -33,7 +33,7 @@ This feature establishes configuration files and directory structures rather tha
 **Validation Rules**:
 - Workspace root must not be publishable (`private: true`)
 - Package manager version must be specified for reproducibility
-- Workspace patterns must include `apps/*` and `packages/*`
+- Workspace patterns must include `apps/*`, `packages/*` (TypeScript/JavaScript), and `libs/*` (Python)
 
 **Example** (`package.json`):
 ```json
@@ -59,9 +59,7 @@ packages:
 **Example** (`pyproject.toml`):
 ```toml
 [tool.uv.workspace]
-members = [
-    "packages/*/",
-]
+members = ["libs/*"]
 ```
 
 ### 2. Build Pipeline Configuration
@@ -248,7 +246,8 @@ dev-dependencies = [
 ```
 Workspace Root
     ├── contains → Package (apps/*)
-    ├── contains → Package (packages/*)
+    ├── contains → Package (packages/*) [TypeScript/JavaScript]
+    ├── contains → Package (libs/*) [Python]
     └── defines → Build Pipeline
 
 Package
@@ -274,15 +273,15 @@ Cache
 1. **Single Version Enforcement**: Each external dependency must have exactly one version across the workspace
 2. **No Circular Dependencies**: Dependency graph must be acyclic at both package and task levels
 3. **Workspace Protocol**: Internal dependencies must use `workspace:*` (pnpm) or path references (uv)
-4. **Directory Structure**: Packages must be in `apps/` or `packages/` directories
+4. **Directory Structure**: Packages must be in `apps/`, `packages/` (TypeScript/JavaScript), or `libs/` (Python) directories
 5. **Cache Isolation**: Each task's cache is isolated by input signature
 
 ## Lifecycle
 
 ### Package Creation
-1. Create directory in `apps/` or `packages/`
-2. Initialize `package.json` or `pyproject.toml`
-3. Run `pnpm install` or `uv sync` to register in workspace
+1. Create directory in `apps/`, `packages/` (TypeScript/JavaScript), or `libs/` (Python)
+2. Initialize `package.json` (TypeScript/JavaScript) or `pyproject.toml` (Python)
+3. Run `pnpm install` (TypeScript/JavaScript) or `uv sync` (Python) to register in workspace
 4. Verify package appears in workspace list
 
 ### Dependency Addition

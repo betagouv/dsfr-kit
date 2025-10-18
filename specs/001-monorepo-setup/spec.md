@@ -9,7 +9,7 @@
 
 ### Session 2025-10-17
 
-- Q: What directory structure should the monorepo use for organizing packages? → A: Separate `apps/` and `packages/` directories (apps for deployable applications, packages for shared libraries)
+- Q: What directory structure should the monorepo use for organizing packages? → A: Three top-level directories: `apps/` (deployable applications), `packages/` (TypeScript/JavaScript libraries), and `libs/` (Python libraries)
 - Q: Where should build cache artifacts be stored? → A: Local cache with optional remote cache support (for CI/team sharing)
 - Q: How should the system handle circular dependencies between packages? → A: Detect and reject circular dependencies with clear error messages
 - Q: How should the system handle conflicting dependency versions across packages? → A: Enforce single version per dependency across all packages (strict mode)

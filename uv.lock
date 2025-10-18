@@ -5,8 +5,8 @@ requires-python = ">=3.12"
 [manifest]
 members = [
     "dsfr-kit",
-    "dsfr-kit-python-core",
-    "dsfr-kit-python-test",
+    "dsfr-kit-core",
+    "dsfr-kit-test",
 ]
 
 [[package]]
@@ -20,17 +20,17 @@ source = { virtual = "." }
 dev = []
 
 [[package]]
-name = "dsfr-kit-python-core"
+name = "dsfr-kit-core"
 version = "0.1.0"
-source = { editable = "packages/python-core" }
+source = { editable = "libs/core" }
 
 [[package]]
-name = "dsfr-kit-python-test"
+name = "dsfr-kit-test"
 version = "0.1.0"
-source = { editable = "packages/python-test" }
+source = { editable = "libs/test" }
 dependencies = [
-    { name = "dsfr-kit-python-core" },
+    { name = "dsfr-kit-core" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "dsfr-kit-python-core", editable = "packages/python-core" }]
+requires-dist = [{ name = "dsfr-kit-core", editable = "libs/core" }]
