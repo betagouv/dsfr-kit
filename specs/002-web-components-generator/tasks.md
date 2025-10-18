@@ -41,16 +41,16 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 **Goal**: Create monorepo structure, configure tooling, establish development environment
 
-- [ ] T001 Create `apps/dsfr-kit/` directory structure with src/, tests/, pyproject.toml
-- [ ] T002 Create `libs/dsfr-generator/` directory structure with src/, tests/, pyproject.toml
-- [ ] T003 Configure `apps/dsfr-kit/pyproject.toml` with dependencies (click/typer, requests)
-- [ ] T004 Configure `libs/dsfr-generator/pyproject.toml` with dependencies (beautifulsoup4, tinycss2, libsass, jinja2)
-- [ ] T005 [P] Add `apps/dsfr-kit` to root `pyproject.toml` workspace configuration
-- [ ] T006 [P] Add `libs/dsfr-generator` to root `pyproject.toml` workspace configuration
-- [ ] T007 [P] Configure Ruff linting/formatting for Python packages in pyproject.toml files
-- [ ] T008 Create `.dsfr-cache/` directory structure for asset caching
-- [ ] T009 Create `apps/dsfr-kit/src/__init__.py` and `libs/dsfr-generator/src/__init__.py`
-- [ ] T010 Install dependencies with `uv sync` and verify workspace setup
+- [x] T001 Create `apps/dsfr-kit/` directory structure with src/, tests/, pyproject.toml
+- [x] T002 Create `libs/dsfr-generator/` directory structure with src/, tests/, pyproject.toml
+- [x] T003 Configure `apps/dsfr-kit/pyproject.toml` with dependencies (click/typer, requests)
+- [x] T004 Configure `libs/dsfr-generator/pyproject.toml` with dependencies (beautifulsoup4, tinycss2, libsass, jinja2)
+- [x] T005 [P] Add `apps/dsfr-kit` to root `pyproject.toml` workspace configuration
+- [x] T006 [P] Add `libs/dsfr-generator` to root `pyproject.toml` workspace configuration
+- [x] T007 [P] Configure Ruff linting/formatting for Python packages in pyproject.toml files
+- [x] T008 Create `.dsfr-cache/` directory structure for asset caching
+- [x] T009 Create `apps/dsfr-kit/src/__init__.py` and `libs/dsfr-generator/src/__init__.py`
+- [x] T010 Install dependencies with `uv sync` and verify workspace setup
 
 ---
 
@@ -60,24 +60,24 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### Configuration & Asset Fetching
 
-- [ ] T011 Implement `libs/dsfr-generator/src/config.py` with DSFR version constant (v1.14.2)
-- [ ] T012 Implement `libs/dsfr-generator/src/fetcher/__init__.py` with module exports
-- [ ] T013 Implement `libs/dsfr-generator/src/fetcher/github.py` to download NPM tarball from registry
-- [ ] T014 Implement `libs/dsfr-generator/src/fetcher/cache.py` for local asset caching in `.dsfr-cache/`
-- [ ] T015 Add error handling for network failures, rate limiting, missing assets in fetcher modules
+- [x] T011 Implement `libs/dsfr-generator/src/config.py` with DSFR version constant (v1.14.2)
+- [x] T012 Implement `libs/dsfr-generator/src/fetcher/__init__.py` with module exports
+- [x] T013 Implement `libs/dsfr-generator/src/fetcher/github.py` to download NPM tarball from registry
+- [x] T014 Implement `libs/dsfr-generator/src/fetcher/cache.py` for local asset caching in `.dsfr-cache/`
+- [x] T015 Add error handling for network failures, rate limiting, missing assets in fetcher modules
 
 ### CLI Foundation
 
-- [ ] T016 Implement `apps/dsfr-kit/src/main.py` with Click/Typer CLI framework setup
-- [ ] T017 Implement `apps/dsfr-kit/src/commands/__init__.py` with command registration
-- [ ] T018 Configure console script entry point in `apps/dsfr-kit/pyproject.toml` for `dsfr-kit` command
-- [ ] T019 Add global CLI options (--verbose, --version, --help) in main.py
+- [x] T016 Implement `apps/dsfr-kit/src/main.py` with Click/Typer CLI framework setup
+- [x] T017 Implement `apps/dsfr-kit/src/commands/__init__.py` with command registration
+- [x] T018 Configure console script entry point in `apps/dsfr-kit/pyproject.toml` for `dsfr-kit` command
+- [x] T019 Add global CLI options (--verbose, --version, --help) in main.py
 
 ### Testing Infrastructure
 
-- [ ] T020 [P] Create `libs/dsfr-generator/tests/fixtures/` with sample DSFR Button assets (HTML, SCSS, JS)
-- [ ] T021 [P] Configure pytest in `libs/dsfr-generator/pyproject.toml` with test discovery
-- [ ] T022 [P] Create `apps/dsfr-kit/tests/` directory for CLI integration tests
+- [x] T020 [P] Create `libs/dsfr-generator/tests/fixtures/` with sample DSFR Button assets (HTML, SCSS, JS)
+- [x] T021 [P] Configure pytest in `libs/dsfr-generator/pyproject.toml` with test discovery
+- [x] T022 [P] Create `apps/dsfr-kit/tests/` directory for CLI integration tests
 
 ---
 

@@ -8,4 +8,11 @@ requires-python = ">=3.12"
 members = ["apps/*", "libs/*"]
 
 [tool.uv]
-dev-dependencies = []
+dev-dependencies = [
+    "dsfr-kit-cli",
+    "dsfr-generator",
+]
+
+[tool.uv.sources]
+dsfr-kit-cli = { workspace = true }
+dsfr-generator = { workspace = true }
