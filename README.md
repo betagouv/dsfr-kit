@@ -78,6 +78,21 @@ packages/
 └── reflex/           # Reflex components (Python)
 ```
 
+### 📚 Interactive Component Documentation
+
+All components are documented with interactive examples using Storybook:
+
+- **Living Documentation** - Examples stay synchronized with code
+- **Interactive Playground** - Test components in isolation
+- **Visual Verification** - Compare against DSFR reference implementations
+- **All Variants** - See every component state and customization option
+- **Accessibility Annotations** - ARIA states and keyboard navigation documented
+
+```bash
+# View component documentation
+just storybook
+```
+
 ## Installation
 
 ### Prerequisites
@@ -235,8 +250,10 @@ just clean
 
 - **TypeScript/JavaScript**: Linted and formatted with [Biome](https://biomejs.dev/)
 - **Python**: Linted and formatted with [Ruff](https://docs.astral.sh/ruff/)
+- **Component Documentation**: Interactive examples with [Storybook](https://storybook.js.org/)
 - **Accessibility**: Automated testing with axe-core and pa11y
 - **Behavioral Tests**: Verify DSFR interaction patterns
+- **Visual Regression**: Optional integration with Chromatic or Percy
 
 ## Component Development
 
@@ -247,9 +264,10 @@ just clean
 3. **Specification** - Define composable API and extension points
 4. **Core Implementation** - Build framework-agnostic logic with Tailwind
 5. **Framework Adapters** - Implement framework-specific renderers
-6. **Testing** - Verify DSFR compliance, accessibility, and behavior
-7. **Documentation** - Provide usage examples and customization guides
-8. **Distribution** - Package as copyable source code
+6. **Interactive Documentation** - Create Storybook stories for all variants and states
+7. **Testing** - Verify DSFR compliance, accessibility, and behavior
+8. **Documentation** - Provide usage examples and customization guides
+9. **Distribution** - Package as copyable source code
 
 ### Design Principles
 
@@ -263,6 +281,7 @@ just clean
 8. **Behavioral Fidelity** - Preserve DSFR JavaScript behaviors
 9. **RGAA 4 Compliance** - Non-negotiable accessibility requirements
 10. **Public Good** - Inspired by government design system adaptations
+11. **Interactive Documentation** - Living documentation with Storybook for all components
 
 ## Accessibility
 
@@ -309,6 +328,7 @@ dsfr-kit draws inspiration from:
 - **DSFR Assets**: https://github.com/GouvernementFR/dsfr
 - **RGAA 4**: https://accessibilite.numerique.gouv.fr/
 - **shadcn/ui**: https://ui.shadcn.com/
+- **Storybook**: https://storybook.js.org/
 - **Tailwind CSS**: https://tailwindcss.com/
 
 ## License
