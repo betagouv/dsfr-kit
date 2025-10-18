@@ -107,6 +107,8 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### Token Mapping (Basic - for Button only)
 
+**Note**: This phase implements minimal token mapping for Button component (MVP). Full token extraction (FR-006 to FR-010) is implemented in Phase 4 (US2). This intentional scoping allows us to validate the generator architecture with Button before scaling to all DSFR tokens.
+
 - [ ] T035 [US1] Implement `libs/dsfr-generator/src/token_mapper/__init__.py` with module exports
 - [ ] T036 [US1] Implement `libs/dsfr-generator/src/token_mapper/colors.py` to map DSFR colors to Tailwind
 - [ ] T037 [US1] Add Button-specific color mappings (primary, secondary, tertiary) in colors.py
@@ -128,7 +130,7 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 ### Accessibility Validation
 
 - [ ] T049 [US1] Implement `libs/dsfr-generator/src/validator/__init__.py` with module exports
-- [ ] T050 [US1] Implement `libs/dsfr-generator/src/validator/accessibility.py` with axe-core integration
+- [ ] T050 [US1] Implement `libs/dsfr-generator/src/validator/accessibility.py` with axe-core integration via subprocess (use Node.js axe-core CLI: `npx @axe-core/cli`)
 - [ ] T051 [US1] Add WCAG 2.1 AA compliance checks in accessibility.py
 - [ ] T052 [US1] Implement `libs/dsfr-generator/src/validator/rgaa.py` for RGAA 4 validation
 - [ ] T053 [US1] Add validation blocking (fail on critical violations) in validator modules
