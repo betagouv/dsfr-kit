@@ -1,10 +1,18 @@
 <!--
 Sync Impact Report:
-- Version: 1.2.0 (minor - updated styling strategy with shadcn/ui principles)
+- Version: 1.3.0 (minor - added component documentation and interactive verification principle)
+- Previous: 1.2.0 (2025-10-17) - Updated styling strategy with shadcn/ui principles
 - Previous: 1.1.1 (2025-10-17) - Clarified RGAA legal requirement
 - Previous: 1.1.0 (2025-10-17) - Added 3 new principles
 - Previous: 1.0.0 (2025-10-17) - Initial constitution
-- Amended: 2025-10-17
+- Amended: 2025-10-18
+- Changes in 1.3.0:
+  * Added Principle XI: Component Documentation & Interactive Verification
+  * Mandates interactive component documentation tools (e.g., Storybook, Histoire)
+  * Requires components to be documented in isolation with all variants
+  * Establishes living documentation as source of truth for component usage
+  * Enables visual regression testing and design system showcase
+  * Updated principle count: 10 → 11 core principles
 - Changes in 1.2.0:
   * Updated Principle II (Extensibility Architecture) to reference shadcn/ui instead of Radix UI
   * Expanded Principle III (Hybrid Styling Strategy) with shadcn/ui Open Code principles
@@ -18,13 +26,14 @@ Sync Impact Report:
   * Added Principle VIII: Behavioral Fidelity (preserve DSFR JavaScript behavior)
   * Added Principle IX: Accessibility Compliance (NON-NEGOTIABLE - preserve DSFR a11y)
   * Added Principle X: Public Good Design System Inspiration (methodology reference)
-- Principles: 10 core principles
+- Principles: 11 core principles
 - Templates status:
   ✅ plan-template.md - Constitution Check section aligns with principles
   ✅ spec-template.md - Requirements structure supports multi-framework approach
   ✅ tasks-template.md - Task organization supports monorepo structure
   ⚠️  Testing requirements now include behavioral and accessibility testing
-- Follow-up: Update task templates to include a11y and behavior test categories
+  ⚠️  Component development workflow should include Storybook/interactive documentation
+- Follow-up: Update task templates to include component documentation tasks
 -->
 
 # dsfr-kit Constitution
@@ -197,6 +206,35 @@ The dsfr-kit project draws methodological inspiration from the Public Good Desig
 - Documentation MAY cite Public Good Design System examples for methodology guidance
 - The project MUST maintain the same commitment to accessibility and public service as its inspirations
 
+### XI. Component Documentation & Interactive Verification
+
+All components MUST be documented and demonstrated in isolation using interactive component documentation tools, providing living documentation, development sandboxes, and visual verification of DSFR compliance.
+
+**Rationale**: Component libraries require more than code comments and static documentation. Interactive component explorers serve multiple critical purposes: they provide living documentation that stays synchronized with implementation, enable rapid development in isolation without full application context, facilitate visual regression testing, showcase DSFR compliance through interactive examples, and create AI-friendly reference material that demonstrates all component variants and usage patterns. DSFR's visual and behavioral complexity demands this level of documentation rigor.
+
+**Reference Implementation**: Storybook (https://storybook.js.org/) is the industry-standard tool for component documentation, supporting React, Vue, Angular, Web Components, Svelte, and other frameworks. It includes first-class Vite support, visual regression testing integrations, and accessibility testing capabilities. For Python frameworks like Reflex that compile to React/Next.js under the hood, standard React documentation tools apply to the generated components.
+
+**Documentation Principles**:
+- **Isolation**: Each component documented independently with all variants visible
+- **Interactive**: Users can interact with components and modify props in real-time
+- **Comprehensive**: All component states, variants, and edge cases demonstrated
+- **Living Documentation**: Documentation generated from actual component code, not separate markdown
+- **Visual Verification**: Enables visual comparison against DSFR reference implementations
+- **Development Sandbox**: Developers can build and test components without full app setup
+
+**Requirements**:
+- Each framework package MUST include interactive component documentation
+- Every component MUST have documented examples demonstrating all major variants and states
+- Component examples MUST show DSFR-compliant default styling and common customization patterns
+- Documentation MUST include accessibility annotations and ARIA state demonstrations where applicable
+- Component documentation MUST be viewable in development mode and deployable as static site
+- Visual regression testing SHOULD be integrated with component documentation
+- Component examples MUST demonstrate responsive behavior across DSFR breakpoints
+- Interactive documentation SHOULD be used during development to verify DSFR behavioral fidelity
+- Documentation MUST show both basic usage and advanced customization examples
+- Component documentation MAY include design tokens and styling information
+- Documentation approach MUST align with framework architecture and ecosystem conventions
+
 ## Technology Stack
 
 ### Required Tools
@@ -206,6 +244,8 @@ The dsfr-kit project draws methodological inspiration from the Public Good Desig
 - **Python Package Manager**: uv (workspaces mode)
 - **TypeScript Linting/Formatting**: Biome
 - **Python Linting/Formatting**: Ruff
+- **Component Documentation**: Storybook (reference implementation for JavaScript/TypeScript frameworks)
+- **Visual Regression Testing**: Chromatic, Percy, or equivalent (optional but recommended)
 - **Version Control**: Git
 
 ### Target Frameworks
@@ -233,9 +273,10 @@ The dsfr-kit project draws methodological inspiration from the Public Good Desig
 3. **Specification**: Define component API with composable interface and extension points
 4. **Core Implementation**: Build framework-agnostic component logic with Tailwind styling
 5. **Framework Adapters**: Implement framework-specific renderers following Open Code principles
-6. **Testing**: Verify DSFR compliance, extensibility, and customization capabilities
-7. **Documentation**: Provide usage examples, customization patterns, and extension guides
-8. **Distribution**: Package as copyable source code with CLI distribution support
+6. **Interactive Documentation**: Create component stories demonstrating all variants, states, and customization patterns
+7. **Testing**: Verify DSFR compliance, extensibility, and customization capabilities (including visual regression)
+8. **Documentation**: Provide usage examples, customization patterns, and extension guides
+9. **Distribution**: Package as copyable source code with CLI distribution support
 
 ### Package Structure
 
@@ -253,8 +294,10 @@ packages/
 
 - All code MUST pass linting (Biome/Ruff) before commit
 - All packages MUST build successfully in Turborepo pipeline
-- All components MUST pass automated accessibility tests (axe-core/pa11y)
+- All components MUST have interactive documentation with usage examples
+- All components MUST pass automated accessibility tests
 - Behavioral tests MUST verify DSFR interaction patterns
+- Visual regression tests SHOULD verify component appearance against baselines
 - Breaking changes MUST be documented in CHANGELOG.md
 - New components MUST include usage examples and accessibility guidance
 
@@ -274,4 +317,4 @@ This constitution supersedes all other development practices and guidelines. Any
 - Complexity that violates principles MUST be justified in implementation plans
 - Use `.specify/memory/constitution.md` as the authoritative reference
 
-**Version**: 1.2.0 | **Ratified**: 2025-10-17 | **Last Amended**: 2025-10-17
+**Version**: 1.3.0 | **Ratified**: 2025-10-17 | **Last Amended**: 2025-10-18
