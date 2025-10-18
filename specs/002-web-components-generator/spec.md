@@ -5,6 +5,12 @@
 **Status**: Draft  
 **Input**: User description: "Web Components Generator Foundation - Build the core generator infrastructure and first web component implementation from DSFR assets"
 
+## Clarifications
+
+### Session 2025-10-18
+
+- **Q**: How should the generator handle DSFR version management and asset retrieval? **A**: Pin to specific DSFR version (e.g., v1.12.0) with manual updates. This provides stability and predictable output, allowing us to test DSFR updates before upgrading the pinned version.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Generate DSFR Button Component (Priority: P1)
@@ -95,7 +101,7 @@ As a component library developer, I need generated web components to be automati
 
 #### Core Generator Infrastructure
 
-- **FR-001**: System MUST fetch official DSFR assets from the GouvernementFR/dsfr GitHub repository, including HTML templates, CSS files, and JavaScript files for specified components
+- **FR-001**: System MUST fetch official DSFR assets from the GouvernementFR/dsfr GitHub repository at a specific pinned version (e.g., v1.12.0), including HTML templates, CSS files, and JavaScript files for specified components
 - **FR-002**: System MUST parse DSFR HTML templates to extract component structure, class names, ARIA attributes, and semantic markup patterns
 - **FR-003**: System MUST parse DSFR CSS files to extract design token definitions including colors, spacing, typography, shadows, borders, and breakpoints
 - **FR-004**: System MUST analyze DSFR JavaScript files to identify component behaviors including event handlers, state management, DOM manipulations, and accessibility features
