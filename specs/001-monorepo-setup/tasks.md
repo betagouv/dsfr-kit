@@ -73,17 +73,17 @@
 
 ### Implementation for User Story 2
 
-- [ ] T022 [P] [US2] Add `build` script to `packages/core/package.json` (e.g., `"build": "tsc"` or `"build": "tsup"`)
-- [ ] T023 [P] [US2] Add `build` script to `packages/test-lib/package.json`
-- [ ] T024 [US2] Install build tools in `packages/core` (e.g., `typescript`, `tsup`, or similar)
-- [ ] T025 [US2] Install build tools in `packages/test-lib`
-- [ ] T026 [US2] Configure `packages/core/tsconfig.json` with output directory (`dist/`)
-- [ ] T027 [US2] Configure `packages/test-lib/tsconfig.json` with output directory (`dist/`)
-- [ ] T028 [US2] Run `turbo run build` and verify packages build in topological order (core before test-lib)
-- [ ] T029 [US2] Run `turbo run build` again without changes and verify cached results are used (should complete in <5 seconds)
-- [ ] T030 [US2] Modify a file in `packages/core/src/`, run `turbo run build`, and verify only `core` and `test-lib` (dependent) are rebuilt
-- [ ] T031 [US2] Verify `.turbo/cache/` directory contains cached build artifacts
-- [ ] T032 [US2] Add `clean` script to both packages to remove `dist/` and verify `turbo run clean` works
+- [x] T022 [P] [US2] Add `build` script to `packages/core/package.json` (e.g., `"build": "tsc"` or `"build": "tsup"`)
+- [x] T023 [P] [US2] Add `build` script to `packages/test-lib/package.json`
+- [x] T024 [US2] Install build tools in `packages/core` (e.g., `typescript`, `tsup`, or similar)
+- [x] T025 [US2] Install build tools in `packages/test-lib`
+- [x] T026 [US2] Configure `packages/core/tsconfig.json` with output directory (`dist/`)
+- [x] T027 [US2] Configure `packages/test-lib/tsconfig.json` with output directory (`dist/`)
+- [x] T028 [US2] Run `turbo run build` and verify packages build in topological order (core before test-lib)
+- [x] T029 [US2] Run `turbo run build` again without changes and verify cached results are used (should complete in <5 seconds)
+- [x] T030 [US2] Modify a file in `packages/core/src/`, run `turbo run build`, and verify only `core` and `test-lib` (dependent) are rebuilt
+- [x] T031 [US2] Verify `.turbo/cache/` directory contains cached build artifacts
+- [x] T032 [US2] Add `clean` script to both packages to remove `dist/` and verify `turbo run clean` works
 
 **Checkpoint**: At this point, build orchestration is functional with caching, incremental builds, and dependency-aware execution.
 

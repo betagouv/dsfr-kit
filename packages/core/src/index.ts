@@ -7,3 +7,8 @@ export const hello = (): string => {
 };
 
 export const version = "0.1.0";
+
+// Test incremental rebuild
+export const timestamp = (): string => {
+  return new Date().toISOString();
+};
