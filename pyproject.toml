@@ -5,7 +5,7 @@ description = "DSFR component library for multiple frameworks"
 requires-python = ">=3.12"
 
 [tool.uv.workspace]
-members = ["libs/*"]
+members = ["apps/*", "libs/*"]
 
 [tool.uv]
 dev-dependencies = []
