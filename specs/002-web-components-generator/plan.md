@@ -17,19 +17,22 @@ The initial target is the DSFR Button component to validate the architecture bef
 
 ## Technical Context
 
-**Language/Version**: Python 3.12+ (core generator), TypeScript 5.x (JS analysis)  
+**Language/Version**: Python 3.12+ (core generator), TypeScript 5.x (JS analysis - optional)  
 **Primary Dependencies**: 
-- **Parsing**: Beautiful Soup 4 (HTML), tinycss2 (CSS), libsass/sass (SCSS compilation), EJS renderer (template processing)
+- **Parsing**: Beautiful Soup 4 (HTML), tinycss2 (CSS)
 - **Generation**: Jinja2 (code templates), TypeScript Compiler API (JS analysis - optional)
 - **Validation**: axe-core (accessibility), pytest (testing)
+- **Asset Fetching**: requests (HTTP), zipfile (release extraction)
 
-**Storage**: File-based (DSFR assets cached locally in `.dsfr-cache/`, generated code output to filesystem)  
+**Storage**: File-based (DSFR release packages cached locally in `.dsfr-cache/`, generated code output to filesystem)  
 **Testing**: pytest (Python), vitest (TypeScript), axe-core (accessibility validation)  
-**Target Platform**: Cross-platform (macOS, Linux, Windows) - Node.js + Python runtime required  
+**Target Platform**: Cross-platform (macOS, Linux, Windows) - Python runtime required, Node.js optional (for JS analysis)  
 **Project Type**: Monorepo (Python libs + TypeScript packages)  
-**Performance Goals**: Generate single component in <30s, full token extraction in <10s, SCSS compilation in <5s  
-**Constraints**: Must preserve RGAA 4 accessibility, must target specific DSFR version (v1.12.0), must generate valid W3C web components, must handle EJS templates and SCSS compilation  
+**Performance Goals**: Generate single component in <30s, full token extraction in <10s, release download/cache in <15s  
+**Constraints**: Must preserve RGAA 4 accessibility, must target specific DSFR version (v1.14.2), must generate valid W3C web components  
 **Scale/Scope**: Initial target is 1 component (Button), architecture must scale to 50+ DSFR components, 100+ design tokens, global assets (fonts, icons, core CSS)
+
+**Key Simplification**: Using DSFR compiled release packages (dist/ + example/) eliminates need for EJS rendering and SCSS compilation - assets are ready to parse!
 
 ## Constitution Check
 
@@ -340,30 +343,33 @@ packages/
    User Command → CLI (apps/dsfr-kit)
    ├─→ Read config (DSFR version, component name)
    └─→ fetcher/github.py
-       ├─→ GitHub API (GouvernementFR/dsfr v1.12.0)
-       ├─→ Download component assets:
-       │   ├─→ src/dsfr/component/button/template/ejs/*.ejs (EJS templates)
-       │   ├─→ src/dsfr/component/button/style/*.scss (SCSS styles)
-       │   └─→ src/dsfr/component/button/script/*.js (if exists)
-       ├─→ Download global dependencies:
-       │   ├─→ src/dsfr/core/style/ (core SCSS, design tokens)
-       │   ├─→ dist/dsfr.min.css (compiled global CSS)
-       │   ├─→ dist/fonts/ (Marianne, Spectral fonts)
-       │   └─→ dist/icons/ (icon assets)
+       ├─→ GitHub Releases API (GouvernementFR/dsfr v1.14.2)
+       ├─→ Download release ZIP or NPM package (@gouvfr/dsfr)
+       ├─→ Extract compiled assets:
+       │   ├─→ example/component/button/*.html (HTML snippets - ready to use!)
+       │   ├─→ dist/component/button/button.min.css (compiled CSS)
+       │   ├─→ dist/component/button/button.module.min.js (compiled JS)
+       │   └─→ dist/dsfr.min.css (core CSS with design tokens)
+       ├─→ Extract global dependencies:
+       │   ├─→ dist/fonts/ (Marianne, Spectral .woff/.woff2)
+       │   ├─→ dist/icons/ (icon assets)
+       │   └─→ dist/utility/ (utility CSS)
        └─→ cache.py (store in .dsfr-cache/)
+       
+   Note: Using compiled release packages (dist/ + example/) instead of 
+   source files (src/) avoids need for EJS/SCSS compilation
 
 2. PARSE PHASE
    Cached Assets → parsers/
-   ├─→ ejs_parser.py (EJS → HTML rendering)
-   │   ├─→ Render EJS templates to HTML
-   │   └─→ Pass to html_parser.py (Beautiful Soup 4)
-   │       └─→ Output: ComponentStructure (DOM tree, ARIA attrs, variants)
-   ├─→ scss_parser.py (SCSS compilation + token extraction)
-   │   ├─→ Compile SCSS to CSS (sass/libsass)
+   ├─→ html_parser.py (Beautiful Soup 4)
+   │   ├─→ Parse example/*.html (already compiled, no EJS needed!)
+   │   └─→ Output: ComponentStructure (DOM tree, ARIA attrs, variants)
+   ├─→ css_parser.py (tinycss2)
+   │   ├─→ Parse dist/*.min.css (already compiled, no SCSS needed!)
    │   ├─→ Extract CSS custom properties (design tokens)
-   │   └─→ Pass to css_parser.py (tinycss2)
-   │       └─→ Output: DesignTokens (colors, spacing, typography)
+   │   └─→ Output: DesignTokens (colors, spacing, typography)
    └─→ [Optional] dsfr-js-analyzer (TypeScript)
+       ├─→ Parse dist/*.min.js (compiled, but can still extract patterns)
        └─→ Output: BehaviorPatterns (events, state, DOM updates)
 
 3. MAP PHASE
