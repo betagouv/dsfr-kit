@@ -347,8 +347,15 @@ packages/
    User Command → CLI (apps/dsfr-kit)
    ├─→ Read config (DSFR version, component name)
    └─→ fetcher/github.py
-       ├─→ GitHub Releases API or NPM (@gouvfr/dsfr v1.14.2)
-       ├─→ Download release ZIP/tarball (includes src/, dist/, example/)
+       ├─→ Download NPM package or source tarball (@gouvfr/dsfr v1.14.2)
+       │   Options:
+       │   A) NPM registry: https://registry.npmjs.org/@gouvfr/dsfr/-/dsfr-1.14.2.tgz
+       │   B) GitHub source tarball: https://api.github.com/repos/GouvernementFR/dsfr/tarball/v1.14.2
+       │   
+       │   Note: Release ZIP (dsfr-v1.14.2.zip) contains only dist/ + example/
+       │         (compiled files for end-users), NOT src/ (source files).
+       │         We need src/ for unminified SCSS/JS parsing.
+       │
        ├─→ Extract assets (hybrid approach - best of both worlds):
        │   ├─→ example/component/button/*.html (clean HTML - no EJS compilation!)
        │   ├─→ src/dsfr/component/button/style/*.scss (unminified CSS - easier to parse tokens)
@@ -360,8 +367,10 @@ packages/
        │   └─→ dist/utility/ (utility CSS)
        └─→ cache.py (store in .dsfr-cache/)
        
-   Note: NPM package includes BOTH src/ and dist/ - we use example/ for HTML
-   (no EJS), src/ for CSS/JS (unminified, easier to parse), dist/ for fonts/icons
+   Asset Source Decision: Use NPM package or source tarball (NOT release ZIP)
+   - NPM/tarball includes: src/, dist/, example/ (full package)
+   - Release ZIP includes: dist/, example/ only (compiled, for end-users)
+   - We need src/ for unminified SCSS/JS parsing
 
 2. PARSE PHASE
    Cached Assets → parsers/
