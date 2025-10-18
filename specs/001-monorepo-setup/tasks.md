@@ -133,16 +133,16 @@
 
 **Purpose**: Documentation, validation, and cleanup
 
-- [ ] T047 [P] Create `README.md` at repository root with monorepo setup instructions
-- [ ] T048 [P] Document `just` commands in README (run `just --list` output)
-- [ ] T049 [P] Add prerequisites section to README (Node.js 22+, pnpm 10+, Python 3.12+, uv, just) and verify `just` is installed with installation instructions
-- [ ] T050 [P] Create `CONTRIBUTING.md` with guidelines for adding new packages
-- [ ] T051 Verify all success criteria from spec.md are met
-- [ ] T052 Run `just verify` to validate workspace configuration
-- [ ] T053 Test circular dependency detection by temporarily creating a cycle and verifying error message
-- [ ] T054 Test version conflict detection by temporarily adding conflicting versions and verifying error message
-- [ ] T055 Decide on test packages: Keep `packages/test-lib/` and `libs/test/` as examples for documentation, or remove if they were only for validation (recommended: keep as working examples)
-- [ ] T056 Update `.specify/memory/constitution.md` if any constitutional insights were gained during implementation
+- [x] T047 [P] Create `README.md` at repository root with monorepo setup instructions
+- [x] T048 [P] Document `just` commands in README (run `just --list` output)
+- [x] T049 [P] Add prerequisites section to README (Node.js 22+, pnpm 10+, Python 3.12+, uv, just) and verify `just` is installed with installation instructions
+- [x] T050 [P] Create `CONTRIBUTING.md` with guidelines for adding new packages
+- [x] T051 Verify all success criteria from spec.md are met
+- [x] T052 Run `just verify` to validate workspace configuration
+- [x] T053 Test circular dependency detection by temporarily creating a cycle and verifying error message
+- [x] T054 Test version conflict detection by temporarily adding conflicting versions and verifying error message
+- [x] T055 Decide on test packages: Keep `packages/test-lib/` and `libs/test/` as examples for documentation, or remove if they were only for validation (recommended: keep as working examples)
+- [x] T056 Update `.specify/memory/constitution.md` if any constitutional insights were gained during implementation
 
 ---
 

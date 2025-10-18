@@ -82,26 +82,44 @@ packages/
 
 ### Prerequisites
 
-- **Node.js**: 22+ with pnpm
-- **Python**: 3.12+ with uv (for Python frameworks)
-- **Turborepo**: Installed globally or via npx
+- **Node.js**: 22+ 
+- **pnpm**: 10+ (package manager for TypeScript/JavaScript)
+- **Python**: 3.12+
+- **uv**: Latest (package manager for Python)
+- **just**: Latest (command runner) - [Installation](https://github.com/casey/just#installation)
 
 ### Quick Start
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/dsfr-kit.git
+git clone https://github.com/betagouv/dsfr-kit.git
 cd dsfr-kit
 
-# Install dependencies
-pnpm install
-uv sync
+# Install all dependencies (Node.js + Python)
+just install
 
 # Build all packages
-pnpm build
+just build
 
-# Add a component to your project (example)
-npx dsfr-kit add button --framework nextjs
+# Verify workspace configuration
+just verify
+```
+
+### Available Commands
+
+Run `just` to see all available commands:
+
+```bash
+just                 # Show all commands
+just install         # Install Node.js and Python dependencies
+just build           # Build all packages
+just dev             # Start development mode
+just lint            # Lint all packages
+just format          # Format all packages
+just test            # Run tests
+just test-coverage   # Run tests with coverage
+just clean           # Clean build outputs and caches
+just verify          # Verify workspace configuration
 ```
 
 ## Usage
@@ -172,36 +190,45 @@ module.exports = {
 
 ```
 dsfr-kit/
-├── packages/
-│   ├── core/              # Shared utilities
-│   ├── web-components/    # Web Components
-│   ├── nextjs/           # Next.js components
-│   ├── solid/            # Solid.js components
-│   ├── streamlit/        # Streamlit components
-│   └── reflex/           # Reflex components
-├── apps/
-│   ├── docs/             # Documentation site
-│   └── playground/       # Component playground
+├── apps/                  # Deployable applications
+│   ├── docs/             # Documentation site (future)
+│   └── playground/       # Component playground (future)
+├── packages/              # TypeScript/JavaScript libraries
+│   ├── core/             # Shared TypeScript utilities
+│   ├── test-lib/         # Test package (example)
+│   ├── web-components/   # Web Components (future)
+│   ├── nextjs/           # Next.js components (future)
+│   └── solid/            # Solid.js components (future)
+├── libs/                  # Python libraries
+│   ├── core/             # Core Python utilities
+│   ├── test/             # Test package (example)
+│   ├── streamlit/        # Streamlit components (future)
+│   └── reflex/           # Reflex components (future)
 ├── turbo.json            # Turborepo configuration
-├── pnpm-workspace.yaml   # pnpm workspaces
-└── pyproject.toml        # uv workspace
+├── pnpm-workspace.yaml   # pnpm workspaces (TypeScript/JavaScript)
+├── pyproject.toml        # uv workspace (Python)
+├── justfile              # Command runner recipes
+└── tsconfig.json         # TypeScript project references
 ```
 
 ### Development Workflow
 
 ```bash
-# Start development mode
-pnpm dev
+# Start development mode (all packages)
+just dev
 
 # Run tests
-pnpm test
+just test
 
 # Lint and format
-pnpm lint
-pnpm format
+just lint
+just format
 
 # Build all packages
-pnpm build
+just build
+
+# Clean build outputs
+just clean
 ```
 
 ### Code Quality
