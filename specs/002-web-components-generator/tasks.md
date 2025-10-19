@@ -163,8 +163,14 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 - [x] T060 [US1] Create integration test: fetch Button assets, generate component, validate output
 - [x] T061 [US1] Test Button component renders in browser with all variants (primary, secondary, tertiary)
 - [x] T062 [US1] Test Button component passes axe-core accessibility validation
-- [x] T063 [US1] Test Button component matches DSFR visual specifications (manual verification)
+- [x] T063 [US1] Test Button component matches DSFR visual specifications (manual verification - see TESTING_STRATEGY.md for visual regression approach)
 - [x] T064 [US1] Test disabled state prevents interaction and displays correct styling
+
+**Visual Verification Strategy** (FR-023):
+- **MVP (Phase 3)**: Manual visual comparison against DSFR reference (T063)
+- **Future Enhancement**: Automated visual regression testing with Chromatic or Percy
+- **Process**: Side-by-side browser comparison of generated component vs. DSFR example HTML
+- **Acceptance**: Visual output matches DSFR within 95% similarity (color, spacing, typography)
 
 ---
 
@@ -208,12 +214,13 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### CLI Init Command
 
-- [x] T084 [US2] Implement `apps/dsfr-kit/src/commands/init.py` with `dsfr init` command
-- [x] T085 [US2] Add project initialization (create directories, generate Tailwind config) in init.py
-- [x] T086 [US2] Add `dsfr-kit.config.json` generation with DSFR version in init.py
-- [x] T087 [US2] Add framework option (--framework web-components) in init.py
+- [x] T084 [US2] Implement `apps/dsfr-kit/src/commands/init.py` with `dsfr init` command supporting dual-mode operation (monorepo --package flag, user project with configurable paths)
+- [x] T085 [US2] Add project initialization (create .dsfr/ directory, generate Tailwind config, create package.json for monorepo packages) in init.py
+- [x] T086 [US2] Add `.dsfr/config.json` generation with DSFR version, framework, and directory paths in init.py
+- [x] T087 [US2] Add framework option (--framework web-components) and path options (--components-dir, --styles-dir) in init.py
 
 **Note**: CLI command is `dsfr` (not `dsfr-kit`) - the gateway for government developers to use DSFR!
+**Design**: See `INIT_COMMAND_DESIGN.md` for complete architecture and usage examples
 
 ### Integration & Testing
 
@@ -272,6 +279,13 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 - [ ] T117 [US3] Test Python-TypeScript integration via subprocess
 - [ ] T118 [US3] Test fallback behavior when TypeScript analyzer unavailable
 
+**Behavioral Testing Framework** (FR-024):
+- [ ] T118.1 [P] Create behavioral testing framework in `libs/dsfr-generator/tests/behavioral/`
+- [ ] T118.2 [P] Add event interaction tests (click, focus, blur, keydown patterns)
+- [ ] T118.3 [P] Add state transition verification tests
+- [ ] T118.4 [P] Add DOM manipulation verification tests
+- [ ] T118.5 [P] Document behavioral testing approach for scaling beyond Button component
+
 ---
 
 ## Phase 6: User Story 4 (P4) - Document Generated Components with Storybook
@@ -288,9 +302,11 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 - [ ] T122 [US4] Add state demonstrations (default, hover, focus, active, disabled) to story.j2
 - [ ] T123 [US4] Add accessibility annotations (ARIA attributes, keyboard nav) to story.j2
 - [ ] T124 [US4] Add usage examples with code snippets to story.j2
+- [ ] T124.1 [US4] Add DSFR official documentation links to story.j2 template (FR-021)
 - [ ] T125 [US4] Implement `libs/dsfr-generator/src/generator/storybook.py` using Jinja2
 - [ ] T126 [US4] Add story rendering with ComponentStructure data in storybook.py
 - [ ] T127 [US4] Add variant and state extraction from ComponentStructure in storybook.py
+- [ ] T127.1 [US4] Add DSFR documentation URL mapping for each component in storybook.py (FR-021)
 
 ### CLI Integration
 
@@ -406,22 +422,26 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ## Task Summary
 
-**Total Tasks**: 184
+**Total Tasks**: 193 (updated after analysis)
 
 - **Phase 1 (Setup)**: 10 tasks
 - **Phase 2 (Foundational)**: 12 tasks
 - **Phase 3 (US1 - Button)**: 42 tasks
 - **Phase 4 (US2 - Tokens)**: 28 tasks
-- **Phase 5 (US3 - Behaviors)**: 26 tasks
-- **Phase 6 (US4 - Storybook)**: 21 tasks
-- **Phase 6.5 (Icons & Assets)**: 28 tasks ⭐ NEW
+- **Phase 5 (US3 - Behaviors)**: 31 tasks (+5 behavioral testing framework)
+- **Phase 6 (US4 - Storybook)**: 23 tasks (+2 DSFR doc links)
+- **Phase 6.5 (Icons & Assets)**: 28 tasks
 - **Phase 7 (Polish)**: 17 tasks
 
-**Parallel Opportunities**: 62 tasks marked [P] can be executed in parallel
+**Parallel Opportunities**: 67 tasks marked [P] can be executed in parallel
 
 **MVP Scope** (Phases 1-3): 64 tasks → Working Button generator (current)
 **MVP + Icons** (Phases 1-3 + 6.5): 92 tasks → Self-contained components with icons
-**Full Feature** (All phases): 184 tasks → Complete generator with all user stories
+**Full Feature** (All phases): 193 tasks → Complete generator with all user stories
+
+**Recent Additions** (Post-Analysis):
+- T124.1, T127.1: DSFR documentation links in Storybook (FR-021)
+- T118.1-T118.5: Comprehensive behavioral testing framework (FR-024)
 
 ## Verification Checklist
 

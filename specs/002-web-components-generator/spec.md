@@ -139,6 +139,15 @@ As a component library developer, I need generated web components to be automati
 - **FR-024**: System MUST test generated components for behavioral fidelity by comparing interaction patterns against DSFR reference implementations
 - **FR-025**: System MUST block component generation output if accessibility tests fail, providing detailed violation reports
 
+#### Project Initialization
+
+- **FR-031**: System MUST support dual-mode initialization: monorepo mode (--package flag) for creating framework packages in packages/ directory, and user project mode (default) for initializing end-user projects with configurable directory paths
+- **FR-032**: System MUST allow users to specify custom component and style directory paths (--components-dir, --styles-dir) to accommodate different project structures (Next.js app/, React src/, etc.)
+- **FR-033**: System MUST create .dsfr/ directory for DSFR-managed state (config.json, cache/) separate from user-owned files, ensuring clean separation of concerns
+- **FR-034**: System MUST store initialization configuration in .dsfr/config.json including DSFR version, framework, and directory paths for use by subsequent generate commands
+- **FR-035**: System MUST generate package.json files for monorepo packages with appropriate dependencies, scripts, and exports configuration
+- **FR-036**: System MUST generate Tailwind configuration files with DSFR token placeholders that will be populated during component generation
+
 #### Icon & Asset Management
 
 - **FR-026**: System MUST detect icon classes (fr-icon-*, fr-fi-*) from parsed HTML and extract icon metadata including name, category, and position modifiers (--icon-left, --icon-right)
@@ -178,4 +187,7 @@ As a component library developer, I need generated web components to be automati
 - **SC-009**: Generated component with icons includes all referenced SVG files in output directory with correct relative paths and renders icons correctly in browser
 - **SC-010**: Component generated with --icons copy option works correctly in offline mode without external network requests for icon assets
 - **SC-011**: Font files copied with --fonts copy option include correct @font-face declarations and render text with proper Marianne/Spectral typography
+- **SC-012**: Developer can run `dsfr init --package web-components` in monorepo and receive a complete package structure with .dsfr/config.json, tailwind.config.js, and package.json in under 2 seconds
+- **SC-013**: Developer can run `dsfr init --components-dir src/components` in their project and subsequent `dsfr generate` commands place components in the configured directory
+- **SC-014**: Generated .dsfr/config.json contains all necessary configuration (DSFR version, framework, paths) for subsequent commands to operate without additional user input
 

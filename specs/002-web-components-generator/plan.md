@@ -225,10 +225,17 @@ packages/
 - Example: `dsfr-kit generate button --output ./src/components --framework web-components`
 
 **`commands/init.py`** - Project initialization command
-- Implements `dsfr-kit init` command
-- Sets up new project with Tailwind config, directory structure
-- Generates initial `dsfr-kit.config.json` with DSFR version
-- Example: `dsfr-kit init --framework web-components`
+- Implements `dsfr init` command with dual-mode operation
+- **Monorepo mode** (--package flag): Creates framework packages in packages/ directory
+- **User project mode** (default): Initializes user projects with configurable paths
+- Supports custom directory paths (--components-dir, --styles-dir)
+- Creates .dsfr/ directory for DSFR-managed state (config.json, cache/)
+- Generates Tailwind config with DSFR token placeholders
+- Generates package.json for monorepo packages
+- Examples:
+  - Monorepo: `dsfr init --package web-components`
+  - User project: `dsfr init --components-dir src/components --framework nextjs`
+- **Design Reference**: See `specs/002-web-components-generator/INIT_COMMAND_DESIGN.md` for detailed architecture
 
 **`commands/config.py`** - Configuration management command
 - Implements `dsfr-kit config` command
@@ -236,8 +243,9 @@ packages/
 - Example: `dsfr-kit config set dsfr-version 1.12.0`
 
 **`config.py`** - Configuration file handling
-- Reads/writes `dsfr-kit.config.json` in user projects
-- Stores DSFR version (v1.12.0 pinned by default)
+- Reads/writes `.dsfr/config.json` in user projects and monorepo packages
+- Stores DSFR version (v1.14.2 pinned by default)
+- Stores directory paths (components, styles, assets) for subsequent commands
 - Manages generator settings (cache location, output paths, framework preferences)
 - Provides version compatibility checks
 
