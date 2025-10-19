@@ -1,7 +1,7 @@
 # Implementation Tasks: Web Components Generator Foundation
 
-**Feature**: Web Components Generator Foundation  
-**Branch**: `002-web-components-generator`  
+**Feature**: Web Components Generator Foundation
+**Branch**: `002-web-components-generator`
 **Generated**: October 18, 2025
 
 ## Overview
@@ -129,12 +129,12 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### Accessibility Validation
 
-- [ ] T049 [US1] Implement `libs/dsfr-generator/src/validator/__init__.py` with module exports
+- [x] T049 [US1] Implement `libs/dsfr-generator/src/validator/__init__.py` with module exports
 - [ ] T050 [US1] Implement `libs/dsfr-generator/src/validator/accessibility.py` with axe-core integration via subprocess (use Node.js axe-core CLI: `npx @axe-core/cli`)
-- [ ] T051 [US1] Add WCAG 2.1 AA compliance checks in accessibility.py
-- [ ] T052 [US1] Implement `libs/dsfr-generator/src/validator/rgaa.py` for RGAA 4 validation
-- [ ] T053 [US1] Add validation blocking (fail on critical violations) in validator modules
-- [ ] T054 [US1] Add detailed violation reporting with fix suggestions in validator modules
+- [x] T051 [US1] Add WCAG 2.1 AA compliance checks in accessibility.py
+- [x] T052 [US1] Implement `libs/dsfr-generator/src/validator/rgaa.py` for RGAA 4 validation
+- [x] T053 [US1] Add validation blocking (fail on critical violations) in validator modules
+- [x] T054 [US1] Add detailed violation reporting with fix suggestions in validator modules
 
 ### CLI Generate Command
 
