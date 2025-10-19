@@ -60,8 +60,8 @@ class TestCategorizeDsfrColors:
         assert "--blue-france-sun-113-625" in categorized["primary"]
         assert "--red-marianne-425-625" in categorized["primary"]
 
-    def test_categorize_grey_scale(self):
-        """Test categorizing grey scale colors."""
+    def test_categorize_neutral_colors(self):
+        """Test categorizing neutral colors (grey scale)."""
         colors = {
             "--grey-50-1000": "#FFFFFF",
             "--grey-200-850": "#3A3A3A",
@@ -69,11 +69,11 @@ class TestCategorizeDsfrColors:
         }
         categorized = categorize_dsfr_colors(colors)
 
-        assert "grey" in categorized
-        assert len(categorized["grey"]) == 3
+        assert "neutral" in categorized
+        assert len(categorized["neutral"]) == 3
 
-    def test_categorize_semantic_colors(self):
-        """Test categorizing semantic colors (success, error, warning, info)."""
+    def test_categorize_system_colors(self):
+        """Test categorizing system colors (success, error, warning, info)."""
         colors = {
             "--success-425-625": "#18753C",
             "--error-425-625": "#CE0500",
@@ -82,14 +82,14 @@ class TestCategorizeDsfrColors:
         }
         categorized = categorize_dsfr_colors(colors)
 
-        assert "semantic" in categorized
-        assert "--success-425-625" in categorized["semantic"]
-        assert "--error-425-625" in categorized["semantic"]
-        assert "--warning-425-625" in categorized["semantic"]
-        assert "--info-425-625" in categorized["semantic"]
+        assert "system" in categorized
+        assert "--success-425-625" in categorized["system"]
+        assert "--error-425-625" in categorized["system"]
+        assert "--warning-425-625" in categorized["system"]
+        assert "--info-425-625" in categorized["system"]
 
-    def test_categorize_theme_colors(self):
-        """Test categorizing theme colors (backgrounds, text, borders)."""
+    def test_categorize_neutral_usage_tokens(self):
+        """Test that background/text/border grey tokens are categorized as neutral."""
         colors = {
             "--background-default-grey": "#F6F6F6",
             "--text-title-grey": "#161616",
@@ -97,13 +97,15 @@ class TestCategorizeDsfrColors:
         }
         categorized = categorize_dsfr_colors(colors)
 
-        assert "theme" in categorized
-        assert "--background-default-grey" in categorized["theme"]
-        assert "--text-title-grey" in categorized["theme"]
-        assert "--border-default-grey" in categorized["theme"]
+        # These should be neutral (grey-based), not a separate "theme" category
+        # DSFR categorizes by color family, not usage context
+        assert "neutral" in categorized
+        assert "--background-default-grey" in categorized["neutral"]
+        assert "--text-title-grey" in categorized["neutral"]
+        assert "--border-default-grey" in categorized["neutral"]
 
-    def test_categorize_extended_palette(self):
-        """Test categorizing extended palette colors."""
+    def test_categorize_illustrative_palette(self):
+        """Test categorizing illustrative palette colors."""
         colors = {
             "--green-tilleul-verveine-sun-418": "#B7A73F",
             "--green-bourgeon-sun-425": "#68A532",
@@ -112,8 +114,8 @@ class TestCategorizeDsfrColors:
         }
         categorized = categorize_dsfr_colors(colors)
 
-        assert "extended" in categorized
-        assert len(categorized["extended"]) == 4
+        assert "illustrative" in categorized
+        assert len(categorized["illustrative"]) == 4
 
     def test_categorize_mixed_colors(self):
         """Test categorizing a mix of different color types."""
@@ -126,19 +128,29 @@ class TestCategorizeDsfrColors:
         }
         categorized = categorize_dsfr_colors(colors)
 
+        # All official DSFR categories should be present
         assert "primary" in categorized
-        assert "grey" in categorized
-        assert "semantic" in categorized
-        assert "theme" in categorized
-        assert "extended" in categorized
+        assert "neutral" in categorized
+        assert "system" in categorized
+        assert "illustrative" in categorized
+        
+        # Verify correct categorization
+        assert "--blue-france" in categorized["primary"]
+        assert "--grey-200" in categorized["neutral"]
+        assert "--success-425" in categorized["system"]
+        assert "--background-default-grey" in categorized["neutral"]  # Grey-based, not theme
+        assert "--green-tilleul-verveine" in categorized["illustrative"]
 
     def test_categorize_empty_colors(self):
         """Test categorizing empty color dict."""
         categorized = categorize_dsfr_colors({})
 
+        # Should return structure with all official DSFR categories
         assert "primary" in categorized
-        assert "grey" in categorized
-        assert "semantic" in categorized
-        assert "theme" in categorized
-        assert "extended" in categorized
+        assert "neutral" in categorized
+        assert "system" in categorized
+        assert "illustrative" in categorized
         assert len(categorized["primary"]) == 0
+        assert len(categorized["neutral"]) == 0
+        assert len(categorized["system"]) == 0
+        assert len(categorized["illustrative"]) == 0

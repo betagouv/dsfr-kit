@@ -49,20 +49,25 @@ def map_dsfr_colors(dsfr_colors: dict[str, str]) -> list[dict[str, str]]:
 
 def categorize_dsfr_colors(dsfr_colors: dict[str, str]) -> dict[str, dict[str, str]]:
     """
-    Categorize DSFR colors by type (T072).
+    Categorize DSFR colors by official DSFR taxonomy.
 
-    Categorizes colors into:
-    - primary: Blue France and Red Marianne (main brand colors)
-    - grey: Grey scale colors
-    - semantic: Success, error, warning, info colors
-    - theme: Background, text, and border colors
-    - extended: Extended palette colors (green, purple, pink, etc.)
+    Uses official DSFR color categories from:
+    https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/couleurs-palette
+
+    Categories:
+    - primary: Blue France and Red Marianne (Couleurs primaires)
+    - neutral: Grey scale, backgrounds, text, borders (Couleurs neutres)
+    - system: Success, error, warning, info (Couleurs système)
+    - illustrative: Extended palette - green, purple, pink, etc. (Couleurs illustratives)
+
+    Note: DSFR categorizes by color family, not usage context.
+    E.g., --background-default-grey is "neutral", not a separate "theme" category.
 
     Args:
         dsfr_colors: Dictionary of DSFR color names to values
 
     Returns:
-        Dictionary with categorized colors
+        Dictionary with categorized colors using official DSFR categories
 
     Example:
         >>> colors = {
@@ -73,36 +78,36 @@ def categorize_dsfr_colors(dsfr_colors: dict[str, str]) -> dict[str, dict[str, s
         >>> categorized = categorize_dsfr_colors(colors)
         >>> "--blue-france-sun-113-625" in categorized["primary"]
         True
+        >>> "--grey-200-850" in categorized["neutral"]
+        True
+        >>> "--success-425-625" in categorized["system"]
+        True
     """
     categorized = {
         "primary": {},
-        "grey": {},
-        "semantic": {},
-        "theme": {},
-        "extended": {},
+        "neutral": {},
+        "system": {},
+        "illustrative": {},
     }
 
     for name, value in dsfr_colors.items():
         name_lower = name.lower()
 
-        # Primary brand colors
+        # Primary: Blue France and Red Marianne (official DSFR primary colors)
         if "blue-france" in name_lower or "red-marianne" in name_lower:
             categorized["primary"][name] = value
-        # Semantic colors
+        # System: Semantic/functional colors (success, error, warning, info)
         elif any(
             keyword in name_lower
             for keyword in ["success", "error", "warning", "info"]
         ):
-            categorized["semantic"][name] = value
-        # Theme colors (backgrounds, text, borders) - check before grey
-        elif any(
-            keyword in name_lower for keyword in ["background", "text", "border"]
-        ):
-            categorized["theme"][name] = value
-        # Grey scale (check after theme to avoid misclassifying background-default-grey)
+            categorized["system"][name] = value
+        # Neutral: Grey scale and all grey-based tokens (backgrounds, text, borders)
+        # Note: Includes tokens like --background-default-grey, --text-title-grey
+        # DSFR categorizes by color family, not usage context
         elif "grey" in name_lower or "gray" in name_lower:
-            categorized["grey"][name] = value
-        # Extended palette (other named colors)
+            categorized["neutral"][name] = value
+        # Illustrative: Extended palette (decorative and accent colors)
         elif any(
             keyword in name_lower
             for keyword in [
@@ -115,9 +120,9 @@ def categorize_dsfr_colors(dsfr_colors: dict[str, str]) -> dict[str, dict[str, s
                 "beige",
             ]
         ):
-            categorized["extended"][name] = value
-        # Default to extended if no other category matches
+            categorized["illustrative"][name] = value
+        # Default to illustrative if no other category matches
         else:
-            categorized["extended"][name] = value
+            categorized["illustrative"][name] = value
 
     return categorized
