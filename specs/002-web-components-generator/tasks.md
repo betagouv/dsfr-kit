@@ -179,11 +179,13 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 ### Token Extraction Enhancement
 
 - [x] T065 [P] [US2] Enhance `libs/dsfr-generator/src/parsers/css_parser.py` to extract all DSFR tokens from global CSS files (not just component-specific)
-- [ ] T066 [P] [US2] Add comprehensive color extraction (blue-france, red-marianne, grey scale, etc.) in scss_parser.py
-- [ ] T067 [P] [US2] Add spacing scale extraction (margins, paddings, gaps) in scss_parser.py
-- [ ] T068 [P] [US2] Add typography extraction (font families, sizes, weights, line heights) in scss_parser.py
-- [ ] T069 [P] [US2] Add shadow/elevation extraction in scss_parser.py
-- [ ] T070 [P] [US2] Add border radius extraction in scss_parser.py
+- [x] T066 [P] [US2] Add comprehensive color extraction (blue-france, red-marianne, grey scale, etc.) - **Completed in T065 via `categorize_tokens()`**
+- [x] T067 [P] [US2] Add spacing scale extraction (margins, paddings, gaps) - **Completed in T065 via `categorize_tokens()`**
+- [x] T068 [P] [US2] Add typography extraction (font families, sizes, weights, line heights) - **Completed in T065 via `categorize_tokens()`**
+- [x] T069 [P] [US2] Add shadow/elevation extraction - **Completed in T065 via `categorize_tokens()`**
+- [x] T070 [P] [US2] Add border radius extraction - **Completed in T065 via `categorize_tokens()`**
+
+**Note**: T066-T070 originally referenced SCSS parser but were consolidated into T065's `categorize_tokens()` function, which extracts and categorizes all token types from compiled CSS files (`dist/core/core.css`, `dist/utility/colors/colors.css`, etc.) per the approved asset strategy.
 
 ### Token Mapping Enhancement
 
