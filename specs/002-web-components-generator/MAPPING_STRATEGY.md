@@ -393,7 +393,60 @@ See [ASSET_STRATEGY.md](./ASSET_STRATEGY.md) for full details.
 - **Asset Strategy**: [ASSET_STRATEGY.md](./ASSET_STRATEGY.md)
 - **Implementation**: Phase 4 (T065-T080)
 
+## Critical Gaps & Limitations
+
+### 🔴 Dark Theme Support (NOT IMPLEMENTED)
+
+**Status**: Critical gap identified  
+**Impact**: High - Dark theme is a core DSFR feature
+
+DSFR provides comprehensive dark theme support via `data-fr-theme="dark"` attribute and `dist/scheme/scheme.css`. Our current implementation:
+- ❌ Only extracts light theme tokens from `core.css`
+- ❌ Doesn't handle `scheme.css` (dark theme overrides)
+- ❌ Doesn't support Tailwind dark mode variants
+- ❌ Doesn't account for bidirectional token naming (e.g., `--grey-200-850`)
+
+**DSFR Dark Theme System**:
+```css
+/* Light theme (core.css) */
+:root {
+  --grey-200-850: #3A3A3A;
+}
+
+/* Dark theme (scheme.css) */
+:root[data-fr-theme=dark] {
+  --grey-200-850: #CECECE;  /* Same token, different value! */
+}
+```
+
+**Required Work**: See [DSFR_ANALYSIS.md](./DSFR_ANALYSIS.md) for detailed analysis and implementation plan.
+
+### 🟡 Official DSFR Color Categories (NEEDS VERIFICATION)
+
+**Status**: Needs alignment with official documentation  
+**Impact**: Medium - Our categories may not match DSFR's official taxonomy
+
+Our current color categorization (primary, grey, semantic, theme, extended) is an internal abstraction that needs verification against DSFR's official documentation at:
+- https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/couleurs-palette
+
+**Action Required**: Review official DSFR documentation and align our categories accordingly.
+
+### 🟡 Hover/Active State Tokens (PARTIALLY IMPLEMENTED)
+
+**Status**: Tokens exist but not explicitly extracted  
+**Impact**: Low - Can be added incrementally
+
+DSFR provides `-hover` and `-active` variants for many tokens:
+```css
+--grey-200-850: #3A3A3A;
+--grey-200-850-hover: #A8A8A8;
+--grey-200-850-active: #939393;
+```
+
+These are currently extracted as separate tokens but not explicitly mapped to Tailwind's hover/active states.
+
 ## Changelog
 
 - **2025-10-19**: Initial mapping strategy documented
 - **2025-10-19**: Implemented T065-T080 (token extraction and mapping)
+- **2025-10-19**: Identified critical gaps (dark theme, official categories) - see DSFR_ANALYSIS.md
