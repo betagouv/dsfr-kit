@@ -107,7 +107,7 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 - [x] T024 [US1] Implement `libs/dsfr-generator/src/parsers/html_parser.py` using Beautiful Soup 4
 - [x] T025 [US1] Add HTML structure extraction (DOM tree, element hierarchy) in html_parser.py
 - [x] T026 [US1] Add ARIA attribute extraction (roles, labels, properties) in html_parser.py
-- [ ] T027 [US1] Add variant detection (primary, secondary, tertiary classes) in html_parser.py
+- [x] T027 [US1] Add variant detection (primary, secondary, tertiary classes) in html_parser.py
 - [x] T028 [US1] Create ComponentStructure dataclass in `libs/dsfr-generator/src/parsers/types.py`
 
 ### CSS/SCSS Parsing

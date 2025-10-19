@@ -36,6 +36,45 @@ def extract_aria_attributes(element: Tag) -> dict[str, str]:
     return aria_attrs
 
 
+def detect_variants(classes: list[str]) -> list[str]:
+    """
+    Detect DSFR component variants from CSS classes.
+
+    Extracts variant modifiers from DSFR BEM-style classes (e.g., fr-btn--secondary).
+    Supports multiple variant patterns:
+    - Size variants: --sm, --lg, --xl
+    - Style variants: --secondary, --tertiary, --tertiary-no-outline
+    - Icon variants: --icon-left, --icon-right
+    - State variants: --disabled (though typically handled via attributes)
+
+    Args:
+        classes: List of CSS class names
+
+    Returns:
+        List of detected variant names (without the -- prefix)
+
+    Examples:
+        >>> detect_variants(["fr-btn", "fr-btn--secondary", "fr-btn--lg"])
+        ['secondary', 'lg']
+        >>> detect_variants(["fr-btn", "fr-icon-checkbox-circle-line", "fr-btn--icon-left"])
+        ['icon-left']
+    """
+    variants = []
+
+    for cls in classes:
+        # Look for DSFR modifier pattern: component--variant
+        if "--" in cls:
+            # Split on -- and take the variant part
+            parts = cls.split("--")
+            if len(parts) >= 2:
+                # Get the variant name (everything after the first --)
+                variant = "--".join(parts[1:])
+                if variant and variant not in variants:
+                    variants.append(variant)
+
+    return variants
+
+
 def extract_html_structure(soup: BeautifulSoup | Tag) -> dict:
     """
     Extract HTML structure from BeautifulSoup object.
@@ -67,11 +106,13 @@ def extract_html_structure(soup: BeautifulSoup | Tag) -> dict:
         element = soup
 
     # Extract basic information
+    classes = element.get("class", [])
     structure = {
         "tag": element.name,
-        "classes": element.get("class", []),
+        "classes": classes,
         "attributes": {},
         "children": [],
+        "variants": detect_variants(classes),
     }
 
     # Extract non-class, non-aria attributes
