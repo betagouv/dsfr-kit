@@ -133,7 +133,7 @@ class TestCategorizeDsfrColors:
         assert "neutral" in categorized
         assert "system" in categorized
         assert "illustrative" in categorized
-        
+
         # Verify correct categorization
         assert "--blue-france" in categorized["primary"]
         assert "--grey-200" in categorized["neutral"]
