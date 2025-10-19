@@ -202,9 +202,9 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### Conflict Detection
 
-- [ ] T081 [US2] Add token conflict detection in `libs/dsfr-generator/src/token_mapper/validator.py`
-- [ ] T082 [US2] Add conflict resolution suggestions in validator.py
-- [ ] T083 [US2] Add token completeness validation (ensure all DSFR tokens mapped) in validator.py
+- [x] T081 [US2] Add token conflict detection in `libs/dsfr-generator/src/token_mapper/validator.py`
+- [x] T082 [US2] Add conflict resolution suggestions in validator.py
+- [x] T083 [US2] Add token completeness validation (ensure all DSFR tokens mapped) in validator.py
 
 ### CLI Init Command
 
