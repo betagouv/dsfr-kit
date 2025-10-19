@@ -58,29 +58,91 @@ This allows the same token name to have different values based on theme!
 4. Generate Tailwind config with dark mode support
 5. Document theme switching mechanism
 
-### 2. Official DSFR Color Categories (NEEDS VERIFICATION)
+### 2. Official DSFR Color Categories (VERIFIED)
 
-**Discovery**: DSFR has official color categories documented on their website that we should align with.
+**Discovery**: DSFR has official color categories documented on their website.
 
-#### Our Current Categories vs DSFR
+**Source**: https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/couleurs-palette
 
-**Our Categories** (internal abstraction):
-1. Primary (Blue France, Red Marianne)
-2. Grey (grey scale)
-3. Semantic (success, error, warning, info)
-4. Theme (background, text, border)
-5. Extended (named colors)
+#### Official DSFR Categories
 
-**DSFR Official Categories** (from documentation - needs verification):
-- Need to review: https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/couleurs-palette
-- Likely includes: Brand colors, Semantic colors, Extended palette
-- May have different groupings than our abstraction
+1. **Primary** (Couleurs primaires)
+   - Blue France
+   - Red Marianne
+   - The two main brand colors of the French government
 
-**Action Required**:
-- Review DSFR official documentation
-- Align our categories with DSFR's official taxonomy
-- Update MAPPING_STRATEGY.md to reflect official categories
-- Add references to DSFR documentation
+2. **Neutral** (Couleurs neutres)
+   - Grey scale colors
+   - Used for backgrounds, text, borders
+   - Neutral UI elements
+
+3. **System** (Couleurs système)
+   - Success (green)
+   - Error (red)
+   - Warning (orange)
+   - Info (blue)
+   - Semantic/functional colors for status and feedback
+
+4. **Illustrative** (Couleurs illustratives)
+   - Extended color palette
+   - Named colors: green-tilleul-verveine, green-bourgeon, purple-glycine, pink-macaron, etc.
+   - Decorative and accent colors
+   - Inspired by French culture and nature
+
+#### Our Categories vs Official DSFR
+
+**Our Implementation** (internal abstraction):
+1. ~~Primary~~ → ✅ Matches DSFR Primary
+2. ~~Grey~~ → ✅ Matches DSFR Neutral
+3. ~~Semantic~~ → ✅ Matches DSFR System
+4. ~~Theme~~ → ❌ Not an official category (contextual usage of Neutral)
+5. ~~Extended~~ → ✅ Matches DSFR Illustrative
+
+**Mapping**:
+```
+Our Category    →  DSFR Official Category
+─────────────────────────────────────────
+primary         →  Primary (exact match)
+grey            →  Neutral (rename needed)
+semantic        →  System (rename needed)
+theme           →  [Remove - use Neutral with context]
+extended        →  Illustrative (rename needed)
+```
+
+**Required Changes**:
+1. Rename `grey` → `neutral`
+2. Rename `semantic` → `system`
+3. Rename `extended` → `illustrative`
+4. Remove `theme` category (merge into `neutral` with usage context)
+5. Update all documentation
+6. Update categorization logic in `colors.py`
+7. Update tests
+
+#### Understanding "Theme" Tokens
+
+Our `theme` category (background, text, border) was an attempt to group tokens by **usage context** rather than **color family**. However, DSFR's official taxonomy is based on color families, not usage.
+
+**DSFR Approach**:
+- Tokens like `--background-default-grey`, `--text-title-grey`, `--border-default-grey` are **Neutral** colors
+- The prefix (background-, text-, border-) indicates **usage**, not category
+- All grey-based tokens belong to the **Neutral** category regardless of usage
+
+**Example**:
+```
+Token Name                    → Official Category → Usage Context
+──────────────────────────────────────────────────────────────────
+--grey-200-850                → Neutral           → (base color)
+--background-default-grey     → Neutral           → background
+--text-title-grey             → Neutral           → text
+--border-default-grey         → Neutral           → border
+--blue-france-sun-113-625     → Primary           → (base color)
+--background-action-high-...  → Primary/System    → background (action)
+```
+
+**Recommendation**: 
+- Use official 4 categories (Primary, Neutral, System, Illustrative)
+- Optionally add metadata about usage context (background, text, border) as a separate attribute
+- This aligns with DSFR's design system philosophy
 
 ### 3. Token Naming Patterns
 
