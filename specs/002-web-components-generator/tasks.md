@@ -224,11 +224,13 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### Integration & Testing
 
-- [ ] T088 [US2] Test token extraction produces 50+ color values matching DSFR documentation
-- [ ] T089 [US2] Test spacing scale matches DSFR specifications
-- [ ] T090 [US2] Test typography definitions (Marianne, Spectral) are correctly configured
-- [ ] T091 [US2] Test generated Tailwind config is valid and usable in projects
-- [ ] T092 [US2] Test conflict detection identifies and reports token conflicts
+- [x] T088 [US2] Test token extraction produces 50+ color values matching DSFR documentation
+- [x] T089 [US2] Test spacing scale matches DSFR specifications
+- [x] T090 [US2] Test typography definitions (Marianne, Spectral) are correctly configured
+- [x] T091 [US2] Test generated Tailwind config is valid and usable in projects
+- [x] T092 [US2] Test conflict detection identifies and reports token conflicts
+
+**Testing**: Complete integration test suite in `tests/integration/test_phase4_token_pipeline.py` (16 tests, all passing)
 
 ---
 
