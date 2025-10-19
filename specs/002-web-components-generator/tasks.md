@@ -149,11 +149,11 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### Integration & Testing
 
-- [ ] T060 [US1] Create integration test: fetch Button assets, generate component, validate output
-- [ ] T061 [US1] Test Button component renders in browser with all variants (primary, secondary, tertiary)
-- [ ] T062 [US1] Test Button component passes axe-core accessibility validation
-- [ ] T063 [US1] Test Button component matches DSFR visual specifications (manual verification)
-- [ ] T064 [US1] Test disabled state prevents interaction and displays correct styling
+- [x] T060 [US1] Create integration test: fetch Button assets, generate component, validate output
+- [x] T061 [US1] Test Button component renders in browser with all variants (primary, secondary, tertiary)
+- [x] T062 [US1] Test Button component passes axe-core accessibility validation
+- [x] T063 [US1] Test Button component matches DSFR visual specifications (manual verification)
+- [x] T064 [US1] Test disabled state prevents interaction and displays correct styling
 
 ---
 
