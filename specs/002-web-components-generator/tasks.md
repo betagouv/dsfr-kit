@@ -15,8 +15,11 @@ After analyzing the DSFR package structure, we've optimized the pipeline to use 
 - **HTML**: `example/component/{component}/index.html` (complete examples with all variants)
 - **CSS Tokens**: `dist/component/{component}/{component}.css` (CSS custom properties, no SCSS compilation needed)
 - **JavaScript**: `dist/component/{component}/{component}.module.js` (compiled, production-ready)
+- **Icons**: `dist/icons/{category}/{icon-name}.svg` + CSS utility classes (~1000+ icons in 18 categories)
+- **Fonts**: `dist/fonts/{font-name}.woff2` (Marianne + Spectral, ~1.5MB total)
+- **Artwork**: `dist/artwork/pictograms/` (100+ pictograms, not needed for MVP)
 
-This eliminates SCSS compilation complexity and uses battle-tested production assets.
+This eliminates SCSS compilation complexity and uses battle-tested production assets. Icons work via CSS classes (no special handling needed for MVP). Font and artwork support planned for future phases.
 
 ## Dependencies
 
@@ -306,44 +309,98 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ---
 
+## Phase 6.5: Icon & Asset Support
+
+**Goal**: Add support for icon detection, font delivery, and asset copying for self-contained components
+
+**Independent Test**: Generate a Button component with icons, verify icon SVG files are copied/referenced correctly, fonts are available, and component works offline.
+
+### Icon Detection & Parsing
+
+- [ ] T140 [P] Add icon class detection in `libs/dsfr-generator/src/parsers/html_parser.py`
+- [ ] T141 [P] Extract icon class names from HTML (fr-icon-*, fr-fi-*) in html_parser.py
+- [ ] T142 [P] Add icon position detection (--icon-left, --icon-right, icon-only) in html_parser.py
+- [ ] T143 [P] Add icon metadata to ComponentStructure (icon_name, icon_position) in types.py
+
+### Icon CSS Parsing
+
+- [ ] T144 [P] Add icon CSS reference extraction in `libs/dsfr-generator/src/parsers/css_parser.py`
+- [ ] T145 [P] Parse mask-image URLs from icon CSS files in css_parser.py
+- [ ] T146 [P] Map icon class names to SVG file paths in css_parser.py
+- [ ] T147 [P] Create IconReference dataclass in types.py (name, category, svg_path)
+
+### Icon Asset Copying
+
+- [ ] T148 [P] Implement `libs/dsfr-generator/src/generator/assets.py` for asset management
+- [ ] T149 [P] Add copy_icon_svg() function to copy SVG files to output directory in assets.py
+- [ ] T150 [P] Add copy_icon_css() function to copy icon CSS to output directory in assets.py
+- [ ] T151 [P] Add icon path resolution (relative vs absolute) in assets.py
+- [ ] T152 [P] Add icon deduplication (don't copy same icon twice) in assets.py
+
+### Font Asset Handling
+
+- [ ] T153 [P] Add font file detection in assets.py
+- [ ] T154 [P] Add copy_fonts() function to copy WOFF2/WOFF files in assets.py
+- [ ] T155 [P] Add @font-face generation for copied fonts in assets.py
+- [ ] T156 [P] Add font CDN reference option (--fonts-cdn flag) in assets.py
+
+### CLI Integration
+
+- [ ] T157 Add --icons option to generate command (copy, cdn, inline)
+- [ ] T158 Add --fonts option to generate command (copy, cdn)
+- [ ] T159 Add --assets-dir option to specify asset output directory
+- [ ] T160 Update generate command to call asset copying functions
+- [ ] T161 Add asset copying progress indicators
+
+### Integration & Testing
+
+- [ ] T162 Test icon detection from Button HTML with icons
+- [ ] T163 Test icon SVG files are copied to output directory
+- [ ] T164 Test icon CSS is included in generated component
+- [ ] T165 Test component with icons renders correctly in browser
+- [ ] T166 Test font files are copied/referenced correctly
+- [ ] T167 Test generated component works offline (self-contained mode)
+
+---
+
 ## Phase 7: Polish & Cross-Cutting Concerns
 
 **Goal**: Add configuration management, improve error messages, add logging, documentation
 
 ### Configuration Management
 
-- [ ] T140 Implement `apps/dsfr-kit/src/commands/config.py` with `dsfr-kit config` command
-- [ ] T141 Add `dsfr-kit config set` subcommand for setting DSFR version
-- [ ] T142 Add `dsfr-kit config get` subcommand for viewing configuration
-- [ ] T143 Add configuration file reading/writing in `apps/dsfr-kit/src/config.py`
+- [ ] T168 Implement `apps/dsfr-kit/src/commands/config.py` with `dsfr-kit config` command
+- [ ] T169 Add `dsfr-kit config set` subcommand for setting DSFR version
+- [ ] T170 Add `dsfr-kit config get` subcommand for viewing configuration
+- [ ] T171 Add configuration file reading/writing in `apps/dsfr-kit/src/config.py`
 
 ### Error Handling & Logging
 
-- [ ] T144 [P] Add comprehensive error messages for all failure modes (network, parsing, validation)
-- [ ] T145 [P] Add logging to `.dsfr-kit/logs/` with timestamps and context
-- [ ] T146 [P] Add progress indicators for long-running operations (download, compilation)
-- [ ] T147 [P] Add graceful degradation for non-critical failures
+- [ ] T172 [P] Add comprehensive error messages for all failure modes (network, parsing, validation)
+- [ ] T173 [P] Add logging to `.dsfr-kit/logs/` with timestamps and context
+- [ ] T174 [P] Add progress indicators for long-running operations (download, compilation)
+- [ ] T175 [P] Add graceful degradation for non-critical failures
 
 ### Documentation
 
-- [ ] T148 [P] Create `apps/dsfr-kit/README.md` with installation and usage instructions
-- [ ] T149 [P] Create `libs/dsfr-generator/README.md` with API documentation
-- [ ] T150 [P] Add inline code documentation (docstrings) to all public functions
-- [ ] T151 [P] Create `CONTRIBUTING.md` with development setup instructions
+- [ ] T176 [P] Create `apps/dsfr-kit/README.md` with installation and usage instructions
+- [ ] T177 [P] Create `libs/dsfr-generator/README.md` with API documentation
+- [ ] T178 [P] Add inline code documentation (docstrings) to all public functions
+- [ ] T179 [P] Create `CONTRIBUTING.md` with development setup instructions
 
 ### Testing & Quality
 
-- [ ] T152 [P] Add unit tests for all parser modules (html, css, scss)
-- [ ] T153 [P] Add unit tests for all token mapper modules (colors, spacing, typography)
-- [ ] T154 [P] Add unit tests for generator modules (web_component, storybook)
-- [ ] T155 [P] Add integration tests for full generation pipeline
-- [ ] T156 [P] Configure CI/CD pipeline for automated testing
+- [ ] T180 [P] Add unit tests for all parser modules (html, css, scss)
+- [ ] T181 [P] Add unit tests for all token mapper modules (colors, spacing, typography)
+- [ ] T182 [P] Add unit tests for generator modules (web_component, storybook)
+- [ ] T183 [P] Add integration tests for full generation pipeline
+- [ ] T184 [P] Configure CI/CD pipeline for automated testing
 
 ---
 
 ## Task Summary
 
-**Total Tasks**: 156
+**Total Tasks**: 184
 
 - **Phase 1 (Setup)**: 10 tasks
 - **Phase 2 (Foundational)**: 12 tasks
@@ -351,21 +408,24 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 - **Phase 4 (US2 - Tokens)**: 28 tasks
 - **Phase 5 (US3 - Behaviors)**: 26 tasks
 - **Phase 6 (US4 - Storybook)**: 21 tasks
+- **Phase 6.5 (Icons & Assets)**: 28 tasks ⭐ NEW
 - **Phase 7 (Polish)**: 17 tasks
 
-**Parallel Opportunities**: 45 tasks marked [P] can be executed in parallel
+**Parallel Opportunities**: 62 tasks marked [P] can be executed in parallel
 
-**MVP Scope** (Phases 1-3): 64 tasks → Working Button generator
-**Full Feature** (All phases): 156 tasks → Complete generator with all user stories
+**MVP Scope** (Phases 1-3): 64 tasks → Working Button generator (current)
+**MVP + Icons** (Phases 1-3 + 6.5): 92 tasks → Self-contained components with icons
+**Full Feature** (All phases): 184 tasks → Complete generator with all user stories
 
 ## Verification Checklist
 
 After completing each phase:
 
-- [ ] **Phase 1**: `uv sync` succeeds, workspace structure is correct
-- [ ] **Phase 2**: `dsfr-kit --version` works, assets can be fetched and cached
-- [ ] **Phase 3**: `dsfr-kit generate button` produces working web component with RGAA 4 compliance
+- [x] **Phase 1**: `uv sync` succeeds, workspace structure is correct
+- [x] **Phase 2**: `dsfr-kit --version` works, assets can be fetched and cached
+- [x] **Phase 3**: `dsfr-kit generate button` produces working web component with RGAA 4 compliance
 - [ ] **Phase 4**: `dsfr-kit init` generates complete Tailwind config with 50+ DSFR colors
 - [ ] **Phase 5**: Behavior analyzer documents Button interactions (optional - P3)
 - [ ] **Phase 6**: Storybook displays Button with all variants and states
+- [ ] **Phase 6.5**: `dsfr-kit generate button --icons copy` produces component with icon SVG files
 - [ ] **Phase 7**: All documentation complete, error handling robust, tests passing

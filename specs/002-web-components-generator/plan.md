@@ -161,13 +161,14 @@ libs/
 │   │   │   ├── __init__.py
 │   │   │   ├── web_component.py    # Web component generator
 │   │   │   ├── storybook.py        # Storybook story generator
+│   │   │   ├── assets.py           # Icon/font asset management (Phase 6.5)
 │   │   │   └── templates/          # Jinja2 templates
 │   │   │       ├── web_component.j2
 │   │   │       └── story.j2
-│   │   └── validator/       # Quality checks
-│   │       ├── __init__.py
-│   │       ├── accessibility.py    # axe-core integration
-│   │       └── rgaa.py             # RGAA 4 validation
+│   │   ├── validator/       # Quality checks
+│   │   │   ├── __init__.py
+│   │   │   ├── accessibility.py    # axe-core integration
+│   │   │   └── rgaa.py             # RGAA 4 validation
 │   ├── tests/
 │   │   ├── unit/
 │   │   ├── integration/
