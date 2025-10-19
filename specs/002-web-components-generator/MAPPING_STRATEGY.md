@@ -395,16 +395,19 @@ See [ASSET_STRATEGY.md](./ASSET_STRATEGY.md) for full details.
 
 ## Critical Gaps & Limitations
 
-### 🔴 Dark Theme Support (NOT IMPLEMENTED)
+### ✅ Dark Theme Support (IMPLEMENTED)
 
-**Status**: Critical gap identified  
+**Status**: ✅ Implemented (2025-10-19)  
 **Impact**: High - Dark theme is a core DSFR feature
 
-DSFR provides comprehensive dark theme support via `data-fr-theme="dark"` attribute and `dist/scheme/scheme.css`. Our current implementation:
-- ❌ Only extracts light theme tokens from `core.css`
-- ❌ Doesn't handle `scheme.css` (dark theme overrides)
-- ❌ Doesn't support Tailwind dark mode variants
-- ❌ Doesn't account for bidirectional token naming (e.g., `--grey-200-850`)
+DSFR provides comprehensive dark theme support via `data-fr-theme="dark"` attribute and `dist/scheme/scheme.css`.
+
+**Implementation Approach**: Tailwind Native Dark Mode
+- ✅ Extracts light theme tokens from `core.css`
+- ✅ Extracts dark theme tokens from `scheme.css` (`:root[data-fr-theme=dark]`)
+- ✅ Merges light/dark tokens for Tailwind dark mode
+- ✅ Framework-independent (works with React, Vue, Svelte, virtual DOM)
+- ✅ Supports build-time optimization
 
 **DSFR Dark Theme System**:
 ```css
@@ -419,17 +422,39 @@ DSFR provides comprehensive dark theme support via `data-fr-theme="dark"` attrib
 }
 ```
 
-**Required Work**: See [DSFR_ANALYSIS.md](./DSFR_ANALYSIS.md) for detailed analysis and implementation plan.
+**Our Tailwind Output**:
+```javascript
+{
+  colors: {
+    'dsfr-grey-200-850': {
+      DEFAULT: '#3A3A3A',  // Light
+      dark: '#CECECE'       // Dark
+    }
+  }
+}
+```
 
-### 🟡 Official DSFR Color Categories (NEEDS VERIFICATION)
+**Functions**:
+- `extract_dark_theme_tokens(css)` - Extract from scheme.css
+- `merge_light_dark_tokens(light, dark)` - Merge for Tailwind
 
-**Status**: Needs alignment with official documentation  
-**Impact**: Medium - Our categories may not match DSFR's official taxonomy
+**See**: [DSFR_ANALYSIS.md](./DSFR_ANALYSIS.md) for detailed analysis.
 
-Our current color categorization (primary, grey, semantic, theme, extended) is an internal abstraction that needs verification against DSFR's official documentation at:
-- https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/couleurs-palette
+### ✅ Official DSFR Color Categories (IMPLEMENTED)
 
-**Action Required**: Review official DSFR documentation and align our categories accordingly.
+**Status**: ✅ Implemented (2025-10-19)  
+**Impact**: Medium - Alignment with DSFR's official taxonomy
+
+Categories renamed to match official DSFR documentation:
+- ✅ **Primary** - Blue France, Red Marianne (Couleurs primaires)
+- ✅ **Neutral** - Grey scale, backgrounds, text, borders (Couleurs neutres)
+- ✅ **System** - Success, error, warning, info (Couleurs système)
+- ✅ **Illustrative** - Extended palette (Couleurs illustratives)
+
+**Key Insight**: DSFR categorizes by color family, not usage context.
+Tokens like `--background-default-grey` are **Neutral** (grey-based), not a separate "theme" category.
+
+**Source**: https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/couleurs-palette
 
 ### 🟡 Hover/Active State Tokens (PARTIALLY IMPLEMENTED)
 
@@ -450,3 +475,5 @@ These are currently extracted as separate tokens but not explicitly mapped to Ta
 - **2025-10-19**: Initial mapping strategy documented
 - **2025-10-19**: Implemented T065-T080 (token extraction and mapping)
 - **2025-10-19**: Identified critical gaps (dark theme, official categories) - see DSFR_ANALYSIS.md
+- **2025-10-19**: ✅ Implemented dark theme support (extract_dark_theme_tokens, merge_light_dark_tokens)
+- **2025-10-19**: ✅ Aligned categories with official DSFR taxonomy (Primary, Neutral, System, Illustrative)
