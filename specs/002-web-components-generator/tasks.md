@@ -242,44 +242,44 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### TypeScript Package Setup
 
-- [ ] T093 [P] [US3] Create `packages/dsfr-js-analyzer/` directory with src/, tests/, package.json
-- [ ] T094 [P] [US3] Configure `packages/dsfr-js-analyzer/package.json` with TypeScript, @typescript/compiler-api
-- [ ] T095 [P] [US3] Add `packages/dsfr-js-analyzer` to root `package.json` workspace
-- [ ] T096 [P] [US3] Configure tsconfig.json for TypeScript compilation
-- [ ] T097 [P] [US3] Configure Biome for linting/formatting in package.json
+- [x] T093 [P] [US3] Create `packages/dsfr-js-analyzer/` directory with src/, tests/, package.json
+- [x] T094 [P] [US3] Configure `packages/dsfr-js-analyzer/package.json` with TypeScript, @typescript/compiler-api
+- [x] T095 [P] [US3] Add `packages/dsfr-js-analyzer` to root `package.json` workspace
+- [x] T096 [P] [US3] Configure tsconfig.json for TypeScript compilation
+- [x] T097 [P] [US3] Configure Biome for linting/formatting in package.json
 
 ### JavaScript Analysis
 
-- [ ] T098 [US3] Implement `packages/dsfr-js-analyzer/src/parser.ts` using TypeScript Compiler API
-- [ ] T099 [US3] Add AST parsing for DSFR JavaScript files in parser.ts
-- [ ] T100 [US3] Implement `packages/dsfr-js-analyzer/src/analyzer.ts` for behavior extraction
-- [ ] T101 [US3] Add event listener detection (click, focus, blur, keydown) in analyzer.ts
-- [ ] T102 [US3] Add state variable identification in analyzer.ts
-- [ ] T103 [US3] Add DOM manipulation detection in analyzer.ts
-- [ ] T104 [US3] Add ARIA attribute change detection in analyzer.ts
-- [ ] T105 [US3] Implement `packages/dsfr-js-analyzer/src/types.ts` with BehaviorPattern interfaces
-- [ ] T106 [US3] Add JSON output formatting for behavior documentation in analyzer.ts
+- [x] T098 [US3] Implement `packages/dsfr-js-analyzer/src/parser.ts` using TypeScript Compiler API
+- [x] T099 [US3] Add AST parsing for DSFR JavaScript files in parser.ts
+- [x] T100 [US3] Implement `packages/dsfr-js-analyzer/src/analyzer.ts` for behavior extraction
+- [x] T101 [US3] Add event listener detection (click, focus, blur, keydown) in analyzer.ts
+- [x] T102 [US3] Add state variable identification in analyzer.ts
+- [x] T103 [US3] Add DOM manipulation detection in analyzer.ts
+- [x] T104 [US3] Add ARIA attribute change detection in analyzer.ts
+- [x] T105 [US3] Implement `packages/dsfr-js-analyzer/src/types.ts` with BehaviorPattern interfaces
+- [x] T106 [US3] Add JSON output formatting for behavior documentation in analyzer.ts
 
 ### CLI Integration
 
-- [ ] T107 [US3] Create CLI entry point in `packages/dsfr-js-analyzer/src/index.ts`
-- [ ] T108 [US3] Add command-line argument parsing (file path input) in index.ts
-- [ ] T109 [US3] Add JSON output to stdout in index.ts
+- [x] T107 [US3] Create CLI entry point in `packages/dsfr-js-analyzer/src/index.ts`
+- [x] T108 [US3] Add command-line argument parsing (file path input) in index.ts
+- [x] T109 [US3] Add JSON output to stdout in index.ts
 
 ### Python Integration
 
-- [ ] T110 [US3] Add TypeScript analyzer subprocess call in `libs/dsfr-generator/src/parsers/js_analyzer.py`
-- [ ] T111 [US3] Add fallback behavior (log warning if analyzer unavailable) in js_analyzer.py
-- [ ] T112 [US3] Add JSON parsing of analyzer output in js_analyzer.py
+- [x] T110 [US3] Add TypeScript analyzer subprocess call in `libs/dsfr-generator/src/parsers/js_analyzer.py`
+- [x] T111 [US3] Add fallback behavior (log warning if analyzer unavailable) in js_analyzer.py
+- [x] T112 [US3] Add JSON parsing of analyzer output in js_analyzer.py
 - [ ] T113 [US3] Integrate behavior patterns into web component generation pipeline
 
 ### Integration & Testing
 
-- [ ] T114 [US3] Test analyzer identifies all event listeners in DSFR Button JavaScript
+- [x] T114 [US3] Test analyzer identifies all event listeners in DSFR Button JavaScript
 - [ ] T115 [US3] Test analyzer documents state transitions correctly
-- [ ] T116 [US3] Test analyzer detects ARIA attribute changes
-- [ ] T117 [US3] Test Python-TypeScript integration via subprocess
-- [ ] T118 [US3] Test fallback behavior when TypeScript analyzer unavailable
+- [x] T116 [US3] Test analyzer detects ARIA attribute changes
+- [x] T117 [US3] Test Python-TypeScript integration via subprocess
+- [x] T118 [US3] Test fallback behavior when TypeScript analyzer unavailable
 
 **Behavioral Testing Framework** (FR-024):
 - [ ] T118.1 [P] Create behavioral testing framework in `libs/dsfr-generator/tests/behavioral/`

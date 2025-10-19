@@ -1,0 +1,35 @@
+{
+  "name": "@dsfr-kit/js-analyzer",
+  "version": "0.1.0",
+  "description": "TypeScript-based analyzer for DSFR JavaScript component behaviors",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "dsfr-analyze": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "lint": "biome check .",
+    "format": "biome format --write ."
+  },
+  "keywords": [
+    "dsfr",
+    "javascript",
+    "analyzer",
+    "ast",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.10.2",
+    "vitest": "^2.1.8"
+  }
+}
