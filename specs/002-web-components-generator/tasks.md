@@ -208,10 +208,12 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### CLI Init Command
 
-- [ ] T084 [US2] Implement `apps/dsfr-kit/src/commands/init.py` with `dsfr-kit init` command
-- [ ] T085 [US2] Add project initialization (create directories, generate Tailwind config) in init.py
-- [ ] T086 [US2] Add `dsfr-kit.config.json` generation with DSFR version in init.py
-- [ ] T087 [US2] Add framework option (--framework web-components) in init.py
+- [x] T084 [US2] Implement `apps/dsfr-kit/src/commands/init.py` with `dsfr init` command
+- [x] T085 [US2] Add project initialization (create directories, generate Tailwind config) in init.py
+- [x] T086 [US2] Add `dsfr-kit.config.json` generation with DSFR version in init.py
+- [x] T087 [US2] Add framework option (--framework web-components) in init.py
+
+**Note**: CLI command is `dsfr` (not `dsfr-kit`) - the gateway for government developers to use DSFR!
 
 ### Integration & Testing
 
