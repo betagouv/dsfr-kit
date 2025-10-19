@@ -101,7 +101,7 @@ As a component library developer, I need generated web components to be automati
 
 #### Core Generator Infrastructure
 
-- **FR-001**: System MUST fetch official DSFR assets from the GouvernementFR/dsfr GitHub repository at a specific pinned version (e.g., v1.12.0), including HTML templates, CSS files, and JavaScript files for specified components
+- **FR-001**: System MUST fetch official DSFR assets from the GouvernementFR/dsfr GitHub repository at a specific pinned version (e.g., v1.14.2), including HTML templates, CSS files, and JavaScript files for specified components
 - **FR-002**: System MUST parse DSFR HTML templates to extract component structure, class names, ARIA attributes, and semantic markup patterns
 - **FR-003**: System MUST parse DSFR CSS files to extract design token definitions including colors, spacing, typography, shadows, borders, and breakpoints
 - **FR-004**: System MUST analyze DSFR JavaScript files to identify component behaviors including event handlers, state management, DOM manipulations, and accessibility features
@@ -139,6 +139,14 @@ As a component library developer, I need generated web components to be automati
 - **FR-024**: System MUST test generated components for behavioral fidelity by comparing interaction patterns against DSFR reference implementations
 - **FR-025**: System MUST block component generation output if accessibility tests fail, providing detailed violation reports
 
+#### Icon & Asset Management
+
+- **FR-026**: System MUST detect icon classes (fr-icon-*, fr-fi-*) from parsed HTML and extract icon metadata including name, category, and position modifiers (--icon-left, --icon-right)
+- **FR-027**: System MUST copy icon SVG files from DSFR package to output directory when --icons copy option is specified, maintaining directory structure and deduplicating identical icons
+- **FR-028**: System MUST generate or copy icon CSS files with mask-image references to SVG files, ensuring icons render correctly with color customization support
+- **FR-029**: System MUST copy font files (WOFF2/WOFF) from DSFR package to output directory when --fonts copy option is specified, including Marianne and Spectral font families with all weights and styles
+- **FR-030**: System MUST generate @font-face declarations for copied fonts with correct file paths, format specifications, and font-display properties for optimal loading performance
+
 ### Key Entities
 
 - **DSFR Asset**: Official design system files from GouvernementFR/dsfr repository including HTML templates, CSS stylesheets, JavaScript files, and documentation. Each asset has a version number, file path, and content type.
@@ -159,12 +167,15 @@ As a component library developer, I need generated web components to be automati
 
 ### Measurable Outcomes
 
-- **SC-001**: Developer can run the generator against DSFR Button assets and receive a functional web component file in under 30 seconds
+- **SC-001**: Developer can run the generator against DSFR Button assets and receive a functional web component file in under 5 seconds on first run (with download) and under 1 second on subsequent runs (cached)
 - **SC-002**: Generated Button web component passes 100% of applicable RGAA 4 accessibility criteria when tested with automated tools (axe-core)
-- **SC-003**: Generated Button web component renders all DSFR variants (primary, secondary, tertiary) with visual output matching DSFR reference implementation within 95% similarity
+- **SC-003**: Generated Button web component renders all DSFR variants (primary, secondary, tertiary) with visual output matching DSFR reference implementation within 95% similarity as measured by visual regression testing tools (Percy, Chromatic, or equivalent)
 - **SC-004**: Tailwind configuration generated from DSFR tokens includes all DSFR color palette entries (minimum 50+ color values) with correct hex values
 - **SC-005**: Generated web component demonstrates all required keyboard navigation patterns (tab, enter, space) matching DSFR specifications
 - **SC-006**: Storybook documentation for generated Button component displays all variants and states with interactive controls functional on first load
 - **SC-007**: Developer can customize generated Button component by editing source code and see changes reflected without breaking DSFR compliance
 - **SC-008**: Generator produces clear, actionable error messages when DSFR assets are missing or invalid, allowing developer to resolve issues in under 5 minutes
+- **SC-009**: Generated component with icons includes all referenced SVG files in output directory with correct relative paths and renders icons correctly in browser
+- **SC-010**: Component generated with --icons copy option works correctly in offline mode without external network requests for icon assets
+- **SC-011**: Font files copied with --fonts copy option include correct @font-face declarations and render text with proper Marianne/Spectral typography
 

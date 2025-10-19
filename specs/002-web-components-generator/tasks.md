@@ -174,9 +174,11 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 **Independent Test**: Run token extraction against DSFR CSS assets and verify generated Tailwind config contains all DSFR color palette (50+ colors), spacing scale, typography definitions, and shadows matching official DSFR documentation.
 
+**Note**: Phase 3 implements basic token extraction for Button component using compiled CSS. Phase 4 extends this to comprehensive token extraction across all DSFR components and global tokens, supporting both CSS (primary) and SCSS (optional) sources.
+
 ### Token Extraction Enhancement
 
-- [ ] T065 [P] [US2] Enhance `libs/dsfr-generator/src/parsers/scss_parser.py` to extract all DSFR tokens (not just Button)
+- [ ] T065 [P] [US2] Enhance `libs/dsfr-generator/src/parsers/css_parser.py` to extract all DSFR tokens from global CSS files (not just component-specific)
 - [ ] T066 [P] [US2] Add comprehensive color extraction (blue-france, red-marianne, grey scale, etc.) in scss_parser.py
 - [ ] T067 [P] [US2] Add spacing scale extraction (margins, paddings, gaps) in scss_parser.py
 - [ ] T068 [P] [US2] Add typography extraction (font families, sizes, weights, line heights) in scss_parser.py

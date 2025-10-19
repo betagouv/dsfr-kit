@@ -34,11 +34,14 @@ The initial target is the DSFR Button component to validate the architecture bef
 
 **Production-Ready Asset Strategy**: Use compiled DSFR package assets (no build required)
 - **example/component/{component}/index.html** - Complete HTML examples with all variants, states, and accessibility
-- **dist/component/{component}/{component}.css** - Compiled CSS with CSS custom properties (design tokens)
+- **dist/component/{component}/{component}.css** - Compiled CSS with CSS custom properties (design tokens) - PRIMARY
 - **dist/component/{component}/{component}.module.js** - Compiled JavaScript with component behavior
-- **dist/fonts/, dist/icons/** - Pre-built assets (fonts, icons)
+- **dist/icons/{category}/{icon-name}.svg** - Icon assets (~1000+ SVG icons in 18 categories)
+- **dist/fonts/{font-name}.woff2** - Font assets (Marianne + Spectral, ~1.5MB total)
+- **dist/artwork/pictograms/** - Decorative illustrations (100+ pictograms)
+- **src/dsfr/component/{component}/main.scss** - SCSS source (OPTIONAL - for advanced token extraction only)
 
-**Key Insight**: DSFR dist/ contains production-ready CSS with CSS variables that can be directly extracted and mapped to Tailwind, eliminating the need for SCSS compilation
+**Key Insight**: DSFR dist/ contains production-ready CSS with CSS variables that can be directly extracted and mapped to Tailwind, eliminating the need for SCSS compilation. SCSS parser remains available for advanced use cases but CSS parsing is the primary approach.
 
 ## Constitution Check
 
