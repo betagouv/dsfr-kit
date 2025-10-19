@@ -98,12 +98,12 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### CSS/SCSS Parsing
 
-- [ ] T029 [P] [US1] Implement `libs/dsfr-generator/src/parsers/scss_parser.py` with libsass compilation
-- [ ] T030 [P] [US1] Add SCSS → CSS compilation in scss_parser.py
-- [ ] T031 [P] [US1] Implement `libs/dsfr-generator/src/parsers/css_parser.py` using tinycss2
-- [ ] T032 [P] [US1] Add CSS custom property extraction in css_parser.py
-- [ ] T033 [P] [US1] Add SCSS variable extraction in scss_parser.py
-- [ ] T034 [P] [US1] Create DesignTokens dataclass in `libs/dsfr-generator/src/parsers/types.py`
+- [x] T029 [P] [US1] Implement `libs/dsfr-generator/src/parsers/scss_parser.py` with libsass compilation
+- [x] T030 [P] [US1] Add SCSS → CSS compilation in scss_parser.py
+- [x] T031 [P] [US1] Implement `libs/dsfr-generator/src/parsers/css_parser.py` using tinycss2
+- [x] T032 [P] [US1] Add CSS custom property extraction in css_parser.py
+- [x] T033 [P] [US1] Add SCSS variable extraction in scss_parser.py
+- [x] T034 [P] [US1] Create DesignTokens dataclass in `libs/dsfr-generator/src/parsers/types.py`
 
 ### Token Mapping (Basic - for Button only)
 
