@@ -117,15 +117,15 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### Web Component Generation
 
-- [ ] T040 [US1] Implement `libs/dsfr-generator/src/generator/__init__.py` with module exports
-- [ ] T041 [US1] Create `libs/dsfr-generator/src/generator/templates/web_component.j2` Jinja2 template
-- [ ] T042 [US1] Add custom element class definition to web_component.j2 template
-- [ ] T043 [US1] Add lifecycle methods (connectedCallback, disconnectedCallback) to web_component.j2
-- [ ] T044 [US1] Add ARIA attribute preservation to web_component.j2 template
-- [ ] T045 [US1] Add variant prop handling (primary, secondary, tertiary) to web_component.j2
-- [ ] T046 [US1] Implement `libs/dsfr-generator/src/generator/web_component.py` using Jinja2
-- [ ] T047 [US1] Add template rendering with ComponentStructure data in web_component.py
-- [ ] T048 [US1] Add Tailwind class injection (replace DSFR classes) in web_component.py
+- [x] T040 [US1] Implement `libs/dsfr-generator/src/generator/__init__.py` with module exports
+- [x] T041 [US1] Create `libs/dsfr-generator/src/generator/templates/web_component.j2` Jinja2 template
+- [x] T042 [US1] Add custom element class definition to web_component.j2 template
+- [x] T043 [US1] Add lifecycle methods (connectedCallback, disconnectedCallback) to web_component.j2
+- [x] T044 [US1] Add ARIA attribute preservation to web_component.j2 template
+- [x] T045 [US1] Add variant prop handling (primary, secondary, tertiary) to web_component.j2
+- [x] T046 [US1] Implement `libs/dsfr-generator/src/generator/web_component.py` using Jinja2
+- [x] T047 [US1] Add template rendering with ComponentStructure data in web_component.py
+- [x] T048 [US1] Add Tailwind class injection (replace DSFR classes) in web_component.py
 
 ### Accessibility Validation
 

@@ -1,0 +1,86 @@
+/**
+ * {{ component_name | title }} Web Component
+ * Generated from DSFR {{ dsfr_version }}
+ * 
+ * Usage: <{{ custom_element_name }}>{{ slot_content }}</{{ custom_element_name }}>
+ */
+
+class {{ class_name }} extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
+
+  static get observedAttributes() {
+    return [{% if variants %}'variant', {% endif %}{% for attr in aria_attributes %}'{{ attr }}'{% if not loop.last %}, {% endif %}{% endfor %}];
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  disconnectedCallback() {
+    // Cleanup if needed
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue !== newValue) {
+      this.render();
+    }
+  }
+
+  render() {
+    const variant = this.getAttribute('variant') || '{{ default_variant }}';
+    {% if aria_attributes %}
+    const ariaLabel = this.getAttribute('aria-label') || '{{ aria_attributes.get("aria-label", "") }}';
+    const role = this.getAttribute('role') || '{{ aria_attributes.get("role", "") }}';
+    {% endif %}
+
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          display: inline-block;
+        }
+
+        {{ tag }} {
+          /* Tailwind utility classes */
+          {% for tailwind_class in tailwind_classes %}
+          /* {{ tailwind_class }} */
+          {% endfor %}
+        }
+
+        /* Variant styles */
+        {% for variant_name in variants %}
+        :host([variant="{{ variant_name }}"]) {{ tag }} {
+          /* {{ variant_name }} variant styles */
+        }
+        {% endfor %}
+
+        /* DSFR color tokens */
+        {% for color in colors %}
+        .{{ color.tailwind_class }} {
+          color: {{ color.value }};
+        }
+        {% endfor %}
+      </style>
+
+      <{{ tag }}
+        {% if attributes %}
+        {% for attr_name, attr_value in attributes.items() %}
+        {{ attr_name }}="{{ attr_value }}"
+        {% endfor %}
+        {% endif %}
+        {% if aria_attributes %}
+        {% for aria_name, aria_value in aria_attributes.items() %}
+        {{ aria_name }}="{{ aria_value }}"
+        {% endfor %}
+        {% endif %}
+        class="{{ tailwind_classes | join(' ') }}"
+      >
+        <slot>{{ default_text }}</slot>
+      </{{ tag }}>
+    `;
+  }
+}
+
+customElements.define('{{ custom_element_name }}', {{ class_name }});
