@@ -3,6 +3,8 @@
 import click
 from dsfr_generator.config import DSFR_VERSION
 
+from .commands import generate
+
 
 @click.group()
 @click.version_option(version="0.1.0", prog_name="dsfr-kit")
@@ -26,6 +28,10 @@ def version(ctx: click.Context) -> None:
     """Show DSFR version and tool version."""
     click.echo("dsfr-kit version: 0.1.0")
     click.echo(f"Target DSFR version: {ctx.obj['dsfr_version']}")
+
+
+# Register commands
+cli.add_command(generate)
 
 
 if __name__ == "__main__":

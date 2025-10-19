@@ -141,11 +141,11 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### CLI Generate Command
 
-- [ ] T055 [US1] Implement `apps/dsfr-kit/src/commands/generate.py` with `dsfr-kit generate` command
-- [ ] T056 [US1] Add component name argument and output directory option in generate.py
-- [ ] T057 [US1] Wire up fetcher → parsers → token_mapper → generator → validator pipeline in generate.py
-- [ ] T058 [US1] Add progress indicators and error messages in generate.py
-- [ ] T059 [US1] Add output file writing (dsfr-button.js, tailwind.config.js) in generate.py
+- [x] T055 [US1] Implement `apps/dsfr-kit/src/commands/generate.py` with `dsfr-kit generate` command
+- [x] T056 [US1] Add component name argument and output directory option in generate.py
+- [x] T057 [US1] Wire up fetcher → parsers → token_mapper → generator → validator pipeline in generate.py
+- [x] T058 [US1] Add progress indicators and error messages in generate.py
+- [x] T059 [US1] Add output file writing (dsfr-button.js, tailwind.config.js) in generate.py
 
 ### Integration & Testing
 
