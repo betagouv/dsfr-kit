@@ -109,11 +109,11 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 **Note**: This phase implements minimal token mapping for Button component (MVP). Full token extraction (FR-006 to FR-010) is implemented in Phase 4 (US2). This intentional scoping allows us to validate the generator architecture with Button before scaling to all DSFR tokens.
 
-- [ ] T035 [US1] Implement `libs/dsfr-generator/src/token_mapper/__init__.py` with module exports
-- [ ] T036 [US1] Implement `libs/dsfr-generator/src/token_mapper/colors.py` to map DSFR colors to Tailwind
-- [ ] T037 [US1] Add Button-specific color mappings (primary, secondary, tertiary) in colors.py
-- [ ] T038 [US1] Implement `libs/dsfr-generator/src/token_mapper/tailwind_config.py` to generate tailwind.config.js
-- [ ] T039 [US1] Add Tailwind config template with DSFR color extensions in tailwind_config.py
+- [x] T035 [US1] Implement `libs/dsfr-generator/src/token_mapper/__init__.py` with module exports
+- [x] T036 [US1] Implement `libs/dsfr-generator/src/token_mapper/colors.py` to map DSFR colors to Tailwind
+- [x] T037 [US1] Add Button-specific color mappings (primary, secondary, tertiary) in colors.py
+- [x] T038 [US1] Implement `libs/dsfr-generator/src/token_mapper/tailwind_config.py` to generate tailwind.config.js
+- [x] T039 [US1] Add Tailwind config template with DSFR color extensions in tailwind_config.py
 
 ### Web Component Generation
 
