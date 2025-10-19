@@ -11,6 +11,7 @@ members = ["apps/*", "libs/*"]
 dev-dependencies = [
     "dsfr-kit-cli",
     "dsfr-generator",
+    "pytest>=8.0.0",
 ]
 
 [tool.uv.sources]
