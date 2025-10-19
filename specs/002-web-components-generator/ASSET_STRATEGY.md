@@ -102,6 +102,94 @@ dsfr-1.14.2/package/
 - ✅ Production-ready code
 - ✅ Can be analyzed for event handlers and lifecycle
 
+### 4. Icon Assets
+**Use**: `dist/icons/{category}/{icon-name}.svg` + `dist/utility/icons/icons-{category}/icons-{category}.css`
+
+**Structure**:
+```
+dist/icons/
+├── system/          # System icons (add, check, close, download, etc.)
+├── arrows/          # Directional icons
+├── business/        # Business-related icons
+├── communication/   # Communication icons
+├── design/          # Design tools icons
+├── development/     # Development icons
+├── device/          # Device icons
+├── document/        # Document icons
+├── editor/          # Editor icons
+├── finance/         # Finance icons
+├── health/          # Health icons
+├── logo/            # Logo icons
+├── map/             # Map icons
+├── media/           # Media icons
+├── others/          # Other icons
+├── user/            # User icons
+└── weather/         # Weather icons
+```
+
+**Icon Implementation**:
+- Icons are SVG files (24x24px)
+- CSS classes use mask-image technique: `.fr-icon-{name}::before`
+- Example: `fr-icon-checkbox-circle-line` → `icons/system/checkbox-circle-line.svg`
+- Icons are applied via CSS classes on buttons: `<button class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">`
+
+**Icon CSS Location**:
+- `dist/utility/icons/icons-system/icons-system.css` (and similar for other categories)
+- Each category has its own CSS file with mask-image declarations
+
+**Why This Matters**:
+- ✅ Icons are production-ready SVG assets
+- ✅ CSS mask technique allows color customization via CSS
+- ✅ No need to inline SVGs in components
+- ✅ Can reference icon files directly from dist/
+
+### 5. Font Assets
+**Use**: `dist/fonts/{font-name}.woff2` and `.woff`
+
+**Available Fonts**:
+- **Marianne** (primary font):
+  - Regular, Bold, Light, Medium
+  - Each with Italic variants
+  - WOFF and WOFF2 formats
+- **Spectral** (display font):
+  - Regular, ExtraBold
+  - WOFF and WOFF2 formats
+
+**Why**:
+- ✅ Production-optimized font files
+- ✅ Modern WOFF2 format + WOFF fallback
+- ✅ Official French government typography
+- ✅ Can be copied or referenced directly
+
+### 6. Artwork & Pictograms
+**Use**: `dist/artwork/pictograms/{category}/` and `dist/artwork/{system|light|dark}.svg`
+
+**Structure**:
+```
+dist/artwork/
+├── pictograms/
+│   ├── accessibility/
+│   ├── buildings/
+│   ├── digital/
+│   ├── document/
+│   ├── environment/
+│   ├── health/
+│   ├── institutions/
+│   ├── leisure/
+│   ├── map/
+│   └── system/
+├── background/
+├── dark.svg         # Dark theme Marianne logo
+├── light.svg        # Light theme Marianne logo
+└── system.svg       # System logo
+```
+
+**Why**:
+- ✅ Official French government artwork
+- ✅ Decorative illustrations for components
+- ✅ Brand-compliant logos
+- ✅ SVG format for scalability
+
 ## Pipeline Comparison
 
 ### OLD Pipeline (SCSS-based)
@@ -138,6 +226,59 @@ dsfr-1.14.2/package/
 - Faster execution (<10s vs <30s)
 - Uses production-tested assets
 - More reliable
+
+## Asset Handling Strategy
+
+### Icon Integration
+
+**Current Approach (CSS Classes)**:
+- DSFR uses CSS mask-image technique
+- Icons applied via utility classes: `fr-icon-{name}`
+- Position modifiers: `fr-btn--icon-left`, `fr-btn--icon-right`
+- Example: `<button class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Label</button>`
+
+**Generator Strategy**:
+1. **Parse icon classes** from HTML examples
+2. **Extract icon references** from CSS (mask-image URLs)
+3. **Copy icon SVG files** to output directory or reference from CDN
+4. **Include icon CSS** in generated component or Tailwind config
+5. **Document icon usage** in component props/attributes
+
+**Options for Icon Delivery**:
+- **Option A**: Copy SVG files to output (self-contained)
+- **Option B**: Reference DSFR CDN (smaller bundle, requires network)
+- **Option C**: Inline SVGs in component (no external dependencies)
+- **Recommended**: Option A for MVP (self-contained, works offline)
+
+### Font Integration
+
+**Current Approach**:
+- Fonts loaded via @font-face in CSS
+- Marianne (sans-serif) for UI
+- Spectral (serif) for display/headings
+
+**Generator Strategy**:
+1. **Copy font files** to output directory
+2. **Generate @font-face** declarations in CSS/Tailwind
+3. **Reference fonts** in component styles
+4. **Provide font loading** optimization options
+
+**Font Delivery Options**:
+- **Option A**: Copy WOFF2/WOFF files (self-contained, ~1.5MB total)
+- **Option B**: Reference DSFR CDN (smaller bundle)
+- **Recommended**: Option B for MVP (reduce bundle size)
+
+### Artwork Integration
+
+**Usage**:
+- Pictograms for decorative illustrations
+- Logos for branding
+- Background patterns
+
+**Generator Strategy**:
+- **Not required for MVP** (Button component doesn't use artwork)
+- **Future**: Add artwork copying for components that need it
+- **Document** artwork availability for manual integration
 
 ## Implementation Updates Required
 
@@ -262,8 +403,54 @@ css_path = package_path / "dist" / "component" / component_slug / f"{component_s
 - Need to test all button variants (primary, secondary, tertiary)
 - Need to verify Tailwind config is correct
 
+**Icon & Asset Handling:**
+- Icons currently referenced via CSS classes (works as-is)
+- Need to decide on icon delivery strategy (copy vs CDN vs inline)
+- Fonts can reference DSFR CDN for MVP
+- Artwork not needed for Button component
+
+## Asset Summary
+
+### Available Production Assets
+
+| Asset Type | Location | Format | Count | Size | Status |
+|------------|----------|--------|-------|------|--------|
+| **HTML Examples** | `example/component/{component}/` | HTML | 1 per component | ~74KB | ✅ Using |
+| **Compiled CSS** | `dist/component/{component}/` | CSS | Multiple variants | ~50-130KB | ✅ Using |
+| **JavaScript** | `dist/component/{component}/` | JS (ES6/Legacy) | 2 formats | ~1.7-3.7KB | ✅ Using |
+| **Icons** | `dist/icons/{category}/` | SVG | ~1000+ icons | 24x24px | ⏭️ Next |
+| **Icon CSS** | `dist/utility/icons/` | CSS | 18 categories | Varies | ⏭️ Next |
+| **Fonts** | `dist/fonts/` | WOFF/WOFF2 | 20 files | ~1.5MB total | ⏭️ Next |
+| **Artwork** | `dist/artwork/` | SVG | 100+ pictograms | Varies | 🔮 Future |
+
+### Asset Integration Priority
+
+**MVP (Current)**:
+1. ✅ HTML structure parsing
+2. ✅ CSS token extraction
+3. ✅ JavaScript behavior (basic)
+4. ⏭️ Icon class detection (CSS classes work as-is)
+
+**Phase 2 (Icon Support)**:
+1. Parse icon classes from HTML
+2. Extract icon SVG references from CSS
+3. Implement icon delivery strategy
+4. Document icon usage in components
+
+**Phase 3 (Font Support)**:
+1. Generate @font-face declarations
+2. Implement font delivery strategy
+3. Optimize font loading
+
+**Phase 4 (Full Asset Support)**:
+1. Artwork/pictogram integration
+2. Background pattern support
+3. Logo variants
+
 ## References
 
 - DSFR Package: v1.14.2
+- DSFR Documentation: https://www.systeme-de-design.gouv.fr/
 - CSS Custom Properties: [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/--*)
+- CSS Mask-Image: [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/mask-image)
 - tinycss2: [Documentation](https://doc.courtbouillon.org/tinycss2/)
