@@ -1,5 +1,7 @@
 """Generate command for creating DSFR web components."""
 
+import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -7,13 +9,25 @@ import click
 from dsfr_generator.fetcher import fetch_dsfr_package, get_cached_package
 from dsfr_generator.generator import generate_web_component
 from dsfr_generator.parsers import (
-    compile_scss,
+    ComponentStructure,
     extract_html_structure,
     extract_scss_variables,
     parse_html,
 )
 from dsfr_generator.token_mapper import generate_tailwind_config, map_dsfr_colors
 from dsfr_generator.validator import validate_rgaa_compliance, validate_wcag_compliance
+
+
+@dataclass
+class GenerationContext:
+    """Context for component generation pipeline."""
+
+    component_name: str
+    component_slug: str
+    dsfr_version: str
+    package_path: Path
+    output_dir: Path
+    verbose: bool
 
 
 @click.command()
@@ -46,45 +60,31 @@ def generate(ctx: click.Context, component_name: str, output: Path) -> None:
 
     try:
         # Step 1: Fetch DSFR package
-        _log_progress("Fetching DSFR package", f"version {dsfr_version}", verbose)
-        package_path = get_cached_package(dsfr_version)
-        if not package_path or not package_path.exists():
-            click.echo(f"  Downloading DSFR {dsfr_version}...")
-            fetch_dsfr_package(dsfr_version)
-            package_path = get_cached_package(dsfr_version)
+        _fetch_package_ctx = GenerationContext(
+            component_name=component_name_normalized,
+            component_slug=component_slug,
+            dsfr_version=dsfr_version,
+            package_path=get_cached_package(dsfr_version) or Path(),
+            output_dir=output,
+            verbose=verbose,
+        )
+        _fetch_package(_fetch_package_ctx)
+
+        # Update package path after fetch
+        generation_ctx = GenerationContext(
+            component_name=component_name_normalized,
+            component_slug=component_slug,
+            dsfr_version=dsfr_version,
+            package_path=get_cached_package(dsfr_version) or Path(),
+            output_dir=output,
+            verbose=verbose,
+        )
 
         # Step 2: Parse HTML structure
-        _log_progress("Parsing HTML structure", component_name_normalized, verbose)
-        html_path = package_path / "example" / f"{component_slug}.html"
-        if not html_path.exists():
-            # Try with different naming conventions
-            html_path = package_path / "example" / f"{component_slug}s.html"
-            if not html_path.exists():
-                raise FileNotFoundError(
-                    f"Component HTML not found: {component_slug}.html or {component_slug}s.html"
-                )
+        component_structure = _parse_component_html(generation_ctx)
 
-        with open(html_path, encoding="utf-8") as f:
-            html_content = f.read()
-
-        parsed_html = parse_html(html_content)
-        component_structure = extract_html_structure(parsed_html, f"fr-{component_slug}")
-
-        # Step 3: Compile SCSS and extract tokens
-        _log_progress("Compiling SCSS", "extracting design tokens", verbose)
-        scss_path = package_path / "src" / "component" / component_slug / f"{component_slug}.scss"
-        if not scss_path.exists():
-            # Try main scss file
-            scss_path = package_path / "src" / "component" / component_slug / "main.scss"
-            if not scss_path.exists():
-                raise FileNotFoundError(f"Component SCSS not found: {component_slug}.scss")
-
-        with open(scss_path, encoding="utf-8") as f:
-            scss_content = f.read()
-
-        # Compile SCSS to validate syntax (CSS output not used in current implementation)
-        _ = compile_scss(scss_content, str(package_path / "src"))
-        scss_tokens = extract_scss_variables(scss_content)
+        # Step 3: Extract design tokens
+        scss_tokens = _extract_design_tokens(generation_ctx)
 
         # Step 4: Map design tokens to Tailwind
         _log_progress("Mapping design tokens", "to Tailwind configuration", verbose)
@@ -92,43 +92,17 @@ def generate(ctx: click.Context, component_name: str, output: Path) -> None:
         tailwind_config = generate_tailwind_config(tailwind_colors, {}, {})
 
         # Step 5: Generate web component
-        _log_progress("Generating web component", component_name_normalized, verbose)
-        component_code = generate_web_component(
-            component_name=component_name_normalized,
-            structure=component_structure,
-            tokens=scss_tokens,
-            tailwind_config=tailwind_config,
+        component_code = _generate_component_code(
+            generation_ctx, component_structure, tailwind_colors
         )
 
         # Step 6: Validate accessibility
-        _log_progress("Validating accessibility", "WCAG 2.1 AA + RGAA 4", verbose)
-
-        # WCAG validation
-        wcag_result = validate_wcag_compliance(component_code)
-        if not wcag_result.get("passed", False):
-            _report_validation_errors("WCAG", wcag_result.get("violations", []))
-            raise click.ClickException("Accessibility validation failed (WCAG 2.1 AA)")
-
-        # RGAA validation
-        rgaa_result = validate_rgaa_compliance(component_code)
-        if not rgaa_result.get("passed", False):
-            _report_validation_errors("RGAA", rgaa_result.get("violations", []))
-            raise click.ClickException("RGAA validation failed (RGAA 4)")
+        _validate_accessibility(generation_ctx, component_code)
 
         # Step 7: Write output files
-        _log_progress("Writing output files", str(output), verbose)
-        output.mkdir(parents=True, exist_ok=True)
-
-        # Write web component
-        component_file = output / f"dsfr-{component_slug}.js"
-        with open(component_file, "w", encoding="utf-8") as f:
-            f.write(component_code)
-
-        # Write Tailwind config
-        tailwind_file = output / "tailwind.config.js"
-        tailwind_content = _format_tailwind_config(tailwind_config)
-        with open(tailwind_file, "w", encoding="utf-8") as f:
-            f.write(tailwind_content)
+        component_file, tailwind_file = _write_output_files(
+            generation_ctx, component_code, tailwind_config
+        )
 
         # Success message
         click.echo()
@@ -181,10 +155,117 @@ def _report_validation_errors(validator_name: str, violations: list[dict[str, An
         click.echo(f"  ... and {len(violations) - 5} more violations")
 
 
+def _fetch_package(ctx: GenerationContext) -> None:
+    """Fetch or retrieve cached DSFR package."""
+    _log_progress("Fetching DSFR package", f"version {ctx.dsfr_version}", ctx.verbose)
+    package_path = get_cached_package(ctx.dsfr_version)
+    if not package_path or not package_path.exists():
+        click.echo(f"  Downloading DSFR {ctx.dsfr_version}...")
+        fetch_dsfr_package(ctx.dsfr_version)
+
+
+def _parse_component_html(ctx: GenerationContext) -> ComponentStructure:
+    """Parse HTML structure from DSFR package."""
+    _log_progress("Parsing HTML structure", ctx.component_name, ctx.verbose)
+
+    html_path = (ctx.package_path / "example" / "component" / ctx.component_slug / "index.html")
+    if not html_path.exists():
+        raise FileNotFoundError(
+            f"Component HTML not found at: example/component/{ctx.component_slug}/index.html"
+        )
+
+    with open(html_path, encoding="utf-8") as f:
+        html_content = f.read()
+
+    parsed_html = parse_html(html_content)
+    html_structure_dict = extract_html_structure(parsed_html)
+
+    # Convert dict to ComponentStructure
+    return ComponentStructure(
+        tag=html_structure_dict.get("tag", "div"),
+        classes=html_structure_dict.get("classes", []),
+        attributes=html_structure_dict.get("attributes", {}),
+        aria_attributes={},
+    )
+
+
+def _extract_design_tokens(ctx: GenerationContext) -> dict[str, str]:
+    """Extract SCSS design tokens from DSFR package."""
+    _log_progress("Extracting design tokens", "from SCSS", ctx.verbose)
+
+    scss_path = (ctx.package_path / "src" / "dsfr" / "component" / ctx.component_slug / "main.scss")
+    if not scss_path.exists():
+        raise FileNotFoundError(
+            f"Component SCSS not found at: src/dsfr/component/{ctx.component_slug}/main.scss"
+        )
+
+    with open(scss_path, encoding="utf-8") as f:
+        scss_content = f.read()
+
+    return extract_scss_variables(scss_content)
+
+
+def _generate_component_code(
+    ctx: GenerationContext,
+    component_structure: ComponentStructure,
+    tailwind_colors: dict[str, dict[str, str]],
+) -> str:
+    """Generate web component code."""
+    _log_progress("Generating web component", ctx.component_name, ctx.verbose)
+
+    # Convert tailwind colors to list format expected by generator
+    color_list = [{"name": k, **v} for k, v in tailwind_colors.items()] if tailwind_colors else []
+
+    return generate_web_component(
+        component=component_structure,
+        component_name=ctx.component_slug,
+        colors=color_list,
+        dsfr_version=ctx.dsfr_version,
+    )
+
+
+def _validate_accessibility(ctx: GenerationContext, component_code: str) -> None:
+    """Validate component accessibility (WCAG + RGAA)."""
+    _log_progress("Validating accessibility", "WCAG 2.1 AA + RGAA 4", ctx.verbose)
+
+    # WCAG validation
+    wcag_result = validate_wcag_compliance(component_code)
+    if not wcag_result.get("passed", False):
+        _report_validation_errors("WCAG", wcag_result.get("violations", []))
+        raise click.ClickException("Accessibility validation failed (WCAG 2.1 AA)")
+
+    # RGAA validation
+    rgaa_result = validate_rgaa_compliance(component_code)
+    if not rgaa_result.get("passed", False):
+        _report_validation_errors("RGAA", rgaa_result.get("violations", []))
+        raise click.ClickException("RGAA validation failed (RGAA 4)")
+
+
+def _write_output_files(
+    ctx: GenerationContext,
+    component_code: str,
+    tailwind_config: dict[str, Any],
+) -> tuple[Path, Path]:
+    """Write generated files to output directory."""
+    _log_progress("Writing output files", str(ctx.output_dir), ctx.verbose)
+    ctx.output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Write web component
+    component_file = ctx.output_dir / f"dsfr-{ctx.component_slug}.js"
+    with open(component_file, "w", encoding="utf-8") as f:
+        f.write(component_code)
+
+    # Write Tailwind config
+    tailwind_file = ctx.output_dir / "tailwind.config.js"
+    tailwind_content = _format_tailwind_config(tailwind_config)
+    with open(tailwind_file, "w", encoding="utf-8") as f:
+        f.write(tailwind_content)
+
+    return component_file, tailwind_file
+
+
 def _format_tailwind_config(config: dict[str, Any]) -> str:
     """Format Tailwind config as JavaScript module."""
-    import json
-
     config_json = json.dumps(config, indent=2)
     return f"""/** @type {{import('tailwindcss').Config}} */
 module.exports = {config_json};
