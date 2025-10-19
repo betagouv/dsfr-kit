@@ -17,6 +17,7 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 ```
 
 **User Story Dependencies**:
+
 - US1 (P1): No dependencies - can start after foundational phase
 - US2 (P2): Independent of US1 - can run in parallel
 - US3 (P3): Independent - TypeScript analyzer is optional
@@ -25,12 +26,14 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 ## Implementation Strategy
 
 **Incremental Delivery**:
+
 1. **MVP** (Phase 1-3): Setup + Foundational + US1 → Working Button generator
 2. **V2** (Phase 4): Add US2 → Automated token extraction
 3. **V3** (Phase 5): Add US3 → JS behavior analysis
 4. **V4** (Phase 6): Add US4 → Storybook automation
 
 **Parallel Opportunities**:
+
 - US1 and US2 can be developed in parallel (different modules)
 - US3 (TypeScript) can be developed independently
 - Tests can be written in parallel with implementation
@@ -130,7 +133,7 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 ### Accessibility Validation
 
 - [x] T049 [US1] Implement `libs/dsfr-generator/src/validator/__init__.py` with module exports
-- [ ] T050 [US1] Implement `libs/dsfr-generator/src/validator/accessibility.py` with axe-core integration via subprocess (use Node.js axe-core CLI: `npx @axe-core/cli`)
+- [x] T050 [US1] Implement `libs/dsfr-generator/src/validator/accessibility.py` with axe-core integration via subprocess (use Node.js axe-core CLI: `pnpm dlx @axe-core/cli`)
 - [x] T051 [US1] Add WCAG 2.1 AA compliance checks in accessibility.py
 - [x] T052 [US1] Implement `libs/dsfr-generator/src/validator/rgaa.py` for RGAA 4 validation
 - [x] T053 [US1] Add validation blocking (fail on critical violations) in validator modules
@@ -333,6 +336,7 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 ## Task Summary
 
 **Total Tasks**: 156
+
 - **Phase 1 (Setup)**: 10 tasks
 - **Phase 2 (Foundational)**: 12 tasks
 - **Phase 3 (US1 - Button)**: 42 tasks

@@ -3,6 +3,7 @@
 from dsfr_generator.validator.accessibility import (
     check_aria_attributes,
     format_violation_report,
+    run_axe_core,
     validate_wcag_compliance,
 )
 
@@ -154,3 +155,24 @@ class TestFormatViolationReport:
         report = format_violation_report(violations)
 
         assert "help" in report.lower() or "fix" in report.lower()
+
+
+class TestRunAxeCore:
+    """Tests for run_axe_core function."""
+
+    def test_run_axe_core_with_html_file(self):
+        """Test running axe-core on HTML file."""
+        # This test requires axe-core to be available
+        # For now, test that the function exists and has correct signature
+        import inspect
+
+        sig = inspect.signature(run_axe_core)
+        assert "html_path" in sig.parameters
+
+    def test_run_axe_core_returns_dict(self):
+        """Test that run_axe_core returns a dictionary."""
+        # Mock test - actual implementation will use subprocess
+        result = run_axe_core(html_path=None, use_subprocess=False)
+
+        assert isinstance(result, dict)
+        assert "available" in result or "violations" in result

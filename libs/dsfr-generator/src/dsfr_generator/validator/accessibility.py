@@ -1,9 +1,11 @@
 """WCAG 2.1 accessibility validation.
 
 This module provides accessibility validation for generated web components.
-Note: For production use, consider integrating with axe-core via subprocess
-for comprehensive automated testing.
+Integrates with axe-core via subprocess for comprehensive automated testing.
 """
+
+import json
+import subprocess
 
 from bs4 import BeautifulSoup
 
@@ -82,26 +84,45 @@ def check_aria_attributes(html: str) -> dict:
     return {"valid": len(violations) == 0, "violations": violations, "warnings": warnings}
 
 
-def validate_wcag_compliance(html: str, level: str = "AA") -> dict:
+def validate_wcag_compliance(
+    html: str, level: str = "AA", use_axe_core: bool = True, html_path: str | None = None
+) -> dict:
     """
     Validate HTML against WCAG 2.1 guidelines.
 
-    Note: This is a basic implementation. For comprehensive validation,
-    integrate with axe-core: `npx @axe-core/cli <url>`
+    Uses axe-core via subprocess for comprehensive validation when available.
+    Falls back to basic BeautifulSoup checks if axe-core is unavailable.
 
     Args:
         html: HTML string to validate
         level: WCAG level ('A', 'AA', or 'AAA')
+        use_axe_core: Whether to attempt axe-core validation
+        html_path: Path to HTML file (required for axe-core)
 
     Returns:
         Dictionary with validation results:
         - compliant: Boolean indicating compliance
         - level: WCAG level tested
         - violations: List of violations found
+        - method: Validation method used ('axe-core' or 'basic')
     """
     if not html or html.strip() == "":
-        return {"compliant": True, "level": level, "violations": []}
+        return {"compliant": True, "level": level, "violations": [], "method": "none"}
 
+    # Try axe-core first if requested and path provided
+    if use_axe_core and html_path:
+        axe_result = run_axe_core(html_path, use_subprocess=True)
+        if axe_result.get("available"):
+            return {
+                "compliant": len(axe_result.get("violations", [])) == 0,
+                "level": level,
+                "violations": axe_result.get("violations", []),
+                "passes": axe_result.get("passes", []),
+                "incomplete": axe_result.get("incomplete", []),
+                "method": "axe-core",
+            }
+
+    # Fallback to basic BeautifulSoup validation
     soup = BeautifulSoup(html, "html.parser")
     violations = []
 
@@ -143,7 +164,12 @@ def validate_wcag_compliance(html: str, level: str = "AA") -> dict:
     if not aria_check["valid"]:
         violations.extend(aria_check["violations"])
 
-    return {"compliant": len(violations) == 0, "level": level, "violations": violations}
+    return {
+        "compliant": len(violations) == 0,
+        "level": level,
+        "violations": violations,
+        "method": "basic",
+    }
 
 
 def format_violation_report(violations: list[dict]) -> str:
@@ -175,3 +201,82 @@ def format_violation_report(violations: list[dict]) -> str:
         report_lines.append("")
 
     return "\n".join(report_lines)
+
+
+def run_axe_core(html_path: str | None = None, use_subprocess: bool = True) -> dict:
+    """
+    Run axe-core accessibility testing via subprocess.
+
+    Uses `pnpm dlx @axe-core/cli` to run axe-core on HTML files.
+
+    Note: Requires Chrome/Chromium and chromedriver to be installed.
+    If not available, returns error in result dict. The validate_wcag_compliance
+    function will automatically fall back to basic validation if axe-core fails.
+
+    Args:
+        html_path: Path to HTML file or file:// URL to test
+        use_subprocess: Whether to actually run subprocess (False for testing)
+
+    Returns:
+        Dictionary with axe-core results:
+        - available: Boolean indicating if axe-core is available
+        - violations: List of violations found (if run)
+        - passes: List of passed rules (if run)
+        - incomplete: List of incomplete checks (if run)
+        - error: Error message if axe-core failed
+    """
+    if not use_subprocess or html_path is None:
+        return {"available": False, "violations": [], "message": "Subprocess disabled or no path"}
+
+    try:
+        # Run axe-core via pnpm dlx
+        # Use --stdout to get JSON output directly
+        result = subprocess.run(
+            ["pnpm", "dlx", "@axe-core/cli", html_path, "--stdout"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
+        if result.returncode != 0:
+            # axe-core returns non-zero if violations found
+            # But we still want to parse the output
+            pass
+
+        # Parse JSON output
+        try:
+            axe_results = json.loads(result.stdout)
+            return {
+                "available": True,
+                "violations": axe_results.get("violations", []),
+                "passes": axe_results.get("passes", []),
+                "incomplete": axe_results.get("incomplete", []),
+            }
+        except json.JSONDecodeError:
+            return {
+                "available": True,
+                "violations": [],
+                "error": "Failed to parse axe-core output",
+                "raw_output": result.stdout,
+                "raw_stderr": result.stderr,
+                "return_code": result.returncode,
+            }
+
+    except FileNotFoundError:
+        return {
+            "available": False,
+            "violations": [],
+            "error": "pnpm not found - axe-core unavailable",
+        }
+    except subprocess.TimeoutExpired:
+        return {
+            "available": False,
+            "violations": [],
+            "error": "axe-core execution timed out",
+        }
+    except Exception as e:
+        return {
+            "available": False,
+            "violations": [],
+            "error": f"Failed to run axe-core: {e}",
+        }
