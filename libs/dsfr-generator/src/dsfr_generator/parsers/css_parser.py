@@ -206,9 +206,7 @@ def _is_color_token(name: str, value: str) -> bool:
         return True
 
     # Check if value references another color variable
-    if value.startswith("var(--") and any(
-        keyword in value for keyword in color_keywords
-    ):
+    if value.startswith("var(--") and any(keyword in value for keyword in color_keywords):
         return True
 
     return False
@@ -247,3 +245,110 @@ def _is_shadow_token(name: str, value: str) -> bool:
 def _is_border_radius_token(name: str) -> bool:
     """Check if a token is a border-radius token."""
     return "radius" in name or "rounded" in name
+
+
+def extract_dark_theme_tokens(css_content: str) -> dict[str, str]:
+    """
+    Extract dark theme tokens from DSFR scheme.css.
+
+    Extracts CSS custom properties from :root[data-fr-theme=dark] selector.
+    This provides dark mode color values that override light theme defaults.
+
+    Args:
+        css_content: CSS string from scheme.css
+
+    Returns:
+        Dictionary mapping dark theme token names to their values
+
+    Example:
+        >>> css = ":root[data-fr-theme=dark] { --grey-200-850: #CECECE; }"
+        >>> tokens = extract_dark_theme_tokens(css)
+        >>> tokens["--grey-200-850"]
+        '#CECECE'
+    """
+    if not css_content or css_content.strip() == "":
+        return {}
+
+    dark_tokens = {}
+
+    try:
+        # Parse CSS
+        stylesheet = tinycss2.parse_stylesheet(css_content)
+
+        for rule in stylesheet:
+            if rule.type == "qualified-rule":
+                # Check if this is the dark theme selector
+                selector = tinycss2.serialize(rule.prelude).strip()
+
+                # Look for :root[data-fr-theme=dark] or :root[data-fr-theme="dark"]
+                if "data-fr-theme" in selector and "dark" in selector:
+                    # Parse declarations in this rule
+                    content = tinycss2.parse_declaration_list(rule.content)
+
+                    for item in content:
+                        if item.type == "declaration" and item.name.startswith("--"):
+                            prop_name = item.name
+                            prop_value = tinycss2.serialize(item.value).strip()
+                            dark_tokens[prop_name] = prop_value
+
+    except Exception:
+        # Fallback to regex if tinycss2 fails
+        # Match :root[data-fr-theme=dark] { ... }
+        pattern = r':root\[data-fr-theme\s*=\s*["\']?dark["\']?\]\s*\{([^}]+)\}'
+        matches = re.finditer(pattern, css_content, re.DOTALL)
+
+        for match in matches:
+            block = match.group(1)
+            # Extract custom properties from the block
+            prop_pattern = r"(--[a-zA-Z0-9_-]+)\s*:\s*([^;]+);"
+            prop_matches = re.finditer(prop_pattern, block)
+
+            for prop_match in prop_matches:
+                prop_name = prop_match.group(1)
+                prop_value = prop_match.group(2).strip()
+                dark_tokens[prop_name] = prop_value
+
+    return dark_tokens
+
+
+def merge_light_dark_tokens(
+    light_tokens: dict[str, str], dark_tokens: dict[str, str]
+) -> dict[str, dict[str, str]]:
+    """
+    Merge light and dark theme tokens for Tailwind dark mode.
+
+    Creates a structure suitable for Tailwind's dark mode where each token
+    has both light and dark values. Tokens missing from one theme will
+    fallback to the other theme's value.
+
+    Args:
+        light_tokens: Light theme tokens (from core.css)
+        dark_tokens: Dark theme tokens (from scheme.css)
+
+    Returns:
+        Dictionary mapping token names to {light: value, dark: value}
+
+    Example:
+        >>> light = {"--grey-200-850": "#3A3A3A"}
+        >>> dark = {"--grey-200-850": "#CECECE"}
+        >>> merged = merge_light_dark_tokens(light, dark)
+        >>> merged["--grey-200-850"]
+        {'light': '#3A3A3A', 'dark': '#CECECE'}
+    """
+    merged = {}
+
+    # Get all unique token names from both themes
+    all_tokens = set(light_tokens.keys()) | set(dark_tokens.keys())
+
+    for token_name in all_tokens:
+        light_value = light_tokens.get(token_name)
+        dark_value = dark_tokens.get(token_name)
+
+        # If token exists in both themes, use both values
+        # If only in one theme, use that value for both (fallback)
+        merged[token_name] = {
+            "light": light_value if light_value is not None else dark_value,
+            "dark": dark_value if dark_value is not None else light_value,
+        }
+
+    return merged
