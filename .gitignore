@@ -31,6 +31,9 @@ coverage/
 .nyc_output/
 .pytest_cache/
 
+# DSFR cache
+.dsfr-cache/
+
 # IDE
 .vscode/
 .idea/
