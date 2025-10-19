@@ -10,6 +10,14 @@ This task breakdown implements a Python-first generator that transforms DSFR ass
 
 **MVP Scope**: User Story 1 (P1) - Generate DSFR Button Component
 
+**Asset Strategy Update** (Oct 19, 2025):
+After analyzing the DSFR package structure, we've optimized the pipeline to use production-ready compiled assets:
+- **HTML**: `example/component/{component}/index.html` (complete examples with all variants)
+- **CSS Tokens**: `dist/component/{component}/{component}.css` (CSS custom properties, no SCSS compilation needed)
+- **JavaScript**: `dist/component/{component}/{component}.module.js` (compiled, production-ready)
+
+This eliminates SCSS compilation complexity and uses battle-tested production assets.
+
 ## Dependencies
 
 ```

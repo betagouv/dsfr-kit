@@ -19,7 +19,7 @@ The initial target is the DSFR Button component to validate the architecture bef
 
 **Language/Version**: Python 3.12+ (core generator), TypeScript 5.x (JS analysis - optional)  
 **Primary Dependencies**: 
-- **Parsing**: Beautiful Soup 4 (HTML), libsass/sass (SCSS compilation), tinycss2 (CSS token extraction)
+- **Parsing**: Beautiful Soup 4 (HTML), tinycss2 (CSS token extraction)
 - **Generation**: Jinja2 (code templates), TypeScript Compiler API (JS analysis - optional)
 - **Validation**: axe-core (accessibility), pytest (testing)
 - **Asset Fetching**: requests (HTTP), zipfile/tarfile (release extraction)
@@ -28,15 +28,17 @@ The initial target is the DSFR Button component to validate the architecture bef
 **Testing**: pytest (Python), vitest (TypeScript), axe-core (accessibility validation)  
 **Target Platform**: Cross-platform (macOS, Linux, Windows) - Python runtime required, Node.js optional (for JS analysis)  
 **Project Type**: Monorepo (Python libs + TypeScript packages)  
-**Performance Goals**: Generate single component in <30s, SCSS compilation + token extraction in <10s, release download/cache in <15s  
+**Performance Goals**: Generate single component in <10s, CSS token extraction in <2s, release download/cache in <15s  
 **Constraints**: Must preserve RGAA 4 accessibility, must target specific DSFR version (v1.14.2), must generate valid W3C web components  
 **Scale/Scope**: Initial target is 1 component (Button), architecture must scale to 50+ DSFR components, 100+ design tokens, global assets (fonts, icons, core CSS)
 
-**Hybrid Approach**: NPM package includes src/, dist/, and example/
-- example/*.html - Clean HTML (no EJS rendering needed!)
-- src/**/*.scss - Unminified SCSS (easier to parse tokens than minified CSS)
-- src/**/*.js - Unminified JS (easier to analyze than minified dist/)
-- dist/fonts/, dist/icons/ - Pre-built assets (fonts, icons)
+**Production-Ready Asset Strategy**: Use compiled DSFR package assets (no build required)
+- **example/component/{component}/index.html** - Complete HTML examples with all variants, states, and accessibility
+- **dist/component/{component}/{component}.css** - Compiled CSS with CSS custom properties (design tokens)
+- **dist/component/{component}/{component}.module.js** - Compiled JavaScript with component behavior
+- **dist/fonts/, dist/icons/** - Pre-built assets (fonts, icons)
+
+**Key Insight**: DSFR dist/ contains production-ready CSS with CSS variables that can be directly extracted and mapped to Tailwind, eliminating the need for SCSS compilation
 
 ## Constitution Check
 
