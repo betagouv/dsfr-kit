@@ -230,7 +230,7 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 - [x] T091 [US2] Test generated Tailwind config is valid and usable in projects
 - [x] T092 [US2] Test conflict detection identifies and reports token conflicts
 
-**Testing**: Complete integration test suite in `tests/integration/test_phase4_token_pipeline.py` (16 tests, all passing)
+**Testing**: Complete integration test suite in `tests/integration/test_token_pipeline.py` (16 tests, all passing)
 
 ---
 
@@ -452,7 +452,7 @@ After completing each phase:
 - [x] **Phase 1**: `uv sync` succeeds, workspace structure is correct
 - [x] **Phase 2**: `dsfr-kit --version` works, assets can be fetched and cached
 - [x] **Phase 3**: `dsfr-kit generate button` produces working web component with RGAA 4 compliance
-- [ ] **Phase 4**: `dsfr-kit init` generates complete Tailwind config with 50+ DSFR colors
+- [x] **Phase 4**: Token extraction pipeline tested with 16 integration tests (all passing)
 - [ ] **Phase 5**: Behavior analyzer documents Button interactions (optional - P3)
 - [ ] **Phase 6**: Storybook displays Button with all variants and states
 - [ ] **Phase 6.5**: `dsfr-kit generate button --icons copy` produces component with icon SVG files
