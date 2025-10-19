@@ -10,8 +10,8 @@ from dsfr_generator.fetcher import fetch_dsfr_package, get_cached_package
 from dsfr_generator.generator import generate_web_component
 from dsfr_generator.parsers import (
     ComponentStructure,
+    extract_custom_properties,
     extract_html_structure,
-    extract_scss_variables,
     parse_html,
 )
 from dsfr_generator.token_mapper import generate_tailwind_config, map_dsfr_colors
@@ -190,19 +190,23 @@ def _parse_component_html(ctx: GenerationContext) -> ComponentStructure:
 
 
 def _extract_design_tokens(ctx: GenerationContext) -> dict[str, str]:
-    """Extract SCSS design tokens from DSFR package."""
-    _log_progress("Extracting design tokens", "from SCSS", ctx.verbose)
+    """Extract CSS design tokens from compiled DSFR CSS."""
+    _log_progress("Extracting design tokens", "from compiled CSS", ctx.verbose)
 
-    scss_path = (ctx.package_path / "src" / "dsfr" / "component" / ctx.component_slug / "main.scss")
-    if not scss_path.exists():
+    # Use compiled CSS from dist/ instead of SCSS source
+    css_path = (
+        ctx.package_path / "dist" / "component" / ctx.component_slug / f"{ctx.component_slug}.css"
+    )
+    if not css_path.exists():
         raise FileNotFoundError(
-            f"Component SCSS not found at: src/dsfr/component/{ctx.component_slug}/main.scss"
+            f"Component CSS not found at: "
+            f"dist/component/{ctx.component_slug}/{ctx.component_slug}.css"
         )
 
-    with open(scss_path, encoding="utf-8") as f:
-        scss_content = f.read()
+    with open(css_path, encoding="utf-8") as f:
+        css_content = f.read()
 
-    return extract_scss_variables(scss_content)
+    return extract_custom_properties(css_content)
 
 
 def _generate_component_code(
