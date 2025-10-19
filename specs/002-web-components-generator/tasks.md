@@ -178,7 +178,7 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### Token Extraction Enhancement
 
-- [ ] T065 [P] [US2] Enhance `libs/dsfr-generator/src/parsers/css_parser.py` to extract all DSFR tokens from global CSS files (not just component-specific)
+- [x] T065 [P] [US2] Enhance `libs/dsfr-generator/src/parsers/css_parser.py` to extract all DSFR tokens from global CSS files (not just component-specific)
 - [ ] T066 [P] [US2] Add comprehensive color extraction (blue-france, red-marianne, grey scale, etc.) in scss_parser.py
 - [ ] T067 [P] [US2] Add spacing scale extraction (margins, paddings, gaps) in scss_parser.py
 - [ ] T068 [P] [US2] Add typography extraction (font families, sizes, weights, line heights) in scss_parser.py
