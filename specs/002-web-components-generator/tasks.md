@@ -189,16 +189,16 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 
 ### Token Mapping Enhancement
 
-- [ ] T071 [US2] Enhance `libs/dsfr-generator/src/token_mapper/colors.py` to map all DSFR colors
-- [ ] T072 [US2] Add color categorization (primary, secondary, grey, semantic) in colors.py
-- [ ] T073 [US2] Implement `libs/dsfr-generator/src/token_mapper/spacing.py` for spacing scale mapping
-- [ ] T074 [US2] Add DSFR spacing → Tailwind spacing utilities in spacing.py
-- [ ] T075 [US2] Implement `libs/dsfr-generator/src/token_mapper/typography.py` for font mapping
-- [ ] T076 [US2] Add Marianne and Spectral font family configurations in typography.py
-- [ ] T077 [US2] Add font size, weight, line height mappings in typography.py
-- [ ] T078 [US2] Enhance `libs/dsfr-generator/src/token_mapper/tailwind_config.py` with complete theme
-- [ ] T079 [US2] Add shadow/elevation utilities to Tailwind config
-- [ ] T080 [US2] Add border radius utilities to Tailwind config
+- [x] T071 [US2] Enhance `libs/dsfr-generator/src/token_mapper/colors.py` to map all DSFR colors
+- [x] T072 [US2] Add color categorization (primary, secondary, grey, semantic) in colors.py
+- [x] T073 [US2] Implement `libs/dsfr-generator/src/token_mapper/spacing.py` for spacing scale mapping
+- [x] T074 [US2] Add DSFR spacing → Tailwind spacing utilities in spacing.py
+- [x] T075 [US2] Implement `libs/dsfr-generator/src/token_mapper/typography.py` for font mapping
+- [x] T076 [US2] Add Marianne and Spectral font family configurations in typography.py
+- [x] T077 [US2] Add font size, weight, line height mappings in typography.py
+- [x] T078 [US2] Enhance `libs/dsfr-generator/src/token_mapper/tailwind_config.py` with complete theme
+- [x] T079 [US2] Add shadow/elevation utilities to Tailwind config
+- [x] T080 [US2] Add border radius utilities to Tailwind config
 
 ### Conflict Detection
 
