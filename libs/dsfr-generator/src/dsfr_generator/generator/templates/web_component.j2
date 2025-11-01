@@ -9,6 +9,11 @@ class {{ class_name }} extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
+    
+    // Initialize state variables
+    {% for state_var in state_variables %}
+    this.{{ state_var.name }} = {{ state_var.initial_value }};
+    {% endfor %}
   }
 
   static get observedAttributes() {
@@ -17,17 +22,66 @@ class {{ class_name }} extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    {% if has_behaviors %}
+    this.setupEventListeners();
+    {% endif %}
   }
 
   disconnectedCallback() {
-    // Cleanup if needed
+    {% if has_behaviors %}
+    this.removeEventListeners();
+    {% endif %}
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue !== newValue) {
       this.render();
+      {% if has_behaviors %}
+      this.handleAttributeChange(name, oldValue, newValue);
+      {% endif %}
     }
   }
+
+  {% if has_behaviors %}
+  setupEventListeners() {
+    {% for listener in event_listeners %}
+    this.addEventListener('{{ listener.event }}', this.{{ listener.handler_name }}.bind(this));
+    {% endfor %}
+  }
+
+  removeEventListeners() {
+    {% for listener in event_listeners %}
+    this.removeEventListener('{{ listener.event }}', this.{{ listener.handler_name }}.bind(this));
+    {% endfor %}
+  }
+
+  handleAttributeChange(name, oldValue, newValue) {
+    // Handle attribute changes based on DSFR behavior patterns
+    {% for transition in state_transitions %}
+    {% if transition.trigger_type == 'attribute' %}
+    if (name === '{{ transition.trigger_attribute }}') {
+      this.{{ transition.action }}();
+    }
+    {% endif %}
+    {% endfor %}
+  }
+
+  {% for listener in event_listeners %}
+  {{ listener.handler_name }}(event) {
+    {% for action in listener.actions %}
+    // {{ action.description }}
+    {% if action.type == 'state_change' %}
+    this.{{ action.target }} = {{ action.value }};
+    {% elif action.type == 'dom_manipulation' %}
+    this.{{ action.method }}({{ action.params | join(', ') }});
+    {% elif action.type == 'aria_change' %}
+    this.setAttribute('{{ action.attribute }}', '{{ action.value }}');
+    {% endif %}
+    {% endfor %}
+  }
+
+  {% endfor %}
+  {% endif %}
 
   render() {
     const variant = this.getAttribute('variant') || '{{ default_variant }}';

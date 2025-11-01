@@ -6,6 +6,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 from ..config import DSFR_VERSION
+from ..parsers.js_analyzer import BehaviorPattern
 from ..parsers.types import ComponentStructure
 
 
@@ -95,6 +96,7 @@ def generate_web_component(
     component: ComponentStructure,
     component_name: str,
     colors: list[dict[str, str]],
+    behavior_pattern: BehaviorPattern | None = None,
     dsfr_version: str = DSFR_VERSION,
 ) -> str:
     """
@@ -124,6 +126,20 @@ def generate_web_component(
     # Determine default variant
     default_variant = component.variants[0] if component.variants else "default"
 
+    # Extract behavior patterns if available
+    event_listeners = []
+    state_variables = []
+    dom_manipulations = []
+    aria_changes = []
+    state_transitions = []
+
+    if behavior_pattern:
+        event_listeners = behavior_pattern.event_listeners
+        state_variables = behavior_pattern.state_variables
+        dom_manipulations = behavior_pattern.dom_manipulations
+        aria_changes = behavior_pattern.aria_changes
+        state_transitions = behavior_pattern.state_transitions
+
     context = {
         "component_name": component_name,
         "class_name": class_name,
@@ -138,6 +154,13 @@ def generate_web_component(
         "slot_content": component.text or "Content",
         "colors": colors,
         "dsfr_version": dsfr_version,
+        # Behavior pattern data
+        "event_listeners": event_listeners,
+        "state_variables": state_variables,
+        "dom_manipulations": dom_manipulations,
+        "aria_changes": aria_changes,
+        "state_transitions": state_transitions,
+        "has_behaviors": behavior_pattern is not None,
     }
 
     # Render template

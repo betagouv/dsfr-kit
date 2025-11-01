@@ -271,7 +271,7 @@ Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3 (US1: Button) → Phase 4
 - [x] T110 [US3] Add TypeScript analyzer subprocess call in `libs/dsfr-generator/src/parsers/js_analyzer.py`
 - [x] T111 [US3] Add fallback behavior (log warning if analyzer unavailable) in js_analyzer.py
 - [x] T112 [US3] Add JSON parsing of analyzer output in js_analyzer.py
-- [ ] T113 [US3] Integrate behavior patterns into web component generation pipeline
+- [x] T113 [US3] Integrate behavior patterns into web component generation pipeline
 
 ### Integration & Testing
 

@@ -14,6 +14,7 @@ from dsfr_generator.parsers import (
     extract_html_structure,
     parse_html,
 )
+from dsfr_generator.parsers.js_analyzer import analyze_javascript_file, is_analyzer_available
 from dsfr_generator.token_mapper import generate_tailwind_config, map_dsfr_colors
 from dsfr_generator.validator import validate_rgaa_compliance, validate_wcag_compliance
 
@@ -86,14 +87,17 @@ def generate(ctx: click.Context, component_name: str, output: Path) -> None:
         # Step 3: Extract design tokens
         scss_tokens = _extract_design_tokens(generation_ctx)
 
-        # Step 4: Map design tokens to Tailwind
+        # Step 4: Analyze JavaScript behaviors (if available)
+        behavior_pattern = _analyze_javascript_behaviors(generation_ctx)
+
+        # Step 5: Map design tokens to Tailwind
         _log_progress("Mapping design tokens", "to Tailwind configuration", verbose)
         tailwind_colors = map_dsfr_colors(scss_tokens)
         tailwind_config = generate_tailwind_config(tailwind_colors, {}, {})
 
-        # Step 5: Generate web component
+        # Step 6: Generate web component
         component_code = _generate_component_code(
-            generation_ctx, component_structure, tailwind_colors
+            generation_ctx, component_structure, tailwind_colors, behavior_pattern
         )
 
         # Step 6: Validate accessibility (temporarily disabled for MVP)
@@ -209,11 +213,37 @@ def _extract_design_tokens(ctx: GenerationContext) -> dict[str, str]:
 
     return extract_custom_properties(css_content)
 
+def _analyze_javascript_behaviors(ctx: GenerationContext):
+    """Analyze JavaScript behaviors from DSFR component."""
+    _log_progress("Analyzing JavaScript behaviors", ctx.component_name, ctx.verbose)
+
+    if not is_analyzer_available():
+        if ctx.verbose:
+            click.echo("  TypeScript analyzer not available, skipping behavior analysis")
+        return None
+
+    # Try to find JavaScript file in the component directory
+    js_path = (
+        ctx.package_path / "dist" / "component" / ctx.component_slug / f"{ctx.component_slug}.module.js"
+    )
+    if not js_path.exists():
+        if ctx.verbose:
+            click.echo(f"  JavaScript file not found at: {js_path}")
+        return None
+
+    try:
+        return analyze_javascript_file(js_path)
+    except Exception as e:
+        if ctx.verbose:
+            click.echo(f"  Behavior analysis failed: {e}")
+        return None
+
 
 def _generate_component_code(
     ctx: GenerationContext,
     component_structure: ComponentStructure,
     tailwind_colors: list[dict[str, str]],
+    behavior_pattern,
 ) -> str:
     """Generate web component code."""
     _log_progress("Generating web component", ctx.component_name, ctx.verbose)
@@ -223,6 +253,7 @@ def _generate_component_code(
         component=component_structure,
         component_name=ctx.component_slug,
         colors=tailwind_colors,
+        behavior_pattern=behavior_pattern,
         dsfr_version=ctx.dsfr_version,
     )
 
