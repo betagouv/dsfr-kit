@@ -3,6 +3,7 @@ const config = {
   stories: [
     "../components/**/*.stories.@(js|jsx|mjs|ts|tsx)",
     "../temp_output/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+    "../test-output/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
     "@storybook/addon-essentials",

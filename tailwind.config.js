@@ -3,6 +3,7 @@ module.exports = {
   content: [
     "./components/**/*.js",
     "./temp_output/**/*.js",
+    "./test-output/**/*.js",
     "./.storybook/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
