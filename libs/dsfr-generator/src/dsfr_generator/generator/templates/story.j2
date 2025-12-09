@@ -1,0 +1,101 @@
+/**
+ * Storybook stories for {{ component_name | title }}
+ * Generated from DSFR {{ dsfr_version }}
+ */
+
+import './{{ component_js_filename }}';
+
+export default {
+  title: 'DSFR/{{ component_name | title }}',
+  component: '{{ custom_element_name }}',
+  tags: ['autodocs'],
+  argTypes: {
+    variant: {
+      control: { type: 'select' },
+      options: [{% for variant in variants %}'{{ variant }}'{% if not loop.last %}, {% endif %}{% endfor %}],
+      description: 'Component variant',
+      table: {
+        defaultValue: { summary: '{{ default_variant }}' }
+      }
+    },
+    label: {
+      control: 'text',
+      description: 'Slot content'
+    },
+    {% for attr_name in attributes %}
+    '{{ attr_name }}': {
+      control: 'text',
+      description: 'attribute: {{ attr_name }}'
+    },
+    {% endfor %}
+    {% for aria_name in aria_attributes %}
+    '{{ aria_name }}': {
+      control: 'text',
+      description: 'ARIA attribute: {{ aria_name }}'
+    },
+    {% endfor %}
+    disabled: {
+      control: 'boolean',
+      description: 'Disabled state'
+    }
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: 'DSFR compliant {{ component_name | title }} component. Documentation: [DSFR System](https://www.systeme-de-design.gouv.fr/)'
+      }
+    }
+  }
+};
+
+const Template = (args) => {
+  const el = document.createElement('{{ custom_element_name }}');
+
+  if (args.variant) {
+    el.setAttribute('variant', args.variant);
+  }
+
+  if (args.disabled) {
+    el.setAttribute('disabled', '');
+  }
+
+  {% for attr_name in attributes %}
+  if (args['{{ attr_name }}']) {
+      el.setAttribute('{{ attr_name }}', args['{{ attr_name }}']);
+  }
+  {% endfor %}
+
+  {% for aria_name in aria_attributes %}
+  if (args['{{ aria_name }}']) {
+      el.setAttribute('{{ aria_name }}', args['{{ aria_name }}']);
+  }
+  {% endfor %}
+
+  el.innerHTML = args.label || '{{ default_text }}';
+
+  return el;
+};
+
+export const Default = Template.bind({});
+Default.args = {
+  variant: '{{ default_variant }}',
+  label: '{{ default_text }}',
+  disabled: false
+};
+
+{% for variant in variants %}
+export const {{ variant | title }} = Template.bind({});
+{{ variant | title }}.args = {
+  variant: '{{ variant }}',
+  label: '{{ variant | title }} action',
+  disabled: false
+};
+
+{% endfor %}
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  variant: '{{ default_variant }}',
+  label: 'Disabled Action',
+  disabled: true
+};

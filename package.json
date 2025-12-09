@@ -15,9 +15,20 @@
     "format": "turbo run format",
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
-    "clean": "turbo run clean && rm -rf node_modules .turbo"
+    "clean": "turbo run clean && rm -rf node_modules .turbo",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "devDependencies": {
-    "turbo": "^2.5.8"
+    "@storybook/addon-a11y": "^8.6.14",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/web-components": "^8.6.14",
+    "@storybook/web-components-vite": "^8.6.14",
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6",
+    "storybook": "^8.6.14",
+    "tailwindcss": "^3.4.18",
+    "turbo": "^2.5.8",
+    "vite": "^5.4.20"
   }
 }

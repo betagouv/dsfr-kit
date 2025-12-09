@@ -98,6 +98,7 @@ def generate_web_component(
     colors: list[dict[str, str]],
     behavior_pattern: BehaviorPattern | None = None,
     dsfr_version: str = DSFR_VERSION,
+    extra_css: str = "",
 ) -> str:
     """
     Generate a web component from ComponentStructure.
@@ -107,6 +108,7 @@ def generate_web_component(
         component_name: Name of the component (e.g., 'button')
         colors: List of color mappings
         dsfr_version: DSFR version string
+        extra_css: Additional CSS to inject (e.g., for icons)
 
     Returns:
         Generated web component JavaScript code
@@ -134,11 +136,38 @@ def generate_web_component(
     state_transitions = []
 
     if behavior_pattern:
-        event_listeners = behavior_pattern.event_listeners
-        state_variables = behavior_pattern.state_variables
-        dom_manipulations = behavior_pattern.dom_manipulations
-        aria_changes = behavior_pattern.aria_changes
-        state_transitions = behavior_pattern.state_transitions
+        # Transform state variables
+        for var in behavior_pattern.state_variables:
+            state_variables.append({
+                "name": var.get("name"),
+                "initial_value": var.get("initialValue") or "undefined",
+            })
+
+        # Transform event listeners
+        for listener in behavior_pattern.event_listeners:
+            event_listeners.append({
+                "event": listener.get("eventType"),
+                "handler_name": listener.get("handler", "handleEvent"),
+                "actions": [
+                    {
+                        "description": f"Original logic from {listener.get('handler')}",
+                        "type": "custom",
+                        "code": "// TODO: Implement logic"
+                    }
+                ]
+            })
+
+        # Transform state transitions
+        for transition in behavior_pattern.state_transitions:
+            state_transitions.append({
+                "trigger_type": "attribute" if "attribute" in transition.get("trigger", "") else "custom",
+                "trigger_attribute": transition.get("condition", "").replace("'", ""), # Simplified
+                "action": "render"
+            })
+
+        # Add raw data for debugging/advanced usage if needed
+        # dom_manipulations = behavior_pattern.dom_manipulations
+        # aria_changes = behavior_pattern.aria_changes
 
     context = {
         "component_name": component_name,
@@ -161,6 +190,7 @@ def generate_web_component(
         "aria_changes": aria_changes,
         "state_transitions": state_transitions,
         "has_behaviors": behavior_pattern is not None,
+        "extra_css": extra_css,
     }
 
     # Render template

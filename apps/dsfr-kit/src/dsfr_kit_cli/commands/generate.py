@@ -7,7 +7,8 @@ from typing import Any
 
 import click
 from dsfr_generator.fetcher import fetch_dsfr_package, get_cached_package
-from dsfr_generator.generator import generate_web_component
+from dsfr_generator.generator import generate_web_component, generate_storybook_story
+from dsfr_generator.generator.assets import AssetManager
 from dsfr_generator.parsers import (
     ComponentStructure,
     extract_custom_properties,
@@ -17,6 +18,14 @@ from dsfr_generator.parsers import (
 from dsfr_generator.parsers.js_analyzer import analyze_javascript_file, is_analyzer_available
 from dsfr_generator.token_mapper import generate_tailwind_config, map_dsfr_colors
 from dsfr_generator.validator import validate_rgaa_compliance, validate_wcag_compliance
+
+
+def _collect_icons(structure: dict) -> list[str]:
+    """Recursively collect icons from component structure."""
+    icons = structure.get("icons", [])[:]
+    for child in structure.get("children", []):
+        icons.extend(_collect_icons(child))
+    return list(set(icons))
 
 
 @dataclass
@@ -40,8 +49,33 @@ class GenerationContext:
     default=Path("components"),
     help="Output directory for generated files (default: ./components)",
 )
+@click.option(
+    "--with-story",
+    is_flag=True,
+    default=False,
+    help="Generate Storybook story for the component",
+)
+@click.option(
+    "--icons",
+    type=click.Choice(["copy", "cdn", "none"]),
+    default="none",
+    help="Strategy for handling icons (default: none)",
+)
+@click.option(
+    "--fonts",
+    is_flag=True,
+    default=False,
+    help="Copy DSFR fonts to output directory",
+)
 @click.pass_context
-def generate(ctx: click.Context, component_name: str, output: Path) -> None:
+def generate(
+    ctx: click.Context,
+    component_name: str,
+    output: Path,
+    with_story: bool,
+    icons: str,
+    fonts: bool,
+) -> None:
     """
     Generate a DSFR web component.
 
@@ -95,18 +129,46 @@ def generate(ctx: click.Context, component_name: str, output: Path) -> None:
         tailwind_colors = map_dsfr_colors(scss_tokens)
         tailwind_config = generate_tailwind_config(tailwind_colors, {}, {})
 
+        # Step 5.5: Handle assets
+        extra_css = ""
+        asset_manager = AssetManager(generation_ctx.package_path)
+
+        if icons == "copy" and component_structure.icons:
+            _log_progress("Handling assets", "copying icons", verbose)
+            extra_css = asset_manager.generate_icon_css(component_structure.icons, output)
+
+        if fonts:
+            _log_progress("Handling assets", "copying fonts", verbose)
+            asset_manager.copy_fonts(output)
+
         # Step 6: Generate web component
         component_code = _generate_component_code(
-            generation_ctx, component_structure, tailwind_colors, behavior_pattern
+            generation_ctx,
+            component_structure,
+            tailwind_colors,
+            behavior_pattern,
+            extra_css,
         )
+
+        # Step 6b: Generate Storybook story
+        story_code = None
+        if with_story:
+            _log_progress("Generating Storybook story", component_name_normalized, verbose)
+            component_filename = f"dsfr-{component_slug}.js"
+            story_code = generate_storybook_story(
+                component=component_structure,
+                component_name=component_slug,
+                component_js_filename=component_filename,
+                dsfr_version=dsfr_version,
+            )
 
         # Step 6: Validate accessibility (temporarily disabled for MVP)
         # TODO: Re-enable after implementing proper component wrapping for validation
         # _validate_accessibility(generation_ctx, component_code)
 
         # Step 7: Write output files
-        component_file, tailwind_file = _write_output_files(
-            generation_ctx, component_code, tailwind_config
+        component_file, tailwind_file, story_file = _write_output_files(
+            generation_ctx, component_code, tailwind_config, story_code
         )
 
         # Success message
@@ -118,6 +180,8 @@ def generate(ctx: click.Context, component_name: str, output: Path) -> None:
         )
         click.echo(f"  Component: {component_file}")
         click.echo(f"  Tailwind:  {tailwind_file}")
+        if story_file:
+            click.echo(f"  Story:     {story_file}")
 
     except FileNotFoundError as e:
         raise click.ClickException(f"File not found: {e}")
@@ -191,6 +255,8 @@ def _parse_component_html(ctx: GenerationContext) -> ComponentStructure:
         classes=html_structure_dict.get("classes", []),
         attributes=html_structure_dict.get("attributes", {}),
         aria_attributes={},
+        variants=html_structure_dict.get("variants", []),
+        icons=_collect_icons(html_structure_dict),
     )
 
 
@@ -244,6 +310,7 @@ def _generate_component_code(
     component_structure: ComponentStructure,
     tailwind_colors: list[dict[str, str]],
     behavior_pattern,
+    extra_css: str = "",
 ) -> str:
     """Generate web component code."""
     _log_progress("Generating web component", ctx.component_name, ctx.verbose)
@@ -255,6 +322,7 @@ def _generate_component_code(
         colors=tailwind_colors,
         behavior_pattern=behavior_pattern,
         dsfr_version=ctx.dsfr_version,
+        extra_css=extra_css,
     )
 
 
@@ -279,7 +347,8 @@ def _write_output_files(
     ctx: GenerationContext,
     component_code: str,
     tailwind_config: dict[str, Any],
-) -> tuple[Path, Path]:
+    story_code: str | None = None,
+) -> tuple[Path, Path, Path | None]:
     """Write generated files to output directory."""
     _log_progress("Writing output files", str(ctx.output_dir), ctx.verbose)
     ctx.output_dir.mkdir(parents=True, exist_ok=True)
@@ -295,7 +364,14 @@ def _write_output_files(
     with open(tailwind_file, "w", encoding="utf-8") as f:
         f.write(tailwind_content)
 
-    return component_file, tailwind_file
+    # Write Storybook story
+    story_file = None
+    if story_code:
+        story_file = ctx.output_dir / f"dsfr-{ctx.component_slug}.stories.js"
+        with open(story_file, "w", encoding="utf-8") as f:
+            f.write(story_code)
+
+    return component_file, tailwind_file, story_file
 
 
 def _format_tailwind_config(config: dict[str, Any]) -> str:

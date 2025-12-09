@@ -24,6 +24,7 @@ class ComponentStructure:
     children: list["ComponentStructure"] = field(default_factory=list)
     text: str = ""
     variants: list[str] = field(default_factory=list)
+    icons: list[str] = field(default_factory=list)
 
 
 @dataclass

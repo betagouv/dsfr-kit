@@ -1,7 +1,7 @@
 /**
  * {{ component_name | title }} Web Component
  * Generated from DSFR {{ dsfr_version }}
- * 
+ *
  * Usage: <{{ custom_element_name }}>{{ slot_content }}</{{ custom_element_name }}>
  */
 
@@ -9,7 +9,7 @@ class {{ class_name }} extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    
+
     // Initialize state variables
     {% for state_var in state_variables %}
     this.{{ state_var.name }} = {{ state_var.initial_value }};
@@ -76,6 +76,8 @@ class {{ class_name }} extends HTMLElement {
     this.{{ action.method }}({{ action.params | join(', ') }});
     {% elif action.type == 'aria_change' %}
     this.setAttribute('{{ action.attribute }}', '{{ action.value }}');
+    {% elif action.type == 'custom' %}
+    {{ action.code }}
     {% endif %}
     {% endfor %}
   }
@@ -116,6 +118,9 @@ class {{ class_name }} extends HTMLElement {
           color: {{ color.value }};
         }
         {% endfor %}
+
+        /* Extra CSS (e.g. icons) */
+        {{ extra_css }}
       </style>
 
       <{{ tag }}

@@ -75,6 +75,28 @@ def detect_variants(classes: list[str]) -> list[str]:
     return variants
 
 
+def detect_icons(classes: list[str]) -> list[str]:
+    """
+    Detect DSFR icon names from CSS classes.
+
+    Identifies classes starting with 'fr-icon-' or 'fr-fi-'.
+
+    Args:
+        classes: List of CSS class names
+
+    Returns:
+        List of detected icon names (e.g., 'user-fill', 'arrow-right-line')
+    """
+    icons = []
+    for cls in classes:
+        if cls.startswith("fr-icon-"):
+            icons.append(cls.replace("fr-icon-", ""))
+        elif cls.startswith("fr-fi-"):
+            icons.append(cls.replace("fr-fi-", ""))
+
+    return icons
+
+
 def extract_html_structure(soup: BeautifulSoup | Tag) -> dict:
     """
     Extract HTML structure from BeautifulSoup object.
@@ -113,6 +135,7 @@ def extract_html_structure(soup: BeautifulSoup | Tag) -> dict:
         "attributes": {},
         "children": [],
         "variants": detect_variants(classes),
+        "icons": detect_icons(classes),
     }
 
     # Extract non-class, non-aria attributes
