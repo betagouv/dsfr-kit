@@ -8,7 +8,8 @@
 class {{ class_name }} extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
+    // Light DOM - no shadow root
+    this._originalContent = this.innerHTML; // Capture initial content
 
     // Initialize state variables
     {% for state_var in state_variables %}
@@ -21,6 +22,9 @@ class {{ class_name }} extends HTMLElement {
   }
 
   connectedCallback() {
+    if (!this._originalContent && this.innerHTML.trim()) {
+       this._originalContent = this.innerHTML;
+    }
     this.render();
     {% if has_behaviors %}
     this.setupEventListeners();
@@ -44,6 +48,10 @@ class {{ class_name }} extends HTMLElement {
 
   {% if has_behaviors %}
   setupEventListeners() {
+    // Note: In Light DOM, we attach listeners to the internal element or this?
+    // The previous logic used 'this.addEventListener'.
+    // If events bubble, 'this' captures them.
+
     {% for listener in event_listeners %}
     this.addEventListener('{{ listener.event }}', this.{{ listener.handler_name }}.bind(this));
     {% endfor %}
@@ -92,26 +100,12 @@ class {{ class_name }} extends HTMLElement {
     const role = this.getAttribute('role') || '{{ aria_attributes.get("role", "") }}';
     {% endif %}
 
-    this.shadowRoot.innerHTML = `
-      <style>
-        :host {
-          display: inline-block;
-        }
-
-        {{ tag }} {
-          /* Tailwind utility classes */
-          {% for tailwind_class in tailwind_classes %}
-          /* {{ tailwind_class }} */
-          {% endfor %}
-        }
-
-        /* Variant styles */
-        {% for variant_name in variants %}
-        :host([variant="{{ variant_name }}"]) {{ tag }} {
-          /* {{ variant_name }} variant styles */
-        }
-        {% endfor %}
-
+    // Extra CSS (icons) - Inject style only once if needed
+    const styleId = 'dsfr-{{ custom_element_name }}-style';
+    if (!document.getElementById(styleId)) {
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = `
         /* DSFR color tokens */
         {% for color in colors %}
         .{{ color.tailwind_class }} {
@@ -119,10 +113,12 @@ class {{ class_name }} extends HTMLElement {
         }
         {% endfor %}
 
-        /* Extra CSS (e.g. icons) */
         {{ extra_css }}
-      </style>
+        `;
+        document.head.appendChild(style);
+    }
 
+    this.innerHTML = `
       <{{ tag }}
         {% if attributes %}
         {% for attr_name, attr_value in attributes.items() %}
@@ -136,7 +132,7 @@ class {{ class_name }} extends HTMLElement {
         {% endif %}
         class="{{ tailwind_classes | join(' ') }}"
       >
-        <slot>{{ default_text }}</slot>
+        ${this._originalContent || '{{ default_text }}'}
       </{{ tag }}>
     `;
   }

@@ -247,14 +247,40 @@ def _parse_component_html(ctx: GenerationContext) -> ComponentStructure:
         html_content = f.read()
 
     parsed_html = parse_html(html_content)
-    html_structure_dict = extract_html_structure(parsed_html)
+
+    # Find the relevant component element
+    # 1. Look for element with generic DSFR class (fr-*)
+    # 2. Or fallback to the first element in body
+    target_element = None
+
+    if parsed_html.body:
+        # Strategy A: Find first element with 'fr-' class
+        for element in parsed_html.body.find_all(recursive=True):
+            classes = element.get("class", [])
+            if any(cls.startswith("fr-") for cls in classes):
+                target_element = element
+                break
+
+        # Strategy B: If no fr-* class, take first significant child of body
+        if not target_element:
+            for child in parsed_html.body.children:
+                if child.name and child.name not in ["script", "style"]:
+                    target_element = child
+                    break
+
+    # Strategy C: Fallback to root if body not found (unlikely for full HTML)
+    if not target_element:
+        # Use existing logic for root extraction
+        target_element = parsed_html
+
+    html_structure_dict = extract_html_structure(target_element)
 
     # Convert dict to ComponentStructure
     return ComponentStructure(
         tag=html_structure_dict.get("tag", "div"),
         classes=html_structure_dict.get("classes", []),
         attributes=html_structure_dict.get("attributes", {}),
-        aria_attributes={},
+        aria_attributes=html_structure_dict.get("aria_attributes", {}), # Fix: Use extracted aria attributes
         variants=html_structure_dict.get("variants", []),
         icons=_collect_icons(html_structure_dict),
     )
