@@ -170,7 +170,7 @@ dsfr-kit/
 4. Create `src/my_lib/__init__.py`:
    ```python
    """My Python library."""
-   
+
    __version__ = "0.1.0"
    ```
 
@@ -293,7 +293,7 @@ Follow conventional commits:
 
 ## Constitution
 
-All contributions must align with our [Constitution](.specify/memory/constitution.md), which defines:
+All contributions must align with our [Constitution](AGENTS.md), which defines:
 
 - **Principle I**: Multi-Framework Support
 - **Principle II**: Open Code Distribution
