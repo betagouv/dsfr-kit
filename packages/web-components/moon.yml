@@ -1,0 +1,23 @@
+type: "library"
+language: "typescript"
+platform: "node"
+
+tasks:
+  build:
+    command: "vite build"
+    inputs:
+      - "src/**/*"
+      - "tsconfig.json"
+      - "vite.config.ts"
+    outputs:
+      - "dist"
+
+  dev:
+    command: "vite"
+    local: true
+
+  typecheck:
+    command: "tsc --noEmit"
+    inputs:
+      - "src/**/*"
+      - "tsconfig.json"
