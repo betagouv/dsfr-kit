@@ -1,0 +1,60 @@
+$schema: 'https://moonrepo.dev/schemas/tasks.json'
+
+fileGroups:
+  configs:
+    - 'package.json'
+    - 'tsconfig.json'
+    - 'pyproject.toml'
+    - 'uv.lock'
+    - 'pnpm-lock.yaml'
+  sources:
+    - 'src/**/*'
+    - 'lib/**/*'
+    - 'tests/**/*'
+
+tasks:
+  build:
+    deps:
+      - '^:build'
+    outputs:
+      - 'dist'
+    inputs:
+      - '@group(sources)'
+      - '@group(configs)'
+
+  test:
+    deps:
+      - 'build'
+    inputs:
+      - '@group(sources)'
+      - '@group(configs)'
+    options:
+      runInCI: true
+
+  test-coverage:
+    deps:
+      - 'build'
+    inputs:
+      - '@group(sources)'
+      - '@group(configs)'
+    options:
+      runInCI: true
+
+  lint:
+    inputs:
+      - '@group(sources)'
+      - '@group(configs)'
+    options:
+      runInCI: true
+
+  format:
+    inputs:
+      - '@group(sources)'
+      - '@group(configs)'
+    options:
+      runInCI: true
+
+  clean:
+    command: 'rm -rf dist build'
+    options:
+        mergeArgs: 'replace'

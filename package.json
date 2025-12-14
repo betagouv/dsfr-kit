@@ -1,23 +1,21 @@
 {
-  "name": "dsfr-kit",
-  "version": "0.1.0",
-  "private": true,
-  "description": "DSFR component library for multiple frameworks",
-  "packageManager": "pnpm@10.18.3",
-  "engines": {
-    "node": ">=22.0.0",
-    "pnpm": ">=10.0.0"
-  },
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "turbo run format",
-    "test": "turbo run test",
-    "test:coverage": "turbo run test:coverage",
-    "clean": "turbo run clean && rm -rf node_modules .turbo"
-  },
-  "devDependencies": {
-    "turbo": "^2.5.8"
-  }
+	"name": "dsfr-kit",
+	"version": "0.1.0",
+	"private": true,
+	"description": "DSFR component library for multiple frameworks",
+	"packageManager": "pnpm@10.18.3",
+	"engines": {
+		"node": "22.0.0",
+		"pnpm": ">=10.0.0"
+	},
+	"scripts": {
+		"build": "moon run :build",
+		"dev": "moon run :dev",
+		"lint": "moon run :lint",
+		"format": "moon run :format",
+		"test": "moon run :test",
+		"test:coverage": "moon run :test-coverage",
+		"clean": "moon run :clean"
+	},
+	"devDependencies": {}
 }
