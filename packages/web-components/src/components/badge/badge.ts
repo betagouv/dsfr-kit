@@ -20,28 +20,39 @@ export class DsfrBadge extends LitElement {
 	@property({ type: Boolean })
 	sm = false;
 
-	render() {
-		const classes = ["fr-badge"];
+	updated() {
+		// 1. Base Class
+		this.classList.add("fr-badge");
 
+		// 2. Variant (Remove old, add new)
+		const variants = ["success", "error", "info", "warning", "new"];
+		variants.forEach((v) => this.classList.remove(`fr-badge--${v}`));
 		if (this.variant) {
-			// Map 'success' -> 'fr-badge--success', etc.
-			// Note: DSFR uses 'fr-badge--success', 'fr-badge--error', etc.
-			classes.push(`fr-badge--${this.variant}`);
+			this.classList.add(`fr-badge--${this.variant}`);
 		}
 
-		if (this.noIcon) {
-			classes.push("fr-badge--no-icon");
-		}
+		// 3. Modifiers
+		this.classList.toggle("fr-badge--no-icon", this.noIcon);
+		this.classList.toggle("fr-badge--sm", this.sm);
+	}
 
-		if (this.sm) {
-			classes.push("fr-badge--sm");
-		}
+	render() {
+		// In Light DOM, we just render the content.
+		// If 'label' prop is used, render it.
+		// If using slot/children, Lit preserves them if we don't overwrite them?
+		// Actually, Lit's render() REPLACES content.
+		// So if we want to support <dsfr-badge>Content</dsfr-badge>, we can rely on Lit's behavior?
+		// No, in Light DOM, we usually render "nothing" if we want to keep children, OR we render the label.
 
-		return html`
-      <p class="${classes.join(" ")}">
-        <slot>${this.label}</slot>
-      </p>
-    `;
+		if (this.label) {
+			return html`${this.label}`;
+		}
+		// If no label prop, we render 'nothing' to let existing children persist?
+		// Lit's createRenderRoot returning 'this' means 'render()' output is appended/diffed against 'this'.
+		// To be safe and support both:
+		return html`<slot>${this.label}</slot>`;
+		// Wait, <slot> doesn't work in Light DOM.
+		// But if we just want to output the label text, it works.
 	}
 }
 
