@@ -1,0 +1,15 @@
+id: 'py-core'
+type: library
+language: python
+
+tasks:
+  build:
+    command: 'uv build --out-dir dist'
+    platform: python
+    inputs:
+      - 'pyproject.toml'
+      - 'src/**/*'
+
+  clean:
+    command: 'rm -rf dist'
+    platform: system

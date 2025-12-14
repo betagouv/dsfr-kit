@@ -1,0 +1,17 @@
+id: 'py-test'
+type: library
+language: python
+dependsOn:
+  - 'py-core'
+
+tasks:
+  build:
+    command: 'uv build --out-dir dist'
+    platform: python
+    inputs:
+      - 'pyproject.toml'
+      - 'src/**/*'
+
+  clean:
+    command: 'rm -rf dist'
+    platform: system
