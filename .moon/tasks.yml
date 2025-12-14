@@ -31,7 +31,7 @@ tasks:
     options:
       runInCI: true
 
-  test:coverage:
+  test-coverage:
     deps:
       - 'build'
     inputs:

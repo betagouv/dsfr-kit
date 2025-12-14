@@ -14,7 +14,7 @@
 		"lint": "moon run :lint",
 		"format": "moon run :format",
 		"test": "moon run :test",
-		"test:coverage": "moon run :test:coverage",
+		"test:coverage": "moon run :test-coverage",
 		"clean": "moon run :clean"
 	},
 	"devDependencies": {}
