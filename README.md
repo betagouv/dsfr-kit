@@ -97,7 +97,7 @@ just storybook
 
 ### Prerequisites
 
-- **Node.js**: 22+ 
+- **Node.js**: 22+
 - **pnpm**: 10+ (package manager for TypeScript/JavaScript)
 - **Python**: 3.12+
 - **uv**: Latest (package manager for Python)
@@ -307,7 +307,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 ### Constitution
 
-All development follows our [Constitution](.specify/memory/constitution.md), which defines:
+All development follows our [Constitution](AGENTS.md), which defines:
 
 - Core principles and rationale
 - Technical requirements

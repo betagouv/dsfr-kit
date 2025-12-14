@@ -27,13 +27,7 @@ Sync Impact Report:
   * Added Principle IX: Accessibility Compliance (NON-NEGOTIABLE - preserve DSFR a11y)
   * Added Principle X: Public Good Design System Inspiration (methodology reference)
 - Principles: 11 core principles
-- Templates status:
-  ✅ plan-template.md - Constitution Check section aligns with principles
-  ✅ spec-template.md - Requirements structure supports multi-framework approach
-  ✅ tasks-template.md - Task organization supports monorepo structure
-  ⚠️  Testing requirements now include behavioral and accessibility testing
-  ⚠️  Component development workflow should include Storybook/interactive documentation
-- Follow-up: Update task templates to include component documentation tasks
+
 -->
 
 # dsfr-kit Constitution
@@ -315,6 +309,6 @@ This constitution supersedes all other development practices and guidelines. Any
 - All pull requests MUST verify compliance with constitution principles
 - Architecture decisions MUST reference relevant constitutional principles
 - Complexity that violates principles MUST be justified in implementation plans
-- Use `.specify/memory/constitution.md` as the authoritative reference
+- Use `AGENTS.md` as the authoritative reference
 
 **Version**: 1.3.0 | **Ratified**: 2025-10-17 | **Last Amended**: 2025-10-18
