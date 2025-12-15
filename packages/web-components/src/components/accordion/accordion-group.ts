@@ -1,6 +1,6 @@
-import { LitElement, html, unsafeCSS } from "lit";
-import { customElement, property } from "lit/decorators.js";
 import accordionStyles from "@gouvfr/dsfr/dist/component/accordion/accordion.min.css?inline";
+import { html, LitElement, unsafeCSS } from "lit";
+import { customElement, property } from "lit/decorators.js";
 import { DsfrAccordion } from "../accordion/accordion";
 
 @customElement("dsfr-accordion-group")
