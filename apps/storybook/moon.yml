@@ -1,0 +1,14 @@
+language: typescript
+type: application
+
+tasks:
+  dev:
+    command: "storybook dev -p 6006"
+    local: true
+    options:
+      persistent: true
+
+  build:
+    command: "storybook build"
+    outputs:
+      - "storybook-static"
