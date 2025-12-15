@@ -7,5 +7,7 @@ requires-python = ">=3.12"
 [tool.uv.workspace]
 members = ["libs/*"]
 
-[tool.uv]
-dev-dependencies = []
+[dependency-groups]
+dev = [
+    "ruff>=0.14.9",
+]

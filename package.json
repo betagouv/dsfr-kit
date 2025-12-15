@@ -18,5 +18,7 @@
 		"clean": "moon run :clean",
 		"storybook": "moon run :storybook"
 	},
-	"devDependencies": {}
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.8"
+	}
 }
