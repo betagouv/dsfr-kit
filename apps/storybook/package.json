@@ -1,0 +1,21 @@
+{
+	"name": "dsfr-storybook",
+	"version": "0.1.0",
+	"type": "module",
+	"scripts": {
+		"storybook": "storybook dev -p 6006",
+		"build-storybook": "storybook build"
+	},
+	"dependencies": {
+		"@dsfr-kit/web-components": "workspace:*",
+		"@gouvfr/dsfr": "^1.14.2",
+		"lit": "^3.3.1"
+	},
+	"devDependencies": {
+		"@storybook/addon-docs": "^10.1.8",
+		"@storybook/addon-vitest": "^10.1.8",
+		"@storybook/web-components-vite": "^10.1.8",
+		"storybook": "^10.1.8",
+		"vite": "^7.2.7"
+	}
+}

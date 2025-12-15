@@ -26,7 +26,9 @@ export class DsfrBadge extends LitElement {
 
 		// 2. Variant (Remove old, add new)
 		const variants = ["success", "error", "info", "warning", "new"];
-		variants.forEach((v) => this.classList.remove(`fr-badge--${v}`));
+		variants.forEach((v) => {
+			this.classList.remove(`fr-badge--${v}`);
+		});
 		if (this.variant) {
 			this.classList.add(`fr-badge--${this.variant}`);
 		}

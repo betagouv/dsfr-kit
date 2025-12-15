@@ -3,10 +3,10 @@
 	"version": "0.1.0",
 	"private": true,
 	"description": "DSFR component library for multiple frameworks",
-	"packageManager": "pnpm@10.18.3",
+	"packageManager": "pnpm@10.25.0",
 	"engines": {
-		"node": "22.0.0",
-		"pnpm": ">=10.0.0"
+		"node": "22.21.1",
+		"pnpm": ">=10.25.0"
 	},
 	"scripts": {
 		"build": "moon run :build",
@@ -15,7 +15,8 @@
 		"format": "moon run :format",
 		"test": "moon run :test",
 		"test:coverage": "moon run :test-coverage",
-		"clean": "moon run :clean"
+		"clean": "moon run :clean",
+		"storybook": "moon run :storybook"
 	},
 	"devDependencies": {}
 }

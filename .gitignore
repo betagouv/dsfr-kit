@@ -58,3 +58,5 @@ lerna-debug.log*
 # moon
 .moon/cache
 .moon/docker
+
+*storybook.log
