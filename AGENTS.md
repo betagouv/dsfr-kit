@@ -231,6 +231,9 @@ All components MUST be documented and demonstrated in isolation using interactiv
 
 ## Technology Stack
 
+> **Note for Agents**: For strict operational details, package management rules, and execution standards, refer to [Technical Context](docs/ai-knowledge/technical-context.md).
+
+
 ### Required Tools
 
 - **Monorepo**: Turborepo (build orchestration, caching, task running)
