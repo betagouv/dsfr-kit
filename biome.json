@@ -7,13 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": true,
-		"includes": [
-			"**",
-			"!**/coverage/**",
-			"!**/dist/**",
-			"!**/.moon/**",
-			"!**/.turbo/**"
-		]
+		"includes": ["**", "!**/coverage", "!**/dist", "!**/.moon", "!**/.turbo"]
 	},
 	"formatter": {
 		"enabled": true,

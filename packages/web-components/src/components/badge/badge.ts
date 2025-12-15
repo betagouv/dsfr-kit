@@ -1,7 +1,7 @@
-import { LitElement, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
 import badgeStyles from "@gouvfr/dsfr/dist/component/badge/badge.min.css?inline";
 import iconStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
+import { html, LitElement } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
 @customElement("dsfr-badge")
 export class DsfrBadge extends LitElement {

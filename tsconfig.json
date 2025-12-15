@@ -1,7 +1,7 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./packages/core" },
-    { "path": "./packages/test-lib" }
-  ]
+	"files": [],
+	"references": [
+		{ "path": "./packages/core" },
+		{ "path": "./packages/test-lib" }
+	]
 }
