@@ -23,7 +23,7 @@ Before you begin, ensure you have the following installed:
 - **pnpm** 10+
 - **Python** 3.12+
 - **uv** (latest)
-- **just** (latest) - [Installation](https://github.com/casey/just#installation)
+- **moon** (binary or via pnpm)
 
 ### Development Setup
 
@@ -33,13 +33,13 @@ git clone https://github.com/betagouv/dsfr-kit.git
 cd dsfr-kit
 
 # Install dependencies for both ecosystems
-just install
+npm run setup
 
 # Build all packages
-just build
+npm run build
 
 # Verify everything works
-just verify
+npm run verify
 ```
 
 ## Project Structure
@@ -127,7 +127,7 @@ dsfr-kit/
 5. Install and verify:
    ```bash
    pnpm install
-   just build
+   npm run build
    ```
 
 ### Python Package
@@ -177,7 +177,7 @@ dsfr-kit/
 5. Install and verify:
    ```bash
    uv sync
-   just build
+   npm run build
    ```
 
 ### Workspace Dependencies
@@ -212,40 +212,40 @@ dsfr-kit-core = { workspace = true }
 
 ### TypeScript/JavaScript
 
-- **Linter**: ESLint (future)
-- **Formatter**: Prettier (future)
+- **Linter**: Biome
+- **Formatter**: Biome
 - **Type checking**: TypeScript strict mode
 
 ### Python
 
-- **Linter**: Ruff (future)
-- **Formatter**: Ruff (future)
+- **Linter**: Ruff
+- **Formatter**: Ruff
 - **Type checking**: mypy (future)
 
 ### Running Quality Checks
 
 ```bash
 # Lint all packages
-just lint
+npm run lint
 
 # Format all packages
-just format
+npm run format
 
 # Type check
-just build  # TypeScript compilation includes type checking
+npm run build  # TypeScript compilation includes type checking
 ```
 
 ## Testing
 
 ```bash
 # Run all tests
-just test
+npm run test
 
 # Run tests with coverage
-just test-coverage
+npm run test:coverage
 
 # Run tests for specific package
-just run-in @dsfr-kit/my-package test
+moon run @dsfr-kit/my-package:test
 ```
 
 ## Pull Request Process
