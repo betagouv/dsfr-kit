@@ -7,12 +7,16 @@
 		"build-storybook": "storybook build"
 	},
 	"dependencies": {
-		"lit": "^3.3.1",
+		"@dsfr-kit/web-components": "workspace:*",
 		"@gouvfr/dsfr": "^1.14.2",
-		"@dsfr-kit/web-components": "workspace:*"
+		"lit": "^3.3.1"
 	},
 	"devDependencies": {
+		"@storybook/addon-docs": "^10.1.8",
+		"@storybook/addon-vitest": "^10.1.8",
 		"@storybook/web-components-vite": "^10.1.8",
+		"add": "^2.0.6",
+		"npx": "^10.2.2",
 		"storybook": "^10.1.8",
 		"vite": "^7.2.7"
 	}

@@ -44,7 +44,8 @@ export const Success: Story = {
 	},
 };
 
-export const ErrorStory: Story = {
+export const ErrorBadge: Story = {
+	name: "Error",
 	args: {
 		variant: "error",
 		label: "Erreur",
