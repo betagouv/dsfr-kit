@@ -21,7 +21,7 @@
 		"test:coverage": "moon run :test-coverage",
 		"clean": "moon run :clean",
 		"clean:hard": "moon run :clean && rm -rf node_modules .turbo .moon/cache && find apps packages libs -type d -name 'node_modules' -prune -exec rm -rf {} +",
-		"setup": "pnpm install && uv sync",
+		"setup": "pnpm install && uv sync && uv run pre-commit install",
 		"verify": "pnpm list --depth 0 && uv tree",
 		"storybook": "moon run :storybook"
 	},
