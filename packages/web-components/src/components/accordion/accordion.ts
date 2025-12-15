@@ -1,10 +1,10 @@
-import { LitElement, html, unsafeCSS } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
 import accordionStyles from "@gouvfr/dsfr/dist/component/accordion/accordion.min.css?inline";
-import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline";
-import iconsStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
 import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
 import schemeStyles from "@gouvfr/dsfr/dist/scheme/scheme.min.css?inline";
+import iconsStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
+import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline";
+import { html, LitElement, type TemplateResult, unsafeCSS } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 
 @customElement("dsfr-accordion")
 export class DsfrAccordion extends LitElement {
@@ -48,7 +48,7 @@ export class DsfrAccordion extends LitElement {
         `;
 
 		// Dynamic heading
-		let heading;
+		let heading: TemplateResult;
 		switch (this.headingLevel) {
 			case "h1":
 				heading = html`<h1 class="fr-accordion__title">${button}</h1>`;
