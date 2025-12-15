@@ -16,37 +16,54 @@ install:
 # Build all packages
 build:
     @echo "🔨 Building all packages..."
-    turbo run build
+    moon run :build
 
 # Run development mode for all packages
 dev:
     @echo "🚀 Starting development mode..."
-    turbo run dev
+    moon run :dev
 
 # Lint all packages
+# Runs both Biome (JS/TS) and Ruff (Python)
 lint:
-    @echo "🔍 Linting all packages..."
-    turbo run lint
+    @echo "🔍 Linting in parallel..."
+    moon run :lint
+
+lint-biome:
+    @echo "🔍 Linting JS/TS with Biome..."
+    moon run :lint-biome
+
+lint-ruff:
+    @echo "🔍 Linting Python with Ruff..."
+    moon run :lint-ruff
 
 # Format all packages
 format:
-    @echo "✨ Formatting all packages..."
-    turbo run format
+    @echo "✨ Formatting in parallel..."
+    moon run :format
+
+format-biome:
+    @echo "✨ Formatting JS/TS with Biome..."
+    moon run :format-biome
+
+format-ruff:
+    @echo "✨ Formatting Python with Ruff..."
+    moon run :format-ruff
 
 # Run tests for all packages
 test:
     @echo "🧪 Running tests..."
-    turbo run test
+    moon run :test
 
 # Run tests with coverage
 test-coverage:
     @echo "🧪 Running tests with coverage..."
-    turbo run test:coverage
+    moon run :test-coverage
 
 # Clean all build outputs and caches
 clean:
     @echo "🧹 Cleaning build outputs and caches..."
-    turbo run clean
+    moon run :clean
     rm -rf node_modules .turbo
     find apps packages -type d -name "node_modules" -prune -exec rm -rf {} +
     @echo "✅ Cleaned"
@@ -60,22 +77,23 @@ verify:
     uv tree
     @echo "\n✅ Workspace verified"
 
-# Show Turborepo cache status
+# Show Moon cache status
 cache-status:
-    @echo "📊 Turborepo cache status:"
-    turbo run build --dry-run
+    @echo "📊 Moon cache status:"
+    @echo "Check .moon/cache for details"
+    ls -lh .moon/cache
 
-# Clear Turborepo cache
+# Clear Moon cache
 cache-clear:
-    @echo "🗑️  Clearing Turborepo cache..."
-    rm -rf .turbo/cache
+    @echo "🗑️  Clearing Moon cache..."
+    rm -rf .moon/cache
     @echo "✅ Cache cleared"
 
 # Run a command in a specific package
 # Usage: just run-in <package-name> <command>
 run-in package command:
     @echo "🎯 Running '{{command}}' in {{package}}..."
-    turbo run {{command}} --filter={{package}}
+    moon run {{package}}:{{command}}
 
 # Add a new package
 # Usage: just add-package <type> <name>
@@ -111,3 +129,8 @@ update:
     pnpm update
     uv sync --upgrade
     @echo "✅ Dependencies updated"
+
+# Run Storybook
+storybook:
+    @echo "📚 Starting Storybook..."
+    moon run :storybook

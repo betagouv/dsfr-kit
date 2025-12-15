@@ -1,6 +1,6 @@
 """Test Python package demonstrating workspace dependencies."""
 
-from dsfr_kit_python_core import hello, get_version
+from dsfr_kit_python_core import get_version, hello
 
 __version__ = "0.1.0"
 

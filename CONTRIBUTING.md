@@ -212,14 +212,14 @@ dsfr-kit-core = { workspace = true }
 
 ### TypeScript/JavaScript
 
-- **Linter**: ESLint (future)
-- **Formatter**: Prettier (future)
+- **Linter**: Biome
+- **Formatter**: Biome
 - **Type checking**: TypeScript strict mode
 
 ### Python
 
-- **Linter**: Ruff (future)
-- **Formatter**: Ruff (future)
+- **Linter**: Ruff
+- **Formatter**: Ruff
 - **Type checking**: mypy (future)
 
 ### Running Quality Checks

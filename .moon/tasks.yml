@@ -40,23 +40,53 @@ tasks:
     options:
       runInCI: true
 
-  lint:
-    command: "sh -c 'EXIT_CODE=0; if [ -f package.json ]; then $MOON_WORKSPACE_ROOT/node_modules/.bin/biome lint . || EXIT_CODE=1; fi; if [ -f pyproject.toml ]; then uv run --project $MOON_WORKSPACE_ROOT ruff check . || EXIT_CODE=1; fi; exit $EXIT_CODE'"
+  lint-biome:
+    command: "sh -c 'if [ -f package.json ]; then $MOON_WORKSPACE_ROOT/node_modules/.bin/biome lint . || exit 1; fi'"
     platform: system
     inputs:
       - '@group(sources)'
       - '/biome.json'
+    options:
+      runInCI: true
+
+  lint-ruff:
+    command: "sh -c 'if [ -f pyproject.toml ]; then uv run --project $MOON_WORKSPACE_ROOT ruff check . || exit 1; fi'"
+    platform: system
+    inputs:
+      - '@group(sources)'
+      - '/pyproject.toml'
+    options:
+      runInCI: true
+
+  lint:
+    deps:
+      - 'lint-biome'
+      - 'lint-ruff'
+    options:
+      runInCI: true
+
+  format-biome:
+    command: "sh -c 'if [ -f package.json ]; then $MOON_WORKSPACE_ROOT/node_modules/.bin/biome format --write . || exit 1; fi'"
+    platform: system
+    inputs:
+      - '@group(sources)'
+      - '/biome.json'
+    options:
+      runInCI: true
+
+  format-ruff:
+    command: "sh -c 'if [ -f pyproject.toml ]; then uv run --project $MOON_WORKSPACE_ROOT ruff format . || exit 1; fi'"
+    platform: system
+    inputs:
+      - '@group(sources)'
       - '/pyproject.toml'
     options:
       runInCI: true
 
   format:
-    command: "sh -c 'EXIT_CODE=0; if [ -f package.json ]; then $MOON_WORKSPACE_ROOT/node_modules/.bin/biome format --write . || EXIT_CODE=1; fi; if [ -f pyproject.toml ]; then uv run --project $MOON_WORKSPACE_ROOT ruff format . || EXIT_CODE=1; fi; exit $EXIT_CODE'"
-    platform: system
-    inputs:
-      - '@group(sources)'
-      - '/biome.json'
-      - '/pyproject.toml'
+    deps:
+      - 'format-biome'
+      - 'format-ruff'
     options:
       runInCI: true
 
