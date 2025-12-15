@@ -23,7 +23,7 @@ Before you begin, ensure you have the following installed:
 - **pnpm** 10+
 - **Python** 3.12+
 - **uv** (latest)
-- **moon** (binary or via pnpm)
+- **just** (latest) - [Installation](https://github.com/casey/just#installation)
 
 ### Development Setup
 
@@ -33,13 +33,13 @@ git clone https://github.com/betagouv/dsfr-kit.git
 cd dsfr-kit
 
 # Install dependencies for both ecosystems
-npm run setup
+just install
 
 # Build all packages
-npm run build
+just build
 
 # Verify everything works
-npm run verify
+just verify
 ```
 
 ## Project Structure
@@ -127,7 +127,7 @@ dsfr-kit/
 5. Install and verify:
    ```bash
    pnpm install
-   npm run build
+   just build
    ```
 
 ### Python Package
@@ -177,7 +177,7 @@ dsfr-kit/
 5. Install and verify:
    ```bash
    uv sync
-   npm run build
+   just build
    ```
 
 ### Workspace Dependencies
@@ -226,26 +226,26 @@ dsfr-kit-core = { workspace = true }
 
 ```bash
 # Lint all packages
-npm run lint
+just lint
 
 # Format all packages
-npm run format
+just format
 
 # Type check
-npm run build  # TypeScript compilation includes type checking
+just build  # TypeScript compilation includes type checking
 ```
 
 ## Testing
 
 ```bash
 # Run all tests
-npm run test
+just test
 
 # Run tests with coverage
-npm run test:coverage
+just test-coverage
 
 # Run tests for specific package
-moon run @dsfr-kit/my-package:test
+just run-in @dsfr-kit/my-package test
 ```
 
 ## Pull Request Process
