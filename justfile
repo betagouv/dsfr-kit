@@ -13,6 +13,12 @@ install:
     uv sync
     @echo "✅ All dependencies installed"
 
+# Setup repository (install dependencies and pre-commit hooks)
+setup: install
+    @echo "🪝 Installing pre-commit hooks..."
+    uv run pre-commit install
+    @echo "✅ Setup complete"
+
 # Build all packages
 build:
     @echo "🔨 Building all packages..."
