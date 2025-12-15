@@ -58,8 +58,21 @@ export const LongContent: Story = {
 };
 
 export const AccordionGroup: Story = {
-	render: () => html`
-        <dsfr-accordion-group>
+	argTypes: {
+		group: {
+			control: "boolean",
+			description: "If true, only one accordion can be open at a time.",
+		},
+		label: { table: { disable: true } },
+		expanded: { table: { disable: true } },
+		headingLevel: { table: { disable: true } },
+		content: { table: { disable: true } },
+	},
+	args: {
+		group: true,
+	},
+	render: (args) => html`
+        <dsfr-accordion-group ?group=${args.group}>
             <dsfr-accordion label="Accordéon 1">Contenu 1</dsfr-accordion>
             <dsfr-accordion label="Accordéon 2">Contenu 2</dsfr-accordion>
             <dsfr-accordion label="Accordéon 3">Contenu 3</dsfr-accordion>

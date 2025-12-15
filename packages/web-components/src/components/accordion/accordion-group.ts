@@ -1,14 +1,18 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 import accordionStyles from "@gouvfr/dsfr/dist/component/accordion/accordion.min.css?inline";
 import { DsfrAccordion } from "../accordion/accordion";
 
 @customElement("dsfr-accordion-group")
 export class DsfrAccordionGroup extends LitElement {
+	// If true, only one accordion can be open at a time (default behavior)
+	@property({ type: Boolean })
+	group = true;
+
 	// Listen for the change event from children
 	private _handleChildChange(e: CustomEvent) {
-		// If the event is declaring an expansion
-		if (e.detail.expanded) {
+		// If the event is declaring an expansion AND grouping is enabled
+		if (this.group && e.detail.expanded) {
 			const target = e.target as DsfrAccordion;
 
 			// Close all other children
