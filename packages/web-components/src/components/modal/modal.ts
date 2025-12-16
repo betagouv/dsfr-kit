@@ -34,10 +34,20 @@ export class DsfrModal extends LitElement {
 		unsafeCSS(buttonStyles),
 	];
 
+	firstUpdated() {
+		if (this.open) {
+			this.dialog?.showModal();
+			this.requestUpdate();
+		}
+	}
+
 	updated(changedProperties: Map<string, unknown>) {
 		if (changedProperties.has("open")) {
 			if (this.open) {
-				this.dialog?.showModal();
+				if (!this.dialog.open) {
+					this.dialog?.showModal();
+					this.requestUpdate();
+				}
 			} else {
 				this.dialog?.close();
 			}
@@ -84,10 +94,15 @@ export class DsfrModal extends LitElement {
 			"fr-col-lg-8": this.size === "lg",
 		};
 
+		const dialogClasses = {
+			"fr-modal": true,
+			"fr-modal--opened": this.open,
+		};
+
 		return html`
             <dialog
                 id=${this.modalId}
-                class="fr-modal"
+                class=${classMap(dialogClasses)}
                 aria-labelledby=${`${this.modalId}-title`}
                 @close=${this._handleDialogClose}
                 @click=${this._handleBackdropClick}
