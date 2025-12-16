@@ -3,6 +3,7 @@ const config = {
 	stories: [
 		"../src/stories/**/*.mdx",
 		"../src/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+		"../node_modules/@gouvfr/dsfr/src/dsfr/component/**/*.stories.js",
 	],
 	addons: [],
 	framework: {
