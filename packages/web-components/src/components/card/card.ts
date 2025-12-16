@@ -3,19 +3,19 @@ import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
 import schemeStyles from "@gouvfr/dsfr/dist/scheme/scheme.min.css?inline";
 import iconsStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
 import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline";
-import { html, LitElement, unsafeCSS } from "lit";
+import { html, LitElement, nothing, type TemplateResult, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
 /**
  * @summary DSFR Card component
  *
- * @slot image - content for the card header (image)
+ * @slot image - content for the card header (image), if not using imgSrc
  * @slot badge - badges to display in the card content start area
  * @slot detail - details to display in the card content start area
- * @slot description - description text
+ * @slot description - description text, if not using description prop
  * @slot footer - call to action buttons or links
- * @slot end - content for the end area of content (alternative to detail/badge placement)
+ * @slot end - content for the end area of content (alternative to endDetail logic)
  */
 @customElement("dsfr-card")
 export class DsfrCard extends LitElement {
@@ -24,6 +24,30 @@ export class DsfrCard extends LitElement {
 
 	@property({ type: String })
 	href = "#";
+
+	@property({ type: String })
+	description = "";
+
+	@property({ type: String, attribute: "img-src" })
+	imgSrc = "";
+
+	@property({ type: String, attribute: "img-alt" })
+	imgAlt = "";
+
+	@property({ type: String, attribute: "detail" })
+	detail = "";
+
+	@property({ type: String, attribute: "detail-icon" })
+	detailIcon = "";
+
+	@property({ type: String, attribute: "end-detail" })
+	endDetail = "";
+
+	@property({ type: String, attribute: "end-detail-icon" })
+	endDetailIcon = "";
+
+	@property({ type: String, attribute: "heading-level" })
+	headingLevel: "h2" | "h3" | "h4" | "h5" | "h6" = "h3";
 
 	@property({ type: Boolean, reflect: true })
 	horizontal = false;
@@ -45,6 +69,24 @@ export class DsfrCard extends LitElement {
 		unsafeCSS(cardStyles),
 	];
 
+	private renderHeading(): TemplateResult {
+		const content = html`<a href=${this.href}>${this.title}</a>`;
+		switch (this.headingLevel) {
+			case "h2":
+				return html`<h2 class="fr-card__title">${content}</h2>`;
+			case "h3":
+				return html`<h3 class="fr-card__title">${content}</h3>`;
+			case "h4":
+				return html`<h4 class="fr-card__title">${content}</h4>`;
+			case "h5":
+				return html`<h5 class="fr-card__title">${content}</h5>`;
+			case "h6":
+				return html`<h6 class="fr-card__title">${content}</h6>`;
+			default:
+				return html`<h3 class="fr-card__title">${content}</h3>`;
+		}
+	}
+
 	render() {
 		const classes = {
 			"fr-card": true,
@@ -54,22 +96,38 @@ export class DsfrCard extends LitElement {
 			"fr-enlarge-link": this.enlargeLink,
 		};
 
+		const hasStartDetail = this.detail || this.detailIcon;
+		const hasEndDetail = this.endDetail || this.endDetailIcon;
+
 		return html`
             <div class=${classMap(classes)}>
                 <div class="fr-card__body">
                     <div class="fr-card__content">
-                        <h3 class="fr-card__title">
-                            <a href=${this.href}>${this.title}</a>
-                        </h3>
+                        ${this.renderHeading()}
+
                         <p class="fr-card__desc">
-                            <slot name="description"></slot>
+                            ${this.description ? this.description : html`<slot name="description"></slot>`}
                         </p>
+
                         <div class="fr-card__start">
                             <slot name="badge"></slot>
-                            <slot name="detail"></slot>
+                            <slot name="detail">
+                                ${
+																	hasStartDetail
+																		? html`<p class="fr-card__detail ${this.detailIcon}">${this.detail}</p>`
+																		: nothing
+																}
+                            </slot>
                         </div>
+
                         <div class="fr-card__end">
-                            <slot name="end"></slot>
+                            <slot name="end">
+                                ${
+																	hasEndDetail
+																		? html`<p class="fr-card__detail ${this.endDetailIcon}">${this.endDetail}</p>`
+																		: nothing
+																}
+                            </slot>
                         </div>
                     </div>
                     <div class="fr-card__footer">
@@ -77,7 +135,16 @@ export class DsfrCard extends LitElement {
                     </div>
                 </div>
                 <div class="fr-card__header">
-                    <slot name="image"></slot>
+                    <slot name="image">
+                        ${
+													this.imgSrc
+														? html`
+                            <div class="fr-card__img">
+                                <img class="fr-responsive-img" src=${this.imgSrc} alt=${this.imgAlt} />
+                            </div>`
+														: nothing
+												}
+                    </slot>
                 </div>
             </div>
         `;
