@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { DsfrModal } from "@dsfr-kit/web-components";
+import "@dsfr-kit/web-components"; // Ensure all components are registered
 import { html } from "lit";
 
 const meta: Meta = {
@@ -39,13 +40,13 @@ type Story = StoryObj;
 
 const Template: Story = {
 	render: (args) => html`
-        <button class="fr-btn" @click=${(e: Event) => {
+        <dsfr-button @click=${(e: Event) => {
 					const modal = (e.target as HTMLElement)
 						.nextElementSibling as unknown as DsfrModal;
 					modal.open = true;
 				}}>
             Ouvrir la modale
-        </button>
+        </dsfr-button>
         <dsfr-modal
             ?open=${args.open}
             modalTitle=${args.modalTitle}
@@ -83,13 +84,13 @@ export const Large: Story = {
 export const WithActions: Story = {
 	...Template,
 	render: (args) => html`
-        <button class="fr-btn" @click=${(e: Event) => {
+        <dsfr-button @click=${(e: Event) => {
 					const modal = (e.target as HTMLElement)
 						.nextElementSibling as unknown as DsfrModal;
 					modal.open = true;
 				}}>
             Ouvrir la modale
-        </button>
+        </dsfr-button>
         <dsfr-modal
             ?open=${args.open}
             modalTitle=${args.modalTitle}
@@ -101,18 +102,16 @@ export const WithActions: Story = {
             <p>Cette modale contient des actions en bas de page.</p>
             <ul slot="footer" class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
                 <li>
-                    <button class="fr-btn">Valider</button>
+                    <dsfr-button>Valider</dsfr-button>
                 </li>
                  <li>
-                    <button class="fr-btn fr-btn--secondary" @click=${(
-											e: Event,
-										) => {
+                    <dsfr-button variant="secondary" @click=${(e: Event) => {
 											(
 												(e.target as HTMLElement).closest(
 													"dsfr-modal",
 												) as unknown as DsfrModal
 											).open = false;
-										}}>Annuler</button>
+										}}>Annuler</dsfr-button>
                 </li>
             </ul>
         </dsfr-modal>

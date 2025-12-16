@@ -1,7 +1,7 @@
 import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
 import modalStyles from "@gouvfr/dsfr/dist/component/modal/modal.min.css?inline";
 import buttonStyles from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
-import { html, LitElement, nothing, unsafeCSS } from "lit";
+import { html, LitElement, nothing, unsafeCSS, css } from "lit";
 import { customElement, property, query } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
@@ -32,6 +32,11 @@ export class DsfrModal extends LitElement {
 		unsafeCSS(coreStyles),
 		unsafeCSS(modalStyles),
 		unsafeCSS(buttonStyles),
+		css`
+            dialog[open] {
+                display: flex !important;
+            }
+        `,
 	];
 
 	firstUpdated() {
