@@ -1,34 +1,60 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import "@dsfr-kit/web-components";
 
+const accordionArgTypes = {
+	isExpanded: {
+		control: "boolean",
+		description: "L'accordéon est-il ouvert au départ",
+		table: {
+			type: { summary: "boolean" },
+		},
+	},
+	id: {
+		control: "text",
+		description: "Attribut 'id' du collapse de l'accordéon",
+		table: {
+			type: { summary: "string" },
+		},
+	},
+	label: {
+		control: "text",
+		description: "Libellé du bouton",
+		table: {
+			type: { summary: "string" },
+		},
+	},
+	content: {
+		control: "text",
+		description: "Contenu du collapse",
+		table: {
+			type: { summary: "string" },
+		},
+	},
+} as const;
+
+const accordionArgs = {
+	isExpanded: false,
+	id: "accordion-id",
+	label: "Libellé accordéon",
+	content:
+		'<h4 class="fr-h4">Contenu </h4> <p>Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>',
+};
+
 const meta: Meta = {
-	title: "Components/Accordion",
+	title: "DSFR/Component/Accordion",
 	component: "dsfr-accordion",
 	tags: ["autodocs"],
-	argTypes: {
-		label: { control: "text" },
-		expanded: { control: "boolean" },
-		headingLevel: {
-			control: "select",
-			options: ["h1", "h2", "h3", "h4", "h5", "h6"],
-		},
-		content: { control: "text" },
-	},
-	args: {
-		label: "Intitulé accordéon",
-		expanded: false,
-		headingLevel: "h3",
-		content:
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-	},
+	argTypes: accordionArgTypes,
+	args: accordionArgs,
 	render: (args) => html`
     <dsfr-accordion
+      id=${args.id}
       label=${args.label}
-      ?expanded=${args.expanded}
-      heading-level=${args.headingLevel}
+      ?expanded=${args.isExpanded}
     >
-      ${args.content}
+      ${unsafeHTML(args.content)}
     </dsfr-accordion>
   `,
 };
@@ -36,46 +62,4 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const Default: Story = {};
-
-export const Expanded: Story = {
-	args: {
-		expanded: true,
-	},
-};
-
-export const LongContent: Story = {
-	args: {
-		content: `
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-        `,
-	},
-};
-
-export const AccordionGroup: Story = {
-	argTypes: {
-		group: {
-			control: "boolean",
-			description: "If true, only one accordion can be open at a time.",
-		},
-		label: { table: { disable: true } },
-		expanded: { table: { disable: true } },
-		headingLevel: { table: { disable: true } },
-		content: { table: { disable: true } },
-	},
-	args: {
-		group: true,
-	},
-	render: (args) => html`
-        <dsfr-accordion-group ?group=${args.group}>
-            <dsfr-accordion label="Accordéon 1">Contenu 1</dsfr-accordion>
-            <dsfr-accordion label="Accordéon 2">Contenu 2</dsfr-accordion>
-            <dsfr-accordion label="Accordéon 3">Contenu 3</dsfr-accordion>
-        </dsfr-accordion-group>
-    `,
-};
+export const AccordionStory: Story = {};
