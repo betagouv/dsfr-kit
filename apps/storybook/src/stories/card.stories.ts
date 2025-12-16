@@ -115,7 +115,7 @@ const meta: Meta = {
                 ?enlarge-link=${args.enlargeLink}
             >
                 ${args.hasBadge ? html`<div slot="badge"><dsfr-badge variant="new" sm>Badge</dsfr-badge></div>` : ""}
-                ${args.hasTag ? html`<div slot="tag"><span class="fr-tag">Tag</span></div>` : ""}
+                ${args.hasTag ? html`<div slot="tag"><dsfr-tag label="Tag"></dsfr-tag></div>` : ""}
             </dsfr-card>
         </div>
     `,
@@ -224,8 +224,10 @@ export const KitchenSink: Story = {
                 <div slot="badge">
                     <dsfr-badge variant="new" sm>Nouveau</dsfr-badge>
                 </div>
+                <!-- Updated to use dsfr-tag -->
                 <div slot="tag">
-                    <span class="fr-tag">Tag</span>
+                    <dsfr-tag label="Tag 1" type="Default"></dsfr-tag>
+                    <dsfr-tag label="Tag 2" icon="fr-icon-success-line" size="sm"></dsfr-tag>
                 </div>
                 <div slot="footer">
                     <button class="fr-btn fr-btn--secondary fr-btn--sm">Télécharger</button>
