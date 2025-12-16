@@ -60,3 +60,4 @@ lerna-debug.log*
 .moon/docker
 
 *storybook.log
+storybook-static/
