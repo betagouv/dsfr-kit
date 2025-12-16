@@ -12,10 +12,11 @@ import { classMap } from "lit/directives/class-map.js";
  *
  * @slot image - content for the card header (image), if not using imgSrc
  * @slot badge - badges to display in the card content start area
+ * @slot tag - tags to display in the card content start area
  * @slot detail - details to display in the card content start area
  * @slot description - description text, if not using description prop
  * @slot footer - call to action buttons or links
- * @slot end - content for the end area of content (alternative to endDetail logic)
+ * @slot end - content for the end area of content
  */
 @customElement("dsfr-card")
 export class DsfrCard extends LitElement {
@@ -24,6 +25,9 @@ export class DsfrCard extends LitElement {
 
 	@property({ type: String })
 	href = "#";
+
+	@property({ type: Boolean, attribute: "has-description" })
+	hasDescription = false;
 
 	@property({ type: String })
 	description = "";
@@ -34,17 +38,29 @@ export class DsfrCard extends LitElement {
 	@property({ type: String, attribute: "img-alt" })
 	imgAlt = "";
 
+	@property({ type: Boolean, attribute: "has-detail-start" })
+	hasDetailStart = false;
+
 	@property({ type: String, attribute: "detail" })
 	detail = "";
 
 	@property({ type: String, attribute: "detail-icon" })
 	detailIcon = "";
 
+	@property({ type: Boolean, attribute: "has-detail-end" })
+	hasDetailEnd = false;
+
 	@property({ type: String, attribute: "end-detail" })
 	endDetail = "";
 
 	@property({ type: String, attribute: "end-detail-icon" })
 	endDetailIcon = "";
+
+	@property({ type: Boolean, attribute: "has-badge" })
+	hasBadge = false;
+
+	@property({ type: Boolean, attribute: "has-tag" })
+	hasTag = false;
 
 	@property({ type: String, attribute: "heading-level" })
 	headingLevel: "h2" | "h3" | "h4" | "h5" | "h6" = "h3";
@@ -96,8 +112,8 @@ export class DsfrCard extends LitElement {
 			"fr-enlarge-link": this.enlargeLink,
 		};
 
-		const hasStartDetail = this.detail || this.detailIcon;
-		const hasEndDetail = this.endDetail || this.endDetailIcon;
+		// "Start" area contains badges, tags, and start-detail.
+		const showStart = this.hasBadge || this.hasTag || this.hasDetailStart;
 
 		return html`
             <div class=${classMap(classes)}>
@@ -105,30 +121,43 @@ export class DsfrCard extends LitElement {
                     <div class="fr-card__content">
                         ${this.renderHeading()}
 
-                        <p class="fr-card__desc">
-                            ${this.description ? this.description : html`<slot name="description"></slot>`}
-                        </p>
+                        ${
+													this.hasDescription
+														? html`
+                            <p class="fr-card__desc">
+                                ${this.description ? this.description : html`<slot name="description"></slot>`}
+                            </p>`
+														: nothing
+												}
 
-                        <div class="fr-card__start">
-                            <slot name="badge"></slot>
-                            <slot name="detail">
+                        ${
+													showStart
+														? html`
+                            <div class="fr-card__start">
+                                ${this.hasBadge ? html`<slot name="badge"></slot>` : nothing}
+                                ${this.hasTag ? html`<slot name="tag"></slot>` : nothing}
                                 ${
-																	hasStartDetail
-																		? html`<p class="fr-card__detail ${this.detailIcon}">${this.detail}</p>`
+																	this.hasDetailStart
+																		? html`
+                                    <slot name="detail">
+                                        <p class="fr-card__detail ${this.detailIcon}">${this.detail}</p>
+                                    </slot>`
 																		: nothing
 																}
-                            </slot>
-                        </div>
+                            </div>`
+														: nothing
+												}
 
-                        <div class="fr-card__end">
-                            <slot name="end">
-                                ${
-																	hasEndDetail
-																		? html`<p class="fr-card__detail ${this.endDetailIcon}">${this.endDetail}</p>`
-																		: nothing
-																}
-                            </slot>
-                        </div>
+                        ${
+													this.hasDetailEnd
+														? html`
+                            <div class="fr-card__end">
+                                <slot name="end">
+                                    <p class="fr-card__detail ${this.endDetailIcon}">${this.endDetail}</p>
+                                </slot>
+                            </div>`
+														: nothing
+												}
                     </div>
                     <div class="fr-card__footer">
                         <slot name="footer"></slot>

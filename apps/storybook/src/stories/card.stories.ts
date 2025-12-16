@@ -21,19 +21,30 @@ const meta: Meta = {
 	argTypes: {
 		title: { control: "text" },
 		href: { control: "text" },
+
+		hasDescription: { control: "boolean" },
 		description: { control: "text" },
+
 		imgSrc: { control: "text" },
 		imgAlt: { control: "text" },
+
+		hasDetailStart: { control: "boolean" },
 		detail: { control: "text" },
 		detailIcon: {
 			control: "select",
 			options: iconOptions,
 		},
+
+		hasDetailEnd: { control: "boolean" },
 		endDetail: { control: "text" },
 		endDetailIcon: {
 			control: "select",
 			options: iconOptions,
 		},
+
+		hasBadge: { control: "boolean" },
+		hasTag: { control: "boolean" },
+
 		headingLevel: {
 			control: "select",
 			options: ["h2", "h3", "h4", "h5", "h6"],
@@ -49,14 +60,25 @@ const meta: Meta = {
 	args: {
 		title: "Intitulé de la carte",
 		href: "#",
+
+		hasDescription: true,
 		description:
 			"Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et",
+
 		imgSrc: "https://placehold.co/600x400/png",
 		imgAlt: "Image placeholder",
+
+		hasDetailStart: false,
 		detail: "",
 		detailIcon: "",
+
+		hasDetailEnd: false,
 		endDetail: "",
 		endDetailIcon: "",
+
+		hasBadge: false,
+		hasTag: false,
+
 		headingLevel: "h3",
 		horizontal: false,
 		size: "md",
@@ -68,19 +90,32 @@ const meta: Meta = {
             <dsfr-card
                 title=${args.title}
                 href=${args.href}
+
+                ?has-description=${args.hasDescription}
                 description=${args.description}
+
                 img-src=${args.imgSrc}
                 img-alt=${args.imgAlt}
+
+                ?has-detail-start=${args.hasDetailStart}
                 detail=${args.detail}
                 detail-icon=${args.detailIcon}
+
+                ?has-detail-end=${args.hasDetailEnd}
                 end-detail=${args.endDetail}
                 end-detail-icon=${args.endDetailIcon}
+
+                ?has-badge=${args.hasBadge}
+                ?has-tag=${args.hasTag}
+
                 heading-level=${args.headingLevel}
                 ?horizontal=${args.horizontal}
                 size=${args.size}
                 ?no-icon=${args.noIcon}
                 ?enlarge-link=${args.enlargeLink}
             >
+                ${args.hasBadge ? html`<div slot="badge"><dsfr-badge variant="new" sm>Badge</dsfr-badge></div>` : ""}
+                ${args.hasTag ? html`<div slot="tag"><span class="fr-tag">Tag</span></div>` : ""}
             </dsfr-card>
         </div>
     `,
@@ -91,6 +126,7 @@ type Story = StoryObj;
 
 export const Default: Story = {
 	args: {
+		hasDetailStart: true,
 		detail: "détail (optionnel)",
 		detailIcon: "fr-icon-warning-fill",
 	},
@@ -107,9 +143,16 @@ export const Horizontal: Story = {
              <dsfr-card
                 title=${args.title}
                 href=${args.href}
+
+                ?has-description=${args.hasDescription}
                 description=${args.description}
+
                 img-src=${args.imgSrc}
                 img-alt=${args.imgAlt}
+
+                ?has-detail-start=${args.hasDetailStart}
+                ?has-detail-end=${args.hasDetailEnd}
+
                 ?horizontal=${args.horizontal}
                 size=${args.size}
                 heading-level=${args.headingLevel}
@@ -138,30 +181,51 @@ export const KitchenSink: Story = {
 		title: "Carte Complète",
 		description:
 			"Cette carte démontre l'utilisation de toutes les propriétés disponibles : image, détails, icônes, et slots personnalisés.",
+		hasDescription: true,
+
+		hasDetailStart: true,
 		detail: "Publié le 12/12/2024",
 		detailIcon: "fr-icon-calendar-line",
+
+		hasDetailEnd: true,
 		endDetail: "PDF - 400ko",
 		endDetailIcon: "fr-icon-file-pdf-fill",
+
+		hasBadge: true,
+		hasTag: true,
 	},
 	render: (args) => html`
          <div style="max-width: 600px; margin: auto;">
             <dsfr-card
                 title=${args.title}
                 href=${args.href}
+
+                ?has-description=${args.hasDescription}
                 description=${args.description}
+
                 img-src=${args.imgSrc}
                 img-alt=${args.imgAlt}
+
+                ?has-detail-start=${args.hasDetailStart}
                 detail=${args.detail}
                 detail-icon=${args.detailIcon}
+
+                ?has-detail-end=${args.hasDetailEnd}
                 end-detail=${args.endDetail}
                 end-detail-icon=${args.endDetailIcon}
+
+                ?has-badge=${args.hasBadge}
+                ?has-tag=${args.hasTag}
+
                 heading-level=${args.headingLevel}
                 ?no-icon=${args.noIcon}
                 ?enlarge-link=${args.enlargeLink}
             >
-                <!-- Slots can still be mixed with props if needed, e.g. for Badges -->
                 <div slot="badge">
                     <dsfr-badge variant="new" sm>Nouveau</dsfr-badge>
+                </div>
+                <div slot="tag">
+                    <span class="fr-tag">Tag</span>
                 </div>
                 <div slot="footer">
                     <button class="fr-btn fr-btn--secondary fr-btn--sm">Télécharger</button>
