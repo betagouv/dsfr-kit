@@ -37,7 +37,7 @@ export const Default: Story = {
 };
 
 export const WithIcon: Story = {
-	render: (args) => `
+	render: (_args) => `
         <dsfr-callout title="Mise en avant avec icône" icon="fr-icon-information-line">
             L'ajout d'une icône permet d'attirer davantage l'attention sur le contenu.
         </dsfr-callout>
@@ -45,7 +45,7 @@ export const WithIcon: Story = {
 };
 
 export const WithButton: Story = {
-	render: (args) => `
+	render: (_args) => `
         <dsfr-callout title="Mise en avant avec action" button-label="En savoir plus">
             Il est possible d'ajouter un bouton d'action pour rediriger l'utilisateur vers un contenu connexe.
         </dsfr-callout>
