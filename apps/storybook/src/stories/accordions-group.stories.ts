@@ -48,7 +48,7 @@ interface AccordionItem {
 }
 
 const meta: Meta = {
-	title: "DSFR/Component/Accordion/Accordions-Group",
+	title: "Web Components/Accordions Group",
 	component: "dsfr-accordion-group",
 	tags: ["autodocs"],
 	argTypes: accordionsGroupArgTypes,

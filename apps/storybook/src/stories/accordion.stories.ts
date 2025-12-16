@@ -43,7 +43,7 @@ const accordionArgs = {
 };
 
 const meta: Meta = {
-	title: "DSFR/Component/Accordion",
+	title: "Web Components/Accordion",
 	component: "dsfr-accordion",
 	tags: ["autodocs"],
 	argTypes: accordionArgTypes,
