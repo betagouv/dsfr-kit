@@ -39,28 +39,23 @@ export class DsfrModal extends LitElement {
         `,
 	];
 
-	firstUpdated() {
-		if (this.open) {
-			this.dialog?.showModal();
-			this.requestUpdate();
-		}
-	}
-
 	updated(changedProperties: Map<string, unknown>) {
 		if (changedProperties.has("open")) {
 			if (this.open) {
 				if (!this.dialog.open) {
 					this.dialog?.showModal();
-					this.requestUpdate();
+					this.dialog.classList.add("fr-modal--opened");
 				}
 			} else {
 				this.dialog?.close();
+				this.dialog.classList.remove("fr-modal--opened");
 			}
 		}
 	}
 
 	private _handleClose() {
 		this.open = false;
+		this.dialog.classList.remove("fr-modal--opened");
 		this.dispatchEvent(
 			new CustomEvent("dsfr-close", {
 				bubbles: true,
@@ -73,6 +68,7 @@ export class DsfrModal extends LitElement {
 		// Catch native close events (e.g. Escape key)
 		if (this.open) {
 			this.open = false;
+			this.dialog.classList.remove("fr-modal--opened");
 			this.dispatchEvent(
 				new CustomEvent("dsfr-close", {
 					bubbles: true,
@@ -99,16 +95,12 @@ export class DsfrModal extends LitElement {
 			"fr-col-lg-8": this.size === "lg",
 		};
 
-		const dialogClasses = {
-			"fr-modal": true,
-			"fr-modal--opened": this.open,
-		};
-
 		return html`
             <dialog
                 id=${this.modalId}
-                class=${classMap(dialogClasses)}
+                class="fr-modal"
                 aria-labelledby=${`${this.modalId}-title`}
+                data-fr-concealing-backdrop="true"
                 @close=${this._handleDialogClose}
                 @click=${this._handleBackdropClick}
             >
