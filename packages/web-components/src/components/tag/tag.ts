@@ -53,7 +53,9 @@ export class DsfrTag extends LitElement {
 			"fr-tag": true,
 			"fr-tag--sm": this.small,
 			"fr-tag--dismiss": this.dismissible,
-			[`${this.icon}`]: !!this.icon && !this.dismissible, // Dismissible has its own icon
+			// Allow icon to be set; if dismissible, we shouldn't block it (might be needed for fix or custom)
+			[`${this.icon}`]: !!this.icon,
+			// Only apply left-icon spacing if it's NOT a dismissible tag (dismissible handles its own icon layout)
 			"fr-tag--icon-left": !!this.icon && !this.dismissible,
 		};
 
