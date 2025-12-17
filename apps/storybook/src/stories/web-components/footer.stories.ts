@@ -3,25 +3,25 @@ import "@dsfr-kit/web-components"; // Register components
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Web Components/Footer",
-	component: "dsfr-footer",
-	tags: ["autodocs"],
-	argTypes: {
-		desc: { control: "text" },
-		accessibility: {
-			control: "radio",
-			options: [
-				"non conforme",
-				"partiellement conforme",
-				"totalement conforme",
-			],
-		},
-		operatorLogoSrc: { control: "text" },
-	},
-	args: {
-		desc: "Une description courte et informative du service (3 lignes max).",
-		accessibility: "non conforme",
-	},
+  title: "Web Components/Footer",
+  component: "dsfr-footer",
+  tags: ["autodocs"],
+  argTypes: {
+    desc: { control: "text" },
+    accessibility: {
+      control: "radio",
+      options: [
+        "non conforme",
+        "partiellement conforme",
+        "totalement conforme",
+      ],
+    },
+    operatorLogoSrc: { control: "text" },
+  },
+  args: {
+    desc: "Une description courte et informative du service (3 lignes max).",
+    accessibility: "non conforme",
+  },
 };
 
 export default meta;
@@ -30,11 +30,11 @@ type Story = StoryObj;
 export const Default: Story = {};
 
 export const WithOperatorAndPartners: Story = {
-	args: {
-		operatorLogoSrc: "https://placehold.co/200x100?text=Operateur",
-		operatorLogoAlt: "Logo Opérateur",
-	},
-	render: (args) => html`
+  args: {
+    operatorLogoSrc: "https://placehold.co/200x100?text=Operateur",
+    operatorLogoAlt: "Logo Opérateur",
+  },
+  render: (args) => html`
         <dsfr-footer
             .desc=${args.desc}
             .accessibility=${args.accessibility}

@@ -1,12 +1,12 @@
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
-import logoStyles from "@gouvfr/dsfr/dist/component/logo/logo.min.css?inline";
 import buttonStyles from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
-import linkStyles from "@gouvfr/dsfr/dist/component/link/link.min.css?inline";
 import headerStyles from "@gouvfr/dsfr/dist/component/header/header.min.css?inline";
+import linkStyles from "@gouvfr/dsfr/dist/component/link/link.min.css?inline";
+import logoStyles from "@gouvfr/dsfr/dist/component/logo/logo.min.css?inline";
 import modalStyles from "@gouvfr/dsfr/dist/component/modal/modal.min.css?inline";
 import navbarStyles from "@gouvfr/dsfr/dist/component/navigation/navigation.min.css?inline";
+import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
 
-import { html, LitElement, unsafeCSS, nothing } from "lit";
+import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 /**
@@ -14,69 +14,69 @@ import { customElement, property, state } from "lit/decorators.js";
  */
 @customElement("dsfr-header")
 export class DsfrHeader extends LitElement {
-	@property({ type: String })
-	serviceTitle = "";
+  @property({ type: String })
+  serviceTitle = "";
 
-	@property({ type: String })
-	serviceTagline = "";
+  @property({ type: String })
+  serviceTagline = "";
 
-	@property({ type: String })
-	homeLink = "/";
+  @property({ type: String })
+  homeLink = "/";
 
-	@property({ type: String })
-	logoText = "République\nFrançaise";
+  @property({ type: String })
+  logoText = "République\nFrançaise";
 
-	@property({ type: String })
-	operatorLogoSrc = "";
+  @property({ type: String })
+  operatorLogoSrc = "";
 
-	@property({ type: String })
-	operatorLogoAlt = "";
+  @property({ type: String })
+  operatorLogoAlt = "";
 
-	@property({ type: String })
-	operatorLogoStyle = "max-width: 3.5rem";
+  @property({ type: String })
+  operatorLogoStyle = "max-width: 3.5rem";
 
-	@state()
-	private _isMenuOpen = false;
+  @state()
+  private _isMenuOpen = false;
 
-	@state()
-	private _isSearchOpen = false;
+  @state()
+  private _isSearchOpen = false;
 
-	// Slots explanation:
-	// default: The navigation items
-	// tools: Quick access links
-	// search: Search bar content
+  // Slots explanation:
+  // default: The navigation items
+  // tools: Quick access links
+  // search: Search bar content
 
-	static styles = [
-		unsafeCSS(coreStyles),
-		unsafeCSS(logoStyles),
-		unsafeCSS(buttonStyles),
-		unsafeCSS(linkStyles),
-		unsafeCSS(headerStyles),
-		unsafeCSS(modalStyles),
-		unsafeCSS(navbarStyles),
-	];
+  static styles = [
+    unsafeCSS(coreStyles),
+    unsafeCSS(logoStyles),
+    unsafeCSS(buttonStyles),
+    unsafeCSS(linkStyles),
+    unsafeCSS(headerStyles),
+    unsafeCSS(modalStyles),
+    unsafeCSS(navbarStyles),
+  ];
 
-	@property({ type: Array })
-	toolsLinks: Array<{ text: string; href: string; icon?: string }> = [];
+  @property({ type: Array })
+  toolsLinks: Array<{ text: string; href: string; icon?: string }> = [];
 
-	@property({ type: Array })
-	navigation: Array<{
-		text: string;
-		href: string;
-		active?: boolean;
-		target?: string;
-	}> = [];
+  @property({ type: Array })
+  navigation: Array<{
+    text: string;
+    href: string;
+    active?: boolean;
+    target?: string;
+  }> = [];
 
-	private _toggleMenu() {
-		this._isMenuOpen = !this._isMenuOpen;
-	}
+  private _toggleMenu() {
+    this._isMenuOpen = !this._isMenuOpen;
+  }
 
-	private _toggleSearch() {
-		this._isSearchOpen = !this._isSearchOpen;
-	}
+  private _toggleSearch() {
+    this._isSearchOpen = !this._isSearchOpen;
+  }
 
-	render() {
-		return html`
+  render() {
+    return html`
 			<header role="banner" class="fr-header">
 				<div class="fr-header__body">
 					<div class="fr-container">
@@ -86,21 +86,21 @@ export class DsfrHeader extends LitElement {
 									<div class="fr-header__logo">
 										<p class="fr-logo">
 											${this.logoText.split("\n").map(
-												(line, index) => html`
+                        (line, index) => html`
 												${line}${index < this.logoText.split("\n").length - 1 ? html`<br>` : nothing}
 											`,
-											)}
+                      )}
 										</p>
 									</div>
 									${
-										this.operatorLogoSrc
-											? html`
+                    this.operatorLogoSrc
+                      ? html`
 										<div class="fr-header__operator">
 											<img class="fr-responsive-img" style="${this.operatorLogoStyle}" src="${this.operatorLogoSrc}" alt="${this.operatorLogoAlt}" />
 										</div>
 									`
-											: nothing
-									}
+                      : nothing
+                  }
 									<div class="fr-header__navbar">
 										<button
 											class="fr-btn--search fr-btn"
@@ -123,8 +123,8 @@ export class DsfrHeader extends LitElement {
 									</div>
 								</div>
 								${
-									this.serviceTitle
-										? html`
+                  this.serviceTitle
+                    ? html`
 									<div class="fr-header__service">
 										<a href="${this.homeLink}" title="Accueil - ${this.serviceTitle}">
 											<p class="fr-header__service-title">
@@ -134,28 +134,28 @@ export class DsfrHeader extends LitElement {
 										${this.serviceTagline ? html`<p class="fr-header__service-tagline">${this.serviceTagline}</p>` : nothing}
 									</div>
 								`
-										: nothing
-								}
+                    : nothing
+                }
 							</div>
 							<div class="fr-header__tools">
 								<div class="fr-header__tools-links">
 									${
-										this.toolsLinks.length > 0
-											? html`
+                    this.toolsLinks.length > 0
+                      ? html`
 										<ul class="fr-btns-group">
 											${this.toolsLinks.map(
-												(link) => html`
+                        (link) => html`
 												<li>
 													<a class="fr-btn ${link.icon || ""}" href="${link.href}">
 														${link.text}
 													</a>
 												</li>
 											`,
-											)}
+                      )}
 										</ul>
 									`
-											: html`<slot name="tools"></slot>`
-									}
+                      : html`<slot name="tools"></slot>`
+                  }
 								</div>
 								<div class="fr-header__search fr-modal ${this._isSearchOpen ? "fr-modal--opened" : ""}" id="modal-search" aria-labelledby="button-search">
 									 <div class="fr-container fr-container-lg--fluid">
@@ -178,25 +178,25 @@ export class DsfrHeader extends LitElement {
 						<nav class="fr-nav" role="navigation" aria-label="Menu principal">
 							<ul class="fr-nav__list">
 								${this.navigation.map(
-									(item) => html`
+                  (item) => html`
 									<li class="fr-nav__item">
 										<a class="fr-nav__link" href="${item.href}" target="${item.target || "_self"}" ?aria-current=${item.active ? "page" : undefined}>
 											${item.text}
 										</a>
 									</li>
 								`,
-								)}
+                )}
 							</ul>
 						</nav>
 					</div>
 				</div>
 			</header>
 		`;
-	}
+  }
 }
 
 declare global {
-	interface HTMLElementTagNameMap {
-		"dsfr-header": DsfrHeader;
-	}
+  interface HTMLElementTagNameMap {
+    "dsfr-header": DsfrHeader;
+  }
 }

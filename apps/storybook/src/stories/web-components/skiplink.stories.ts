@@ -3,23 +3,23 @@ import "@dsfr-kit/web-components";
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Web Components/Skiplink",
-	component: "dsfr-skiplink",
-	tags: ["autodocs"],
-	parameters: {
-		docs: {
-			description: {
-				component: "Press Tab key to reveal the skiplinks.",
-			},
-		},
-	},
+  title: "Web Components/Skiplink",
+  component: "dsfr-skiplink",
+  tags: ["autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        component: "Press Tab key to reveal the skiplinks.",
+      },
+    },
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-	render: () => html`
+  render: () => html`
         <dsfr-skiplink>
             <dsfr-skiplink-item href="#content" text="Contenu"></dsfr-skiplink-item>
             <dsfr-skiplink-item href="#header" text="Menu"></dsfr-skiplink-item>

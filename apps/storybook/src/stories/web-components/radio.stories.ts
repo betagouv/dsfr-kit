@@ -3,26 +3,26 @@ import "@dsfr-kit/web-components";
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Web Components/Radio",
-	component: "dsfr-radio",
-	tags: ["autodocs"],
-	argTypes: {
-		label: { control: "text" },
-		name: { control: "text" },
-		value: { control: "text" },
-		checked: { control: "boolean" },
-		disabled: { control: "boolean" },
-		hint: { control: "text" },
-		rich: { control: "boolean" },
-	},
-	args: {
-		label: "Option radio",
-		name: "radio-group-demo",
-		value: "option-1",
-		checked: false,
-		disabled: false,
-		rich: false,
-	},
+  title: "Web Components/Radio",
+  component: "dsfr-radio",
+  tags: ["autodocs"],
+  argTypes: {
+    label: { control: "text" },
+    name: { control: "text" },
+    value: { control: "text" },
+    checked: { control: "boolean" },
+    disabled: { control: "boolean" },
+    hint: { control: "text" },
+    rich: { control: "boolean" },
+  },
+  args: {
+    label: "Option radio",
+    name: "radio-group-demo",
+    value: "option-1",
+    checked: false,
+    disabled: false,
+    rich: false,
+  },
 };
 
 export default meta;
@@ -31,33 +31,33 @@ type Story = StoryObj;
 export const Default: Story = {};
 
 export const Checked: Story = {
-	args: {
-		label: "Option sélectionnée",
-		checked: true,
-		value: "option-checked",
-	},
+  args: {
+    label: "Option sélectionnée",
+    checked: true,
+    value: "option-checked",
+  },
 };
 
 export const WithHint: Story = {
-	args: {
-		label: "Option avec description",
-		hint: "Texte d'aide pour préciser l'option",
-	},
+  args: {
+    label: "Option avec description",
+    hint: "Texte d'aide pour préciser l'option",
+  },
 };
 
 export const Disabled: Story = {
-	args: {
-		label: "Option désactivée",
-		disabled: true,
-	},
+  args: {
+    label: "Option désactivée",
+    disabled: true,
+  },
 };
 
 export const Rich: Story = {
-	args: {
-		label: "Option riche",
-		rich: true,
-	},
-	render: (args) => html`
+  args: {
+    label: "Option riche",
+    rich: true,
+  },
+  render: (args) => html`
         <dsfr-radio
             label=${args.label}
             name=${args.name}

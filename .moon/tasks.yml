@@ -41,7 +41,7 @@ tasks:
       runInCI: true
 
   lint-biome:
-    command: "sh -c 'if [ -f package.json ]; then $MOON_WORKSPACE_ROOT/node_modules/.bin/biome lint . || exit 1; fi'"
+    command: "sh -c 'if [ -f package.json ]; then $MOON_WORKSPACE_ROOT/node_modules/.bin/biome check --write . || exit 1; fi'"
     platform: system
     inputs:
       - '@group(sources)'

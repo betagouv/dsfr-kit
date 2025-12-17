@@ -5,58 +5,58 @@ import "@dsfr-kit/web-components";
 
 // Duplicate of accordionArgs from accordion.stories.ts to avoid circular deps or complex imports
 const baseAccordionArgs = {
-	isExpanded: false,
-	id: "accordion-id",
-	label: "Libellé accordéon",
-	content:
-		'<h4 class="fr-h4">Contenu </h4> <p>Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>',
+  isExpanded: false,
+  id: "accordion-id",
+  label: "Libellé accordéon",
+  content:
+    '<h4 class="fr-h4">Contenu </h4> <p>Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>',
 };
 
 const getAccordionArgs = (id: number) => {
-	return {
-		id: `${baseAccordionArgs.id}-${id}`,
-		label: `${baseAccordionArgs.label} ${id}`,
-		content: `${baseAccordionArgs.content}`,
-	};
+  return {
+    id: `${baseAccordionArgs.id}-${id}`,
+    label: `${baseAccordionArgs.label} ${id}`,
+    content: `${baseAccordionArgs.content}`,
+  };
 };
 
 const accordionsGroupArgTypes = {
-	group: {
-		control: "boolean",
-		description:
-			"Accordéons groupés (ferme le précédent à l’ouverture d'un autre)",
-		table: {
-			type: { summary: "boolean" },
-		},
-	},
+  group: {
+    control: "boolean",
+    description:
+      "Accordéons groupés (ferme le précédent à l’ouverture d'un autre)",
+    table: {
+      type: { summary: "boolean" },
+    },
+  },
 } as const;
 
 const accordionsGroupArgs = {
-	group: true,
-	accordions: [
-		getAccordionArgs(1),
-		getAccordionArgs(2),
-		getAccordionArgs(3),
-		getAccordionArgs(4),
-	],
+  group: true,
+  accordions: [
+    getAccordionArgs(1),
+    getAccordionArgs(2),
+    getAccordionArgs(3),
+    getAccordionArgs(4),
+  ],
 };
 
 interface AccordionItem {
-	id: string;
-	label: string;
-	content: string;
+  id: string;
+  label: string;
+  content: string;
 }
 
 const meta: Meta = {
-	title: "Web Components/Accordions Group",
-	component: "dsfr-accordion-group",
-	tags: ["autodocs"],
-	argTypes: accordionsGroupArgTypes,
-	args: accordionsGroupArgs,
-	render: (args) => html`
+  title: "Web Components/Accordions Group",
+  component: "dsfr-accordion-group",
+  tags: ["autodocs"],
+  argTypes: accordionsGroupArgTypes,
+  args: accordionsGroupArgs,
+  render: (args) => html`
     <dsfr-accordion-group ?group=${args.group}>
       ${args.accordions.map(
-				(accordion: AccordionItem) => html`
+        (accordion: AccordionItem) => html`
         <dsfr-accordion
           id=${accordion.id}
           label=${accordion.label}
@@ -64,7 +64,7 @@ const meta: Meta = {
           ${unsafeHTML(accordion.content)}
         </dsfr-accordion>
       `,
-			)}
+      )}
     </dsfr-accordion-group>
   `,
 };

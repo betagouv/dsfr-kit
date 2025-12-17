@@ -4,88 +4,88 @@ import "@dsfr-kit/web-components";
 
 // Helper to provide icon options (subset of DSFR icons)
 const iconOptions = [
-	"",
-	"fr-icon-arrow-right-line",
-	"fr-icon-warning-fill",
-	"fr-icon-success-fill",
-	"fr-icon-error-fill",
-	"fr-icon-info-fill",
-	"fr-icon-calendar-line",
-	"fr-icon-map-pin-2-line",
+  "",
+  "fr-icon-arrow-right-line",
+  "fr-icon-warning-fill",
+  "fr-icon-success-fill",
+  "fr-icon-error-fill",
+  "fr-icon-info-fill",
+  "fr-icon-calendar-line",
+  "fr-icon-map-pin-2-line",
 ];
 
 const meta: Meta = {
-	title: "Web Components/Card",
-	component: "dsfr-card",
-	tags: ["autodocs"],
-	argTypes: {
-		title: { control: "text" },
-		href: { control: "text" },
+  title: "Web Components/Card",
+  component: "dsfr-card",
+  tags: ["autodocs"],
+  argTypes: {
+    title: { control: "text" },
+    href: { control: "text" },
 
-		hasDescription: { control: "boolean" },
-		description: { control: "text" },
+    hasDescription: { control: "boolean" },
+    description: { control: "text" },
 
-		imgSrc: { control: "text" },
-		imgAlt: { control: "text" },
+    imgSrc: { control: "text" },
+    imgAlt: { control: "text" },
 
-		hasDetailStart: { control: "boolean" },
-		detail: { control: "text" },
-		detailIcon: {
-			control: "select",
-			options: iconOptions,
-		},
+    hasDetailStart: { control: "boolean" },
+    detail: { control: "text" },
+    detailIcon: {
+      control: "select",
+      options: iconOptions,
+    },
 
-		hasDetailEnd: { control: "boolean" },
-		endDetail: { control: "text" },
-		endDetailIcon: {
-			control: "select",
-			options: iconOptions,
-		},
+    hasDetailEnd: { control: "boolean" },
+    endDetail: { control: "text" },
+    endDetailIcon: {
+      control: "select",
+      options: iconOptions,
+    },
 
-		hasBadge: { control: "boolean" },
-		hasTag: { control: "boolean" },
+    hasBadge: { control: "boolean" },
+    hasTag: { control: "boolean" },
 
-		headingLevel: {
-			control: "select",
-			options: ["h2", "h3", "h4", "h5", "h6"],
-		},
-		horizontal: { control: "boolean" },
-		size: {
-			control: "select",
-			options: ["sm", "md", "lg"],
-		},
-		noIcon: { control: "boolean" },
-		enlargeLink: { control: "boolean" },
-	},
-	args: {
-		title: "Intitulé de la carte",
-		href: "#",
+    headingLevel: {
+      control: "select",
+      options: ["h2", "h3", "h4", "h5", "h6"],
+    },
+    horizontal: { control: "boolean" },
+    size: {
+      control: "select",
+      options: ["sm", "md", "lg"],
+    },
+    noIcon: { control: "boolean" },
+    enlargeLink: { control: "boolean" },
+  },
+  args: {
+    title: "Intitulé de la carte",
+    href: "#",
 
-		hasDescription: true,
-		description:
-			"Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et",
+    hasDescription: true,
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et",
 
-		imgSrc: "https://placehold.co/600x400/png",
-		imgAlt: "Image placeholder",
+    imgSrc: "https://placehold.co/600x400/png",
+    imgAlt: "Image placeholder",
 
-		hasDetailStart: false,
-		detail: "",
-		detailIcon: "",
+    hasDetailStart: false,
+    detail: "",
+    detailIcon: "",
 
-		hasDetailEnd: false,
-		endDetail: "",
-		endDetailIcon: "",
+    hasDetailEnd: false,
+    endDetail: "",
+    endDetailIcon: "",
 
-		hasBadge: false,
-		hasTag: false,
+    hasBadge: false,
+    hasTag: false,
 
-		headingLevel: "h3",
-		horizontal: false,
-		size: "md",
-		noIcon: false,
-		enlargeLink: true,
-	},
-	render: (args) => html`
+    headingLevel: "h3",
+    horizontal: false,
+    size: "md",
+    noIcon: false,
+    enlargeLink: true,
+  },
+  render: (args) => html`
         <div style="max-width: 600px; margin: auto;">
             <dsfr-card
                 title=${args.title}
@@ -125,20 +125,20 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-	args: {
-		hasDetailStart: true,
-		detail: "détail (optionnel)",
-		detailIcon: "fr-icon-warning-fill",
-	},
+  args: {
+    hasDetailStart: true,
+    detail: "détail (optionnel)",
+    detailIcon: "fr-icon-warning-fill",
+  },
 };
 
 export const Horizontal: Story = {
-	args: {
-		horizontal: true,
-		description:
-			"Une carte horizontale s'adapte à la largeur. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.",
-	},
-	render: (args) => html`
+  args: {
+    horizontal: true,
+    description:
+      "Une carte horizontale s'adapte à la largeur. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.",
+  },
+  render: (args) => html`
         <div style="max-width: 800px; margin: auto;">
              <dsfr-card
                 title=${args.title}
@@ -163,38 +163,38 @@ export const Horizontal: Story = {
 };
 
 export const Small: Story = {
-	args: {
-		size: "sm",
-		title: "Petite carte",
-	},
+  args: {
+    size: "sm",
+    title: "Petite carte",
+  },
 };
 
 export const Large: Story = {
-	args: {
-		size: "lg",
-		title: "Grande carte",
-	},
+  args: {
+    size: "lg",
+    title: "Grande carte",
+  },
 };
 
 export const KitchenSink: Story = {
-	args: {
-		title: "Carte Complète",
-		description:
-			"Cette carte démontre l'utilisation de toutes les propriétés disponibles : image, détails, icônes, et slots personnalisés.",
-		hasDescription: true,
+  args: {
+    title: "Carte Complète",
+    description:
+      "Cette carte démontre l'utilisation de toutes les propriétés disponibles : image, détails, icônes, et slots personnalisés.",
+    hasDescription: true,
 
-		hasDetailStart: true,
-		detail: "Publié le 12/12/2024",
-		detailIcon: "fr-icon-calendar-line",
+    hasDetailStart: true,
+    detail: "Publié le 12/12/2024",
+    detailIcon: "fr-icon-calendar-line",
 
-		hasDetailEnd: true,
-		endDetail: "PDF - 400ko",
-		endDetailIcon: "fr-icon-file-pdf-fill",
+    hasDetailEnd: true,
+    endDetail: "PDF - 400ko",
+    endDetailIcon: "fr-icon-file-pdf-fill",
 
-		hasBadge: true,
-		hasTag: true,
-	},
-	render: (args) => html`
+    hasBadge: true,
+    hasTag: true,
+  },
+  render: (args) => html`
          <div style="max-width: 600px; margin: auto;">
             <dsfr-card
                 title=${args.title}

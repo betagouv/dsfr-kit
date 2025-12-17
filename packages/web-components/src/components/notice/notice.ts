@@ -5,15 +5,15 @@ import { customElement, property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
 export type NoticeType =
-	| "info"
-	| "warning"
-	| "alert"
-	| "weather-orange"
-	| "weather-red"
-	| "weather-purple"
-	| "attack"
-	| "witness"
-	| "cyberattack";
+  | "info"
+  | "warning"
+  | "alert"
+  | "weather-orange"
+  | "weather-red"
+  | "weather-purple"
+  | "attack"
+  | "witness"
+  | "cyberattack";
 
 /**
  * @summary DSFR Notice component
@@ -22,47 +22,47 @@ export type NoticeType =
  */
 @customElement("dsfr-notice")
 export class DsfrNotice extends LitElement {
-	@property({ type: String })
-	title = "";
+  @property({ type: String })
+  title = "";
 
-	@property({ type: String })
-	description = "";
+  @property({ type: String })
+  description = "";
 
-	@property({ type: String })
-	link = "";
+  @property({ type: String })
+  link = "";
 
-	@property({ type: String, attribute: "link-label" })
-	linkLabel = "Voir plus";
+  @property({ type: String, attribute: "link-label" })
+  linkLabel = "Voir plus";
 
-	@property({ type: String })
-	type: NoticeType = "info";
+  @property({ type: String })
+  type: NoticeType = "info";
 
-	@property({ type: Boolean })
-	closeable = false;
+  @property({ type: Boolean })
+  closeable = false;
 
-	@state()
-	private _closed = false;
+  @state()
+  private _closed = false;
 
-	static styles = [unsafeCSS(coreStyles), unsafeCSS(noticeStyles)];
+  static styles = [unsafeCSS(coreStyles), unsafeCSS(noticeStyles)];
 
-	private _handleClose() {
-		this._closed = true;
-		this.dispatchEvent(
-			new CustomEvent("dsfr-close", { bubbles: true, composed: true }),
-		);
-	}
+  private _handleClose() {
+    this._closed = true;
+    this.dispatchEvent(
+      new CustomEvent("dsfr-close", { bubbles: true, composed: true }),
+    );
+  }
 
-	render() {
-		if (this._closed) {
-			return nothing;
-		}
+  render() {
+    if (this._closed) {
+      return nothing;
+    }
 
-		const classes = {
-			"fr-notice": true,
-			[`fr-notice--${this.type}`]: true,
-		};
+    const classes = {
+      "fr-notice": true,
+      [`fr-notice--${this.type}`]: true,
+    };
 
-		return html`
+    return html`
             <div class=${classMap(classes)}>
                 <div class="fr-container">
                     <div class="fr-notice__body">
@@ -70,33 +70,33 @@ export class DsfrNotice extends LitElement {
                             <span class="fr-notice__title">${this.title}</span>
                             ${this.description ? html`<span class="fr-notice__desc">${this.description}</span>` : nothing}
                             ${
-															this.link
-																? html`
+                              this.link
+                                ? html`
                                 <a target="_blank" rel="noopener external" href=${this.link} class="fr-notice__link" title="${this.linkLabel} - nouvelle fenêtre">
                                     ${this.linkLabel}
                                 </a>
                             `
-																: nothing
-														}
+                                : nothing
+                            }
                         </p>
                         ${
-													this.closeable
-														? html`
+                          this.closeable
+                            ? html`
                             <button class="fr-btn--close fr-btn" title="Masquer le message" @click=${this._handleClose}>
                                 Masquer le message
                             </button>
                         `
-														: nothing
-												}
+                            : nothing
+                        }
                     </div>
                 </div>
             </div>
         `;
-	}
+  }
 }
 
 declare global {
-	interface HTMLElementTagNameMap {
-		"dsfr-notice": DsfrNotice;
-	}
+  interface HTMLElementTagNameMap {
+    "dsfr-notice": DsfrNotice;
+  }
 }

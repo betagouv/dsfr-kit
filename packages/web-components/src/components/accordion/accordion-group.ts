@@ -5,28 +5,28 @@ import { DsfrAccordion } from "../accordion/accordion";
 
 @customElement("dsfr-accordion-group")
 export class DsfrAccordionGroup extends LitElement {
-	// If true, only one accordion can be open at a time (default behavior)
-	@property({ type: Boolean })
-	group = true;
+  // If true, only one accordion can be open at a time (default behavior)
+  @property({ type: Boolean })
+  group = true;
 
-	// Listen for the change event from children
-	private _handleChildChange(e: CustomEvent) {
-		// If the event is declaring an expansion AND grouping is enabled
-		if (this.group && e.detail.expanded) {
-			const target = e.target as DsfrAccordion;
+  // Listen for the change event from children
+  private _handleChildChange(e: CustomEvent) {
+    // If the event is declaring an expansion AND grouping is enabled
+    if (this.group && e.detail.expanded) {
+      const target = e.target as DsfrAccordion;
 
-			// Close all other children
-			const children = this.querySelectorAll("dsfr-accordion");
-			children.forEach((child) => {
-				if (child !== target && child instanceof DsfrAccordion) {
-					child.expanded = false;
-				}
-			});
-		}
-	}
+      // Close all other children
+      const children = this.querySelectorAll("dsfr-accordion");
+      children.forEach((child) => {
+        if (child !== target && child instanceof DsfrAccordion) {
+          child.expanded = false;
+        }
+      });
+    }
+  }
 
-	render() {
-		return html`
+  render() {
+    return html`
             <style>
                 ${unsafeCSS(accordionStyles)}
                 :host {
@@ -37,11 +37,11 @@ export class DsfrAccordionGroup extends LitElement {
                 <slot></slot>
             </div>
         `;
-	}
+  }
 }
 
 declare global {
-	interface HTMLElementTagNameMap {
-		"dsfr-accordion-group": DsfrAccordionGroup;
-	}
+  interface HTMLElementTagNameMap {
+    "dsfr-accordion-group": DsfrAccordionGroup;
+  }
 }

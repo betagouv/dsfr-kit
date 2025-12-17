@@ -5,34 +5,34 @@ import { customElement, property } from "lit/decorators.js";
 
 @customElement("dsfr-badge")
 export class DsfrBadge extends LitElement {
-	@property({ type: String })
-	label = "";
+  @property({ type: String })
+  label = "";
 
-	@property({ type: String })
-	variant: "success" | "error" | "info" | "warning" | "new" | null = null;
+  @property({ type: String })
+  variant: "success" | "error" | "info" | "warning" | "new" | null = null;
 
-	@property({ type: Boolean, attribute: "no-icon" })
-	noIcon = false;
+  @property({ type: Boolean, attribute: "no-icon" })
+  noIcon = false;
 
-	@property({ type: Boolean })
-	sm = false;
+  @property({ type: Boolean })
+  sm = false;
 
-	render() {
-		const classes = {
-			"fr-badge": true,
-			[`fr-badge--${this.variant}`]: this.variant,
-			"fr-badge--no-icon": this.noIcon,
-			"fr-badge--sm": this.sm,
-		};
+  render() {
+    const classes = {
+      "fr-badge": true,
+      [`fr-badge--${this.variant}`]: this.variant,
+      "fr-badge--no-icon": this.noIcon,
+      "fr-badge--sm": this.sm,
+    };
 
-		// Construct class string manually since we don't have classMap directive imported yet
-		// or just import classMap? For simplicity, manual string construction:
-		const classList = Object.entries(classes)
-			.filter(([_, value]) => value)
-			.map(([key]) => key)
-			.join(" ");
+    // Construct class string manually since we don't have classMap directive imported yet
+    // or just import classMap? For simplicity, manual string construction:
+    const classList = Object.entries(classes)
+      .filter(([_, value]) => value)
+      .map(([key]) => key)
+      .join(" ");
 
-		return html`
+    return html`
             <style>
                 ${badgeStyles}
                 ${iconStyles}
@@ -41,11 +41,11 @@ export class DsfrBadge extends LitElement {
 				<slot>${this.label}</slot>
 			</p>
 		`;
-	}
+  }
 }
 
 declare global {
-	interface HTMLElementTagNameMap {
-		"dsfr-badge": DsfrBadge;
-	}
+  interface HTMLElementTagNameMap {
+    "dsfr-badge": DsfrBadge;
+  }
 }
