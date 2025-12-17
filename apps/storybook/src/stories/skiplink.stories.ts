@@ -3,7 +3,7 @@ import "@dsfr-kit/web-components";
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Components/Skiplink",
+	title: "Web Components/Skiplink",
 	component: "dsfr-skiplink",
 	tags: ["autodocs"],
 	parameters: {

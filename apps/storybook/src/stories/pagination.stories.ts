@@ -3,7 +3,7 @@ import "@dsfr-kit/web-components";
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Components/Pagination",
+	title: "Web Components/Pagination",
 	component: "dsfr-pagination",
 	tags: ["autodocs"],
 	argTypes: {

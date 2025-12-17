@@ -4,7 +4,7 @@ import "@dsfr-kit/web-components"; // Ensure all components are registered
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Components/Modal",
+	title: "Web Components/Modal",
 	component: "dsfr-modal",
 	tags: ["autodocs"],
 	argTypes: {

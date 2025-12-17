@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import "@dsfr-kit/web-components";
 
 const meta: Meta = {
-	title: "Components/Button",
+	title: "Web Components/Button",
 	component: "dsfr-button",
 	tags: ["autodocs"],
 	argTypes: {
