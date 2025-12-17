@@ -15,7 +15,7 @@ const iconOptions = [
 ];
 
 const meta: Meta = {
-	title: "Components/Card",
+	title: "Web Components/Card",
 	component: "dsfr-card",
 	tags: ["autodocs"],
 	argTypes: {

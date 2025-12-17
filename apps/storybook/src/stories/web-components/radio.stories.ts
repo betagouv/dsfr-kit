@@ -3,7 +3,7 @@ import "@dsfr-kit/web-components";
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Components/Radio",
+	title: "Web Components/Radio",
 	component: "dsfr-radio",
 	tags: ["autodocs"],
 	argTypes: {

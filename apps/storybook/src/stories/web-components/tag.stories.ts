@@ -3,7 +3,7 @@ import { html } from "lit";
 import "@dsfr-kit/web-components";
 
 const meta: Meta = {
-	title: "Components/Tag",
+	title: "Web Components/Tag",
 	component: "dsfr-tag",
 	tags: ["autodocs"],
 	argTypes: {

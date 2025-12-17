@@ -3,7 +3,7 @@ import "@dsfr-kit/web-components";
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Components/Stepper",
+	title: "Web Components/Stepper",
 	component: "dsfr-stepper",
 	tags: ["autodocs"],
 	argTypes: {

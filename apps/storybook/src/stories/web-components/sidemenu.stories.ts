@@ -3,7 +3,7 @@ import "@dsfr-kit/web-components";
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Components/Sidemenu",
+	title: "Web Components/Sidemenu",
 	component: "dsfr-sidemenu",
 	tags: ["autodocs"],
 	argTypes: {
