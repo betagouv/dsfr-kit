@@ -5,7 +5,8 @@
 	"scripts": {
 		"dev": "storybook dev -p 6006",
 		"storybook": "storybook dev -p 6006",
-		"build-storybook": "storybook build"
+		"build-storybook": "storybook build",
+		"setup:dsfr": "./scripts/setup-dsfr.sh"
 	},
 	"dependencies": {
 		"@dsfr-kit/web-components": "workspace:*",
@@ -16,7 +17,11 @@
 		"@storybook/addon-docs": "^10.1.8",
 		"@storybook/addon-vitest": "^10.1.8",
 		"@storybook/web-components-vite": "^10.1.8",
+		"ejs4b": "^3.1.63",
+		"html-entities": "^2.6.0",
+		"js-beautify": "^1.15.4",
 		"storybook": "^10.1.8",
-		"vite": "^7.2.7"
+		"vite": "^7.2.7",
+		"yaml": "^2.8.2"
 	}
 }
