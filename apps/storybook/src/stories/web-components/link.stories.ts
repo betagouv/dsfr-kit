@@ -114,8 +114,11 @@ const meta: Meta<LinkArgs> = {
   title: "Web Components/Link",
   component: "dsfr-link",
   tags: ["autodocs"],
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   argTypes: linkArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   args: linkArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   render: render as any,
 };
 
@@ -123,13 +126,13 @@ export default meta;
 type Story = StoryObj<LinkArgs>;
 
 export const LinkStory: Story = {
-  name: "Link",
+  name: "LinkStory",
   args: {},
 };
 
 export const TextLinkStory: Story = {
-  name: "Text Link",
-  tags: ["autodocs", "!dev"],
+  name: "TextLinkStory",
+  tags: ["autodocs"],
   render: () => html`
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
     ${render({ ...linkArgs, label: "lien interne", href: "#" } as LinkArgs)}
@@ -138,8 +141,8 @@ export const TextLinkStory: Story = {
 };
 
 export const IconStory: Story = {
-  name: "Icon",
-  tags: ["autodocs", "!dev"],
+  name: "IconStory",
+  tags: ["autodocs"],
   render: () => html`
     <div style="display: flex; gap: 1rem;">
       ${renders([
@@ -155,8 +158,8 @@ export const IconStory: Story = {
 };
 
 export const SizesStory: Story = {
-  name: "Sizes",
-  tags: ["autodocs", "!dev"],
+  name: "SizesStory",
+  tags: ["autodocs"],
   render: () => html`
     <div style="display: flex; flex-direction: column; gap: 1rem;">
       ${renders([
@@ -169,16 +172,16 @@ export const SizesStory: Story = {
 };
 
 export const DisabledStory: Story = {
-  name: "Disabled",
-  tags: ["autodocs", "!dev"],
+  name: "DisabledStory",
+  tags: ["autodocs"],
   args: {
     disabled: true,
   },
 };
 
 export const DownloadStory: Story = {
-  name: "Download",
-  tags: ["autodocs", "!dev"],
+  name: "DownloadStory",
+  tags: ["autodocs"],
   args: {
     label: "Télécharger le document lorem ipsum sit dolores amet",
     href: "https://gouvfr.github.io/dsfr/example/img/placeholder.16x9.png",
@@ -188,8 +191,8 @@ export const DownloadStory: Story = {
 };
 
 export const ExternalStory: Story = {
-  name: "External",
-  tags: ["autodocs", "!dev"],
+  name: "ExternalStory",
+  tags: ["autodocs"],
   args: {
     blank: true,
     label: "Lien externe",
@@ -197,8 +200,8 @@ export const ExternalStory: Story = {
 };
 
 export const BackToTopStory: Story = {
-  name: "Back to Top",
-  tags: ["autodocs", "!dev"],
+  name: "BackToTopStory",
+  tags: ["autodocs"],
   args: {
     label: "Haut de page",
     href: "#top",
