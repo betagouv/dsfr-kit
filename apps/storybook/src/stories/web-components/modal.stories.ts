@@ -110,22 +110,74 @@ export default meta;
 type Story = StoryObj<ModalArgs>;
 
 export const ModalStory: Story = {
-  name: "Modal",
+  name: "ModalStory",
   args: {},
 };
 
-export const SizeSmStory: Story = {
-  name: "Small",
+export const SizesSmStory: Story = {
+  name: "SizesSmStory",
   args: {
     size: "sm",
     title: "Petite modale",
   },
 };
 
+export const SizeMdStory: Story = {
+  name: "SizeMdStory",
+  args: {
+    size: "md",
+    title: "Modale moyenne",
+  },
+};
+
 export const SizeLgStory: Story = {
-  name: "Large",
+  name: "SizeLgStory",
   args: {
     size: "lg",
     title: "Grande modale",
+  },
+};
+
+export const FooterStory: Story = {
+  name: "FooterStory",
+  render: (args) => html`
+  <dsfr-button @click=${() => {
+    // biome-ignore lint/suspicious/noExplicitAny: DOM manipulation in Storybook
+    const modal = document.getElementById("modal-footer-story") as any;
+    modal.open = true;
+  }}>
+    Ouvrir la modale
+  </dsfr-button>
+  <dsfr-modal
+    id="modal-footer-story"
+    .title=${args.title}
+    ?open=${args.open}
+    .size=${args.size}
+    .icon=${args.icon}
+    ?top=${args.top}
+    ?concealingBackdrop=${args.concealingBackdrop}
+    @dsfr-close=${() => {
+      // biome-ignore lint/suspicious/noExplicitAny: DOM manipulation in Storybook
+      const modal = document.getElementById("modal-footer-story") as any;
+      modal.open = false;
+    }}
+  >
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>
+    <ul slot="footer" class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+      <li>
+        <dsfr-button>Valider</dsfr-button>
+      </li>
+      <li>
+        <dsfr-button variant="secondary" @click=${() => {
+          // biome-ignore lint/suspicious/noExplicitAny: DOM manipulation in Storybook
+          const modal = document.getElementById("modal-footer-story") as any;
+          modal.open = false;
+        }}>Annuler</dsfr-button>
+      </li>
+    </ul>
+  </dsfr-modal>
+`,
+  args: {
+    title: "Modale avec footer personnalisé",
   },
 };
