@@ -143,14 +143,14 @@ export default meta;
 type Story = StoryObj<AlertArgs>;
 
 export const AlertStory: Story = {
-  name: "Alert",
+  name: "AlertStory",
   tags: ["!autodocs"],
   args: {},
 };
 
 export const TitleStory: Story = {
-  name: "Title",
-  tags: ["autodocs", "!dev"],
+  name: "TitleStory",
+  tags: ["autodocs"],
   args: {
     hasTitle: true,
     title: "Titre de l'alerte contenant l'intitulé de son type",
@@ -159,8 +159,8 @@ export const TitleStory: Story = {
 };
 
 export const DescriptionStory: Story = {
-  name: "Description",
-  tags: ["autodocs", "!dev"],
+  name: "DescriptionStory",
+  tags: ["autodocs"],
   args: {
     hasTitle: true,
     title: "Titre de l'alerte contenant l'intitulé de son type",
@@ -170,8 +170,8 @@ export const DescriptionStory: Story = {
 };
 
 export const SuccessStory: Story = {
-  name: "Success",
-  tags: ["autodocs", "!dev"],
+  name: "SuccessStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -184,8 +184,8 @@ export const SuccessStory: Story = {
 };
 
 export const ErrorStory: Story = {
-  name: "Error",
-  tags: ["autodocs", "!dev"],
+  name: "ErrorStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -198,8 +198,8 @@ export const ErrorStory: Story = {
 };
 
 export const InformationStory: Story = {
-  name: "Information",
-  tags: ["autodocs", "!dev"],
+  name: "InformationStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -212,8 +212,8 @@ export const InformationStory: Story = {
 };
 
 export const WarningStory: Story = {
-  name: "Warning",
-  tags: ["autodocs", "!dev"],
+  name: "WarningStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -226,8 +226,8 @@ export const WarningStory: Story = {
 };
 
 export const SizeSmStory: Story = {
-  name: "Size SM",
-  tags: ["autodocs", "!dev"],
+  name: "SizeSmStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -262,8 +262,8 @@ export const SizeSmStory: Story = {
 };
 
 export const SizeMdStory: Story = {
-  name: "Size MD",
-  tags: ["autodocs", "!dev"],
+  name: "SizeMdStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -290,8 +290,8 @@ export const SizeMdStory: Story = {
 };
 
 export const DismissibleStory: Story = {
-  name: "Dismissible",
-  tags: ["autodocs", "!dev"],
+  name: "DismissibleStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -305,8 +305,8 @@ export const DismissibleStory: Story = {
 };
 
 export const DismissibleNoJsStory: Story = {
-  name: "Dismissible No JS",
-  tags: ["autodocs", "!dev"],
+  name: "DismissibleNoJsStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -320,8 +320,8 @@ export const DismissibleNoJsStory: Story = {
 };
 
 export const IconCustomStory: Story = {
-  name: "Icon Custom",
-  tags: ["autodocs", "!dev"],
+  name: "IconCustomStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
