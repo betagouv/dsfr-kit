@@ -125,22 +125,99 @@ export default meta;
 type Story = StoryObj<HeaderArgs>;
 
 export const HeaderStory: Story = {
-  name: "Header",
+  name: "HeaderStory",
   args: {},
 };
 
-export const WithOperatorStory: Story = {
-  name: "With Operator",
+export const HeaderWithNavigationStory: Story = {
+  name: "HeaderWithNavigationStory",
   args: {
-    operatorLogoSrc: "https://placehold.co/100x100?text=OPERATOR",
-    operatorLogoAlt: "Nom de l'opérateur",
+    navigation: [
+      { label: "Rubrique 1", href: "#" },
+      { label: "Rubrique 2", href: "#", active: true },
+      { label: "Rubrique 3", href: "#" },
+    ],
   },
 };
 
-export const NoServiceStory: Story = {
-  name: "No Service",
+export const HeaderMinimalStory: Story = {
+  name: "HeaderMinimalStory",
   args: {
     brandServiceTitle: "",
     brandServiceTagline: "",
+    navigation: [],
+    toolsLinks: [],
+  },
+};
+
+export const ServiceStory: Story = {
+  name: "ServiceStory",
+  args: {
+    brandServiceTitle: "Nom du service",
+    brandServiceTagline: "Baseline du service",
+  },
+};
+
+export const ToolLinksStory: Story = {
+  name: "ToolLinksStory",
+  args: {
+    toolsLinks: [
+      { label: "Lien 1", href: "#", icon: "lock-line" },
+      { label: "Lien 2", href: "#", icon: "account-line" },
+    ],
+  },
+};
+
+export const SearchStory: Story = {
+  name: "SearchStory",
+  args: {
+    // Search is enabled by default in the component
+    toolsLinks: [],
+  },
+};
+
+export const ToolLinksSearchStory: Story = {
+  name: "ToolLinksSearchStory",
+  args: {
+    toolsLinks: [
+      { label: "Lien 1", href: "#", icon: "lock-line" },
+      { label: "Lien 2", href: "#", icon: "account-line" },
+    ],
+  },
+};
+
+export const TranslateStory: Story = {
+  name: "TranslateStory",
+  args: {
+    toolsLinks: [{ label: "EN", href: "#", icon: "translate-2" }],
+  },
+};
+
+export const ToolLinksTranslateStory: Story = {
+  name: "ToolLinksTranslateStory",
+  args: {
+    toolsLinks: [
+      { label: "Lien 1", href: "#", icon: "lock-line" },
+      { label: "Lien 2", href: "#", icon: "account-line" },
+      { label: "EN", href: "#", icon: "translate-2" },
+    ],
+  },
+};
+
+export const VerticalOperatorStory: Story = {
+  name: "VerticalOperatorStory",
+  args: {
+    operatorLogoSrc: "https://placehold.co/100x100?text=V",
+    operatorLogoAlt: "Opérateur",
+    operatorLogoStyle: "width: 3.5rem;",
+  },
+};
+
+export const HorizontalOperatorStory: Story = {
+  name: "HorizontalOperatorStory",
+  args: {
+    operatorLogoSrc: "https://placehold.co/200x50?text=Horizontal",
+    operatorLogoAlt: "Opérateur",
+    operatorLogoStyle: "width: 10rem; max-width: 100%;",
   },
 };
