@@ -4,62 +4,65 @@ import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import "@dsfr-kit/web-components";
 
 const accordionArgTypes = {
-  isExpanded: {
-    control: "boolean",
-    description: "L'accordéon est-il ouvert au départ",
-    table: {
-      type: { summary: "boolean" },
-    },
-  },
-  id: {
-    control: "text",
-    description: "Attribut 'id' du collapse de l'accordéon",
-    table: {
-      type: { summary: "string" },
-    },
-  },
   label: {
     control: "text",
-    description: "Libellé du bouton",
-    table: {
-      type: { summary: "string" },
-    },
+    description: "Libellé de l'accordéon",
   },
   content: {
     control: "text",
-    description: "Contenu du collapse",
-    table: {
-      type: { summary: "string" },
-    },
+    description: "Contenu de l'accordéon",
   },
-} as const;
-
-const accordionArgs = {
-  isExpanded: false,
-  id: "accordion-id",
-  label: "Libellé accordéon",
-  content:
-    '<h4 class="fr-h4">Contenu </h4> <p>Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>',
+  isExpanded: {
+    control: "boolean",
+    description: "L'accordéon est-il ouvert ?",
+  },
+  id: {
+    control: "text",
+    description: "Id de l'accordéon",
+  },
 };
 
-const meta: Meta = {
+const accordionArgs = {
+  label: "Libellé accordéon",
+  content:
+    "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
+  isExpanded: false,
+  id: "accordion-1",
+};
+
+interface AccordionArgs {
+  label: string;
+  content: string;
+  isExpanded: boolean;
+  id: string;
+}
+
+const render = (args: AccordionArgs) => html`
+  <dsfr-accordion
+    .label=${args.label}
+    ?expanded=${args.isExpanded}
+    .id=${args.id}
+  >
+    ${unsafeHTML(args.content)}
+  </dsfr-accordion>
+`;
+
+const meta: Meta<AccordionArgs> = {
   title: "Web Components/Accordion",
   component: "dsfr-accordion",
   tags: ["autodocs"],
-  argTypes: accordionArgTypes,
-  args: accordionArgs,
-  render: (args) => html`
-    <dsfr-accordion
-      id=${args.id}
-      label=${args.label}
-      ?expanded=${args.isExpanded}
-    >
-      ${unsafeHTML(args.content)}
-    </dsfr-accordion>
-  `,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: accordionArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: accordionArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<AccordionArgs>;
 
-export const AccordionStory: Story = {};
+export const AccordionStory: Story = {
+  name: "AccordionStory",
+  args: {},
+};

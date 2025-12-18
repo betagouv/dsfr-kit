@@ -5,25 +5,37 @@ import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
+export interface SidemenuItem {
+  id: string;
+  label: string;
+  href?: string;
+  active?: boolean;
+  type?: "link" | "menu";
+  items?: SidemenuItem[];
+}
+
 /**
  * @summary DSFR Sidemenu Main Container
  */
 @customElement("dsfr-sidemenu")
 export class DsfrSidemenu extends LitElement {
   @property({ type: String })
-  title = "Menu";
+  title = "";
 
-  @property({ type: Boolean, reflect: true, attribute: "sticky" })
-  sticky = false;
+  @property({ type: String })
+  buttonLabel = "Dans cette rubrique";
 
-  @property({ type: Boolean, reflect: true, attribute: "full-height" })
-  fullHeight = false;
+  @property({ type: String })
+  modifier: "default" | "sticky" | "right" | "sticky-full-height" = "default";
 
-  @property({ type: Boolean, reflect: true, attribute: "right" })
-  right = false;
+  @property({ type: Array })
+  items: SidemenuItem[] = [];
 
   @state()
   private _collapsed = true;
+
+  @state()
+  private _expandedMenus: Set<string> = new Set();
 
   static styles = [unsafeCSS(coreStyles), unsafeCSS(sidemenuStyles)];
 
@@ -31,35 +43,80 @@ export class DsfrSidemenu extends LitElement {
     this._collapsed = !this._collapsed;
   }
 
+  private _toggleMenu(itemId: string) {
+    if (this._expandedMenus.has(itemId)) {
+      this._expandedMenus.delete(itemId);
+    } else {
+      this._expandedMenus.add(itemId);
+    }
+    this.requestUpdate();
+  }
+
+  private _renderItem(item: SidemenuItem) {
+    const isActive = item.active;
+    const isMenu =
+      item.type === "menu" || (item.items && item.items.length > 0);
+    const isExpanded = this._expandedMenus.has(item.id);
+
+    if (isMenu) {
+      return html`
+        <li class="fr-sidemenu__item ${isActive ? "fr-sidemenu__item--active" : ""}">
+          <button
+            class="fr-sidemenu__btn"
+            aria-expanded="${isExpanded}"
+            aria-controls="sidemenu-item-${item.id}"
+            @click=${() => this._toggleMenu(item.id)}
+            ?aria-current=${isActive ? "page" : undefined}
+          >
+            ${item.label}
+          </button>
+          <div class="fr-collapse ${isExpanded ? "fr-collapse--expanded" : ""}" id="sidemenu-item-${item.id}">
+            <ul class="fr-sidemenu__list">
+              ${item.items?.map((subItem) => this._renderItem(subItem))}
+            </ul>
+          </div>
+        </li>
+      `;
+    }
+
+    return html`
+      <li class="fr-sidemenu__item ${isActive ? "fr-sidemenu__item--active" : ""}">
+        <a class="fr-sidemenu__link" href="${item.href || "#"}" ?aria-current=${isActive ? "page" : undefined}>
+          ${item.label}
+        </a>
+      </li>
+    `;
+  }
+
   render() {
-    // Classes for the nav element
     const navClasses = {
       "fr-sidemenu": true,
-      "fr-sidemenu--sticky": this.sticky,
-      "fr-sidemenu--sticky-full-height": this.fullHeight,
-      "fr-sidemenu--right": this.right,
+      "fr-sidemenu--sticky": this.modifier === "sticky",
+      "fr-sidemenu--sticky-full-height": this.modifier === "sticky-full-height",
+      "fr-sidemenu--right": this.modifier === "right",
     };
 
     return html`
-            <nav class=${classMap(navClasses)} aria-labelledby="fr-sidemenu-title" role="navigation">
-                <div class="fr-sidemenu__inner">
-                    <button
-                        class="fr-sidemenu__btn"
-                        aria-controls="fr-sidemenu-wrapper"
-                        aria-expanded="${!this._collapsed}"
-                        @click=${this._toggleCollapse}
-                    >
-                        Dans cette rubrique
-                    </button>
-                    <div class="fr-collapse ${!this._collapsed ? "fr-collapse--expanded" : ""}" id="fr-sidemenu-wrapper">
-                        ${this.title ? html`<div class="fr-sidemenu__title" id="fr-sidemenu-title">${this.title}</div>` : nothing}
-                        <ul class="fr-sidemenu__list">
-                            <slot></slot>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        `;
+      <nav class=${classMap(navClasses)} aria-labelledby="fr-sidemenu-title" role="navigation">
+        <div class="fr-sidemenu__inner">
+          <button
+            class="fr-sidemenu__btn"
+            aria-controls="fr-sidemenu-wrapper"
+            aria-expanded="${!this._collapsed}"
+            @click=${this._toggleCollapse}
+          >
+            ${this.buttonLabel}
+          </button>
+          <div class="fr-collapse ${!this._collapsed ? "fr-collapse--expanded" : ""}" id="fr-sidemenu-wrapper">
+            ${this.title ? html`<div class="fr-sidemenu__title" id="fr-sidemenu-title">${this.title}</div>` : nothing}
+            <ul class="fr-sidemenu__list">
+              ${this.items.map((item) => this._renderItem(item))}
+              <slot></slot>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    `;
   }
 }
 

@@ -6,6 +6,7 @@ import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
  * @summary DSFR Tag component
@@ -19,10 +20,10 @@ export class DsfrTag extends LitElement {
   href = "";
 
   @property({ type: String })
-  target = "_self";
+  target: "_self" | "_blank" = "_self";
 
-  @property({ type: Boolean })
-  small = false;
+  @property({ type: String })
+  size: "sm" | "md" = "md";
 
   @property({ type: String })
   icon = "";
@@ -30,14 +31,14 @@ export class DsfrTag extends LitElement {
   @property({ type: Boolean })
   disabled = false;
 
-  @property({ type: Boolean })
-  selectable = false;
-
-  @property({ type: Boolean, reflect: true })
-  selected = false;
+  @property({ type: String })
+  type: "default" | "clickable" | "pressable" | "dismissible" = "default";
 
   @property({ type: Boolean })
-  dismissible = false;
+  pressed = false;
+
+  @property({ type: String })
+  accent: string | null = null;
 
   static styles = [
     unsafeCSS(coreStyles),
@@ -48,55 +49,44 @@ export class DsfrTag extends LitElement {
   ];
 
   render() {
-    // Common classes
     const classes = {
       "fr-tag": true,
-      "fr-tag--sm": this.small,
-      "fr-tag--dismiss": this.dismissible,
-      // Allow icon to be set; if dismissible, we shouldn't block it (might be needed for fix or custom)
-      [`${this.icon}`]: !!this.icon,
-      // Only apply left-icon spacing if it's NOT a dismissible tag (dismissible handles its own icon layout)
-      "fr-tag--icon-left": !!this.icon && !this.dismissible,
+      "fr-tag--sm": this.size === "sm",
+      "fr-tag--dismiss": this.type === "dismissible",
+      [`fr-tag--${this.accent}`]: !!this.accent,
+      [`fr-icon-${this.icon}`]: !!this.icon,
+      "fr-tag--icon-left": !!this.icon,
     };
 
-    // 1. Link Variant
-    if (this.href && !this.disabled && !this.dismissible && !this.selectable) {
+    if (this.type === "clickable") {
+      const hrefValue = this.disabled ? undefined : this.href;
       return html`
         <a
-          href=${this.href}
+          href=${ifDefined(hrefValue)}
           target=${this.target}
           class=${classMap(classes)}
-          ?aria-disabled=${this.disabled}
+          aria-disabled=${ifDefined(this.disabled ? "true" : undefined)}
+          role=${ifDefined(this.disabled ? "link" : undefined)}
         >
           ${this.label}
         </a>
       `;
     }
 
-    // 2. Button Variant (Selectable or Dismissible)
-    if (this.selectable || this.dismissible || (this.href && this.disabled)) {
-      // Logic for aria-label on dismissible
-      const ariaLabel = this.dismissible ? `Retirer ${this.label}` : nothing;
-      const ariaPressed = this.selectable
-        ? this.selected
-          ? "true"
-          : "false"
-        : nothing;
-
+    if (this.type === "pressable" || this.type === "dismissible") {
       return html`
         <button
           type="button"
           class=${classMap(classes)}
           ?disabled=${this.disabled}
-          aria-pressed=${ariaPressed}
-          aria-label=${ariaLabel}
+          aria-pressed=${ifDefined(this.type === "pressable" ? (this.pressed ? "true" : "false") : undefined)}
+          aria-label=${ifDefined(this.type === "dismissible" ? `Retirer ${this.label}` : undefined)}
         >
           ${this.label}
         </button>
       `;
     }
 
-    // 3. Default Variant (Paragraph)
     return html`
       <p class=${classMap(classes)}>
         ${this.label}

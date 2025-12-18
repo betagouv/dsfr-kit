@@ -24,17 +24,20 @@ export class DsfrCallout extends LitElement {
   @property({ type: String, attribute: "heading-level" })
   headingLevel = "h3";
 
+  @property({ type: String })
+  accent: string | null = null;
+
   static styles = [unsafeCSS(coreStyles), unsafeCSS(calloutStyles)];
 
   render() {
     const classes = {
       "fr-callout": true,
-      [`${this.icon}`]: !!this.icon,
+      [`fr-icon-${this.icon}`]: !!this.icon,
+      [`fr-callout--${this.accent}`]: !!this.accent,
     };
 
     const renderTitle = () => {
       if (!this.title) return nothing;
-      // Using simple switch for heading level as per previous components
       switch (this.headingLevel) {
         case "h2":
           return html`<h2 class="fr-callout__title">${this.title}</h2>`;
@@ -50,22 +53,18 @@ export class DsfrCallout extends LitElement {
     };
 
     return html`
-            <div class=${classMap(classes)}>
-                ${renderTitle()}
-                <p class="fr-callout__text">
-                    <slot></slot>
-                </p>
-                ${
-                  this.buttonLabel
-                    ? html`<button class="fr-btn" @click=${this._handleButtonClick}>${this.buttonLabel}</button>`
-                    : // Note: If buttonHref is provided, it should likely be an anchor styled as a button or we use logic.
-                      // DSFR docs show <button> in example, but usually "inciter à l'action" implies a link or action.
-                      // If href provided, use <a> with fr-btn class?
-                      // Let's support both.
-                      nothing
-                }
-            </div>
-        `;
+      <div class=${classMap(classes)}>
+        ${renderTitle()}
+        <p class="fr-callout__text">
+          <slot></slot>
+        </p>
+        ${
+          this.buttonLabel
+            ? html`<dsfr-button .label=${this.buttonLabel} .href=${this.buttonHref} .markup=${this.buttonHref ? "a" : "button"} @click=${this._handleButtonClick}></dsfr-button>`
+            : nothing
+        }
+      </div>
+    `;
   }
 
   private _handleButtonClick() {

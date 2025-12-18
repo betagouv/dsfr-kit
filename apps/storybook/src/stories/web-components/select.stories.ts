@@ -1,77 +1,129 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const selectArgTypes = {
+  label: {
+    control: "text",
+    description: "Libellé de la liste déroulante",
+  },
+  hint: {
+    control: "text",
+    description: "Texte additionnel",
+  },
+  value: {
+    control: "text",
+    description: "Valeur sélectionnée",
+  },
+  options: {
+    control: "object",
+    description: "Options de la liste",
+  },
+  disabled: {
+    control: "boolean",
+    description: "Désactive la liste",
+  },
+  error: {
+    control: "text",
+    description: "Message d'erreur",
+  },
+  valid: {
+    control: "text",
+    description: "Message de validation",
+  },
+};
+
+const selectArgs = {
+  label: "Libellé liste déroulante",
+  hint: "",
+  value: "",
+  options: [
+    { label: "Option 1", value: "1" },
+    { label: "Option 2", value: "2" },
+    { label: "Option 3", value: "3" },
+    { label: "Option 4", value: "4", disabled: true },
+  ],
+  disabled: false,
+  error: "",
+  valid: "",
+};
+
+interface SelectArgs {
+  label: string;
+  hint: string;
+  value: string;
+  // biome-ignore lint/suspicious/noExplicitAny: Flexible options structure
+  options: any[];
+  disabled: boolean;
+  error: string;
+  valid: string;
+}
+
+const render = (args: SelectArgs) => html`
+  <dsfr-select
+    .label=${args.label}
+    .hint=${args.hint}
+    .value=${args.value}
+    .options=${args.options}
+    ?disabled=${args.disabled}
+    .error=${args.error}
+    .valid=${args.valid}
+  ></dsfr-select>
+`;
+
+const meta: Meta<SelectArgs> = {
   title: "Web Components/Select",
   component: "dsfr-select",
   tags: ["autodocs"],
-  argTypes: {
-    label: { control: "text" },
-    name: { control: "text" },
-    value: { control: "text" },
-    options: { control: "object" },
-    disabled: { control: "boolean" },
-    hint: { control: "text" },
-    state: {
-      control: "select",
-      options: ["default", "error", "valid"],
-    },
-    message: { control: "text" },
-  },
-  args: {
-    label: "Libellé de la liste déroulante",
-    options: [
-      { label: "Option 1", value: "1" },
-      { label: "Option 2", value: "2" },
-      { label: "Option 3", value: "3" },
-      { label: "Option 4 (désactivée)", value: "4", disabled: true },
-    ],
-    disabled: false,
-    state: "default",
-  },
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: selectArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: selectArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<SelectArgs>;
 
-export const Default: Story = {};
+export const SelectStory: Story = {
+  name: "Select",
+  args: {},
+};
 
-export const Selected: Story = {
+export const DefaultStory: Story = {
+  name: "Default",
+  tags: ["autodocs", "!dev"],
   args: {
-    label: "Option pré-sélectionnée",
-    value: "2",
+    label: "Liste par défaut",
   },
 };
 
-export const WithHint: Story = {
+export const HintStory: Story = {
+  name: "With Hint",
+  tags: ["autodocs", "!dev"],
   args: {
     label: "Liste avec description",
-    hint: "Texte d'aide pour la liste déroulante",
+    hint: "Texte de description additionnel",
   },
 };
 
-export const Disabled: Story = {
-  args: {
-    label: "Liste désactivée",
-    disabled: true,
-    value: "1",
-  },
-};
-
-export const ErrorState: Story = {
+export const ErrorStory: Story = {
+  name: "Error",
+  tags: ["autodocs", "!dev"],
   args: {
     label: "Liste en erreur",
-    state: "error",
-    message: "Sélection invalide",
+    error: "Message d'erreur",
     value: "1",
   },
 };
 
-export const ValidState: Story = {
+export const ValidStory: Story = {
+  name: "Valid",
+  tags: ["autodocs", "!dev"],
   args: {
     label: "Liste valide",
-    state: "valid",
-    message: "Sélection valide",
+    valid: "Message de validation",
     value: "2",
   },
 };

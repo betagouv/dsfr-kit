@@ -1,106 +1,157 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const noticeArgTypes = {
+  title: {
+    control: "text",
+    description: "Titre du bandeau",
+  },
+  desc: {
+    control: "text",
+    description: "Texte de description du bandeau",
+  },
+  type: {
+    control: { type: "select" },
+    options: [
+      "info",
+      "warning",
+      "alert",
+      "weather-orange",
+      "weather-red",
+      "weather-purple",
+      "attack",
+      "witness",
+      "cyberattack",
+    ],
+    description: "Type de bandeau",
+  },
+  dismissible: {
+    control: "boolean",
+    description: "Ajoute un bouton de fermeture",
+  },
+  link: {
+    control: "text",
+    description: "URL du lien",
+  },
+  linkLabel: {
+    control: "text",
+    description: "Libellé du lien",
+  },
+  icon: {
+    control: "text",
+    description: "Nom de l'icône ou false pour masquer",
+  },
+  markup: {
+    control: { type: "select" },
+    options: ["p", "h1", "h2", "h3", "h4", "h5", "h6"],
+    description: "Balise de contenu",
+  },
+};
+
+const noticeArgs = {
+  title: "Titre du bandeau",
+  desc: "Texte de description lorem ipsum sit consectetur adipiscing elit.",
+  type: "info",
+  dismissible: true,
+  link: "#",
+  linkLabel: "Voir plus",
+  icon: "",
+  markup: "p",
+};
+
+interface NoticeArgs {
+  title: string;
+  desc: string;
+  type: string;
+  dismissible: boolean;
+  link: string;
+  linkLabel: string;
+  icon: string;
+  markup: string;
+}
+
+const render = (args: NoticeArgs) => html`
+  <dsfr-notice
+    .title=${args.title}
+    .desc=${args.desc}
+    .type=${args.type as any}
+    ?dismissible=${args.dismissible}
+    .link=${args.link}
+    .link-label=${args.linkLabel}
+    .icon=${args.icon}
+    .markup=${args.markup}
+  ></dsfr-notice>
+`;
+
+const meta: Meta<NoticeArgs> = {
   title: "Web Components/Notice",
   component: "dsfr-notice",
   tags: ["autodocs"],
-  argTypes: {
-    type: {
-      control: "select",
-      options: [
-        "info",
-        "warning",
-        "alert",
-        "weather-orange",
-        "weather-red",
-        "weather-purple",
-        "attack",
-        "witness",
-        "cyberattack",
-      ],
-    },
-    title: { control: "text" },
-    description: { control: "text" },
-    link: { control: "text" },
-    linkLabel: { control: "text" },
-    closeable: { control: "boolean" },
-  },
-  args: {
-    type: "info",
-    title: "Titre du bandeau",
-    description: "",
-    closeable: false,
-    link: "",
-    linkLabel: "Voir plus",
-  },
+  argTypes: noticeArgTypes as any,
+  args: noticeArgs as any,
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<NoticeArgs>;
 
-export const Info: Story = {
+export const NoticeStory: Story = {
+  name: "Notice",
+  tags: ["!autodocs"],
+  args: {},
+};
+
+export const InfoStory: Story = {
+  name: "Info",
+  tags: ["autodocs", "!dev"],
   args: {
     type: "info",
-    description: "Ceci est une information importante pour l’utilisateur.",
+    title: "Titre du bandeau d'information importante",
   },
 };
 
-export const Warning: Story = {
+export const WarningStory: Story = {
+  name: "Warning",
+  tags: ["autodocs", "!dev"],
   args: {
     type: "warning",
-    title: "Travaux en cours",
-    description: "Le service sera indisponible ce soir de 22h à minuit.",
+    title: "Titre du bandeau d'avertissement",
   },
 };
 
-export const WeatherOrange: Story = {
+export const AlertStory: Story = {
+  name: "Alert",
+  tags: ["autodocs", "!dev"],
+  args: {
+    type: "alert",
+    title: "Titre du bandeau d'alerte",
+  },
+};
+
+export const WeatherOrangeStory: Story = {
+  name: "Weather Orange",
+  tags: ["autodocs", "!dev"],
   args: {
     type: "weather-orange",
     title: "Vigilance météo orange",
-    description: "Orages violents prévus dans votre département.",
   },
 };
 
-export const WeatherRed: Story = {
+export const WeatherRedStory: Story = {
+  name: "Weather Red",
+  tags: ["autodocs", "!dev"],
   args: {
     type: "weather-red",
     title: "Vigilance météo rouge",
-    description: "Restez chez vous, danger imminent.",
   },
 };
 
-export const Attack: Story = {
+export const AttackStory: Story = {
+  name: "Attack",
+  tags: ["autodocs", "!dev"],
   args: {
     type: "attack",
-    title: "Alerte attentat",
-    description: "Attentat en cours. Suivez les instructions des FDO.",
-  },
-};
-
-export const Witness: Story = {
-  args: {
-    type: "witness",
-    title: "Appel à témoins",
-    description: "La Police Nationale lance un appel à témoins.",
-  },
-};
-
-export const WithLink: Story = {
-  args: {
-    type: "info",
-    title: "Mise à jour majeure",
-    description: "Une nouvelle version du site est disponible.",
-    link: "https://example.com",
-    linkLabel: "Découvrir les nouveautés",
-    closeable: true,
-  },
-};
-
-export const Closeable: Story = {
-  args: {
-    type: "info",
-    title: "Bandeau fermable",
-    closeable: true,
+    title: "Attentat en cours",
   },
 };

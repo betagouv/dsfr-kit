@@ -4,6 +4,7 @@ import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
  * @summary DSFR Radio component
@@ -26,10 +27,16 @@ export class DsfrRadio extends LitElement {
   disabled = false;
 
   @property({ type: String })
+  size: "sm" | "md" = "md";
+
+  @property({ type: String })
   hint = "";
 
   @property({ type: Boolean, reflect: true })
   rich = false;
+
+  @property({ type: Boolean })
+  inline = false;
 
   @property({ type: String })
   radioId = `radio-${Math.random().toString(36).substring(2, 9)}`;
@@ -55,35 +62,36 @@ export class DsfrRadio extends LitElement {
   render() {
     const groupClasses = {
       "fr-radio-group": true,
+      "fr-radio-group--sm": this.size === "sm" && !this.rich,
       "fr-radio-rich": this.rich,
     };
 
     return html`
-            <div class=${classMap(groupClasses)}>
-                <input
-                    type="radio"
-                    id=${this.radioId}
-                    name=${this.name}
-                    value=${this.value}
-                    ?checked=${this.checked}
-                    ?disabled=${this.disabled}
-                    @change=${this._handleChange}
-                >
-                <label class="fr-label" for=${this.radioId}>
-                    ${this.label}
-                    ${this.hint ? html`<span class="fr-hint-text">${this.hint}</span>` : nothing}
-                </label>
-                ${
-                  this.rich
-                    ? html`
-                    <div class="fr-radio-rich__pictogram">
-                        <slot name="pictogram"></slot>
-                    </div>
-                `
-                    : nothing
-                }
-            </div>
-        `;
+      <div class=${classMap(groupClasses)}>
+        <input
+          type="radio"
+          id=${this.radioId}
+          name=${ifDefined(this.name || undefined)}
+          value=${ifDefined(this.value || undefined)}
+          ?checked=${this.checked}
+          ?disabled=${this.disabled}
+          @change=${this._handleChange}
+        />
+        <label class="fr-label" for=${this.radioId}>
+          ${this.label}
+          ${this.hint ? html`<span class="fr-hint-text">${this.hint}</span>` : nothing}
+        </label>
+        ${
+          this.rich
+            ? html`
+                <div class="fr-radio-rich__pictogram">
+                  <slot name="pictogram"></slot>
+                </div>
+              `
+            : nothing
+        }
+      </div>
+    `;
   }
 }
 

@@ -15,25 +15,28 @@ export class DsfrHighlight extends LitElement {
   @property({ type: String })
   size: "sm" | "md" | "lg" = "md";
 
+  @property({ type: String })
+  accent: string | null = null;
+
   static styles = [unsafeCSS(coreStyles), unsafeCSS(highlightStyles)];
 
   render() {
     const classes = {
       "fr-highlight": true,
+      [`fr-highlight--${this.accent}`]: !!this.accent,
     };
 
     const textClasses = {
-      "fr-text--sm": this.size === "sm",
-      "fr-text--lg": this.size === "lg",
+      [`fr-text--${this.size}`]: this.size !== "md",
     };
 
     return html`
-            <div class=${classMap(classes)}>
-                <p class=${classMap(textClasses)}>
-                    ${this.text || html`<slot></slot>`}
-                </p>
-            </div>
-        `;
+      <div class=${classMap(classes)}>
+        <p class=${classMap(textClasses)}>
+          ${this.text || html`<slot></slot>`}
+        </p>
+      </div>
+    `;
   }
 }
 

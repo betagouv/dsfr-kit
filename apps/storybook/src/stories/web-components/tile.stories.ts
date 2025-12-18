@@ -1,72 +1,184 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const tileArgTypes = {
+  title: {
+    control: "text",
+    description: "Titre de la tuile",
+  },
+  description: {
+    control: "text",
+    description: "Description de la tuile",
+  },
+  url: {
+    control: "text",
+    description: "URL de la tuile",
+  },
+  imageUrl: {
+    control: "text",
+    description: "URL de l'image (pictogramme)",
+  },
+  imageAlt: {
+    control: "text",
+    description: "Alt de l'image",
+  },
+  size: {
+    control: { type: "select" },
+    options: ["md", "sm"],
+    description: "Taille de la tuile",
+  },
+  horizontal: {
+    control: "boolean",
+    description: "Mode horizontal",
+  },
+  verticalBreakpoint: {
+    control: { type: "select" },
+    options: ["", "md", "lg"],
+    description: "Breakpoint pour passage en vertical",
+  },
+  enlarge: {
+    control: "boolean",
+    description: "Zone de clic agrandie",
+  },
+  noIcon: {
+    control: "boolean",
+    description: "Désactive l'icône de lien",
+  },
+  download: {
+    control: "boolean",
+    description: "Mode téléchargement",
+  },
+  detail: {
+    control: "text",
+    description: "Détail de la tuile",
+  },
+  actionMarkup: {
+    control: { type: "select" },
+    options: ["a", "button", "false"],
+    description: "Balise d'action",
+  },
+};
+
+const tileArgs = {
+  title: "Titre de la tuile",
+  description: "Description (optionnelle)",
+  url: "#",
+  imageUrl: "https://www.systeme-de-design.gouv.fr/img/placeholder.1x1.png",
+  imageAlt: "",
+  size: "md",
+  horizontal: false,
+  verticalBreakpoint: "",
+  enlarge: true,
+  noIcon: false,
+  download: false,
+  detail: "",
+  actionMarkup: "a",
+};
+
+interface TileArgs {
+  title: string;
+  description: string;
+  url: string;
+  imageUrl: string;
+  imageAlt: string;
+  size: "md" | "sm";
+  horizontal: boolean;
+  verticalBreakpoint: "md" | "lg" | "";
+  enlarge: boolean;
+  noIcon: boolean;
+  download: boolean;
+  detail: string;
+  actionMarkup: "a" | "button" | "false";
+}
+
+const render = (args: TileArgs) => html`
+  <dsfr-tile
+    .title=${args.title}
+    .description=${args.description}
+    .url=${args.url}
+    .image-url=${args.imageUrl}
+    .image-alt=${args.imageAlt}
+    .size=${args.size}
+    ?horizontal=${args.horizontal}
+    .vertical-breakpoint=${args.verticalBreakpoint}
+    ?enlarge=${args.enlarge}
+    ?no-icon=${args.noIcon}
+    ?download=${args.download}
+    .detail=${args.detail}
+    .action-markup=${args.actionMarkup}
+  ></dsfr-tile>
+`;
+
+const meta: Meta<TileArgs> = {
   title: "Web Components/Tile",
   component: "dsfr-tile",
   tags: ["autodocs"],
-  argTypes: {
-    title: { control: "text" },
-    description: { control: "text" },
-    url: { control: "text" },
-    imageUrl: { control: "text" },
-    orientation: {
-      control: "select",
-      options: ["vertical", "horizontal", "horizontal-md", "horizontal-lg"],
-    },
-    noIcon: { control: "boolean" },
-    disabled: { control: "boolean" },
-    download: { control: "boolean" },
-    small: { control: "boolean" },
-    detail: { control: "text" },
-  },
-  args: {
-    title: "Titre de la tuile",
-    description: "Description de la tuile",
-    url: "#",
-    imageUrl: "",
-    orientation: "vertical",
-    noIcon: false,
-    disabled: false,
-    download: false,
-    small: false,
-    detail: "",
-  },
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: tileArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: tileArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<TileArgs>;
 
-export const Default: Story = {};
+export const TileStory: Story = {
+  name: "Tile",
+  args: {},
+};
 
-export const Horizontal: Story = {
+export const DefaultStory: Story = {
+  name: "Default",
+  tags: ["autodocs", "!dev"],
+  args: {},
+};
+
+export const SizeSmStory: Story = {
+  name: "Size SM",
+  tags: ["autodocs", "!dev"],
   args: {
-    orientation: "horizontal",
-    imageUrl: "https://www.systeme-de-design.gouv.fr/img/placeholder.1x1.png",
-    imageAlt: "Placeholder image",
+    size: "sm",
+    detail: "Détail (optionnel)",
   },
 };
 
-export const WithImage: Story = {
+export const HorizontalStory: Story = {
+  name: "Horizontal",
+  tags: ["autodocs", "!dev"],
   args: {
-    imageUrl: "https://www.systeme-de-design.gouv.fr/img/placeholder.1x1.png",
-    imageAlt: "Placeholder image",
+    horizontal: true,
+    detail: "Détail (optionnel)",
   },
 };
 
-export const Download: Story = {
+export const HorizontalVerticalFromMdStory: Story = {
+  name: "Horizontal Vertical From Md",
+  tags: ["autodocs", "!dev"],
   args: {
+    horizontal: true,
+    verticalBreakpoint: "md",
+    detail: "Détail (optionnel)",
+  },
+};
+
+export const DownloadStory: Story = {
+  name: "Download",
+  tags: ["autodocs", "!dev"],
+  args: {
+    title: "Télécharger le document XX",
     download: true,
-    title: "Télécharger le document",
     detail: "PDF - 2Mo",
-    imageUrl: "https://www.systeme-de-design.gouv.fr/img/placeholder.1x1.png",
-    // Note: In real usage, download tiles usually use a specific pictogram SVG
   },
 };
 
-export const Small: Story = {
+export const NoLinkStory: Story = {
+  name: "No Link",
+  tags: ["autodocs", "!dev"],
   args: {
-    small: true,
-    title: "Petite tuile",
+    actionMarkup: "false",
+    detail: "Détail (optionnel)",
   },
 };

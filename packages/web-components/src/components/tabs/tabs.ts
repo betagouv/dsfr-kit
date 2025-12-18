@@ -9,6 +9,7 @@ import {
   state,
 } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
  * @summary DSFR Tab Item Component
@@ -116,37 +117,41 @@ export class DsfrTabs extends LitElement {
 
   render() {
     return html`
-            <div class="fr-tabs">
-                <ul class="fr-tabs__list" role="tablist" aria-label=${this.label} @keydown=${this._handleKeyDown}>
-                    ${this._tabs.map((tab, index) => {
-                      const isSelected = index === this._selectedIndex;
-                      const btnClasses = {
-                        "fr-tabs__tab": true,
-                        "fr-tabs__tab--icon-left": !!tab.icon,
-                        [tab.icon]: !!tab.icon,
-                      };
+      <div class="fr-tabs">
+        <ul class="fr-tabs__list" role="tablist" aria-label=${ifDefined(this.label || undefined)} @keydown=${this._handleKeyDown}>
+          ${this._tabs.map((tab, index) => {
+            const isSelected = index === this._selectedIndex;
+            const iconClass =
+              tab.icon && !tab.icon.startsWith("fr-icon-")
+                ? `fr-icon-${tab.icon}`
+                : tab.icon;
+            const btnClasses = {
+              "fr-tabs__tab": true,
+              "fr-tabs__tab--icon-left": !!tab.icon,
+              [iconClass]: !!tab.icon,
+            };
 
-                      return html`
-                            <li role="presentation">
-                                <button
-                                    id=${`tab-${tab.panelId}`}
-                                    class=${classMap(btnClasses)}
-                                    tabindex=${isSelected ? "0" : "-1"}
-                                    role="tab"
-                                    aria-selected=${isSelected}
-                                    aria-controls=${tab.panelId}
-                                    @click=${() => this._selectTab(index)}
-                                    type="button"
-                                >
-                                    ${tab.label}
-                                </button>
-                            </li>
-                        `;
-                    })}
-                </ul>
-                <slot @slotchange=${this._handleSlotChange}></slot>
-            </div>
-        `;
+            return html`
+              <li role="presentation">
+                <button
+                  id=${`tab-${tab.panelId}`}
+                  class=${classMap(btnClasses)}
+                  tabindex=${isSelected ? "0" : "-1"}
+                  role="tab"
+                  aria-selected=${isSelected}
+                  aria-controls=${tab.panelId}
+                  @click=${() => this._selectTab(index)}
+                  type="button"
+                >
+                  ${tab.label}
+                </button>
+              </li>
+            `;
+          })}
+        </ul>
+        <slot @slotchange=${this._handleSlotChange}></slot>
+      </div>
+    `;
   }
 }
 

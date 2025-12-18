@@ -26,7 +26,7 @@ export class DsfrNotice extends LitElement {
   title = "";
 
   @property({ type: String })
-  description = "";
+  desc = "";
 
   @property({ type: String })
   link = "";
@@ -35,10 +35,16 @@ export class DsfrNotice extends LitElement {
   linkLabel = "Voir plus";
 
   @property({ type: String })
-  type: NoticeType = "info";
+  type: NoticeType | "" = "";
 
   @property({ type: Boolean })
-  closeable = false;
+  dismissible = false;
+
+  @property({ type: String })
+  icon = "";
+
+  @property({ type: String })
+  markup = "p";
 
   @state()
   private _closed = false;
@@ -59,39 +65,66 @@ export class DsfrNotice extends LitElement {
 
     const classes = {
       "fr-notice": true,
-      [`fr-notice--${this.type}`]: true,
+      [`fr-notice--${this.type}`]: !!this.type,
+      "fr-notice--no-icon": this.icon === "false",
     };
 
+    const titleClasses = {
+      "fr-notice__title": true,
+      [`fr-icon-${this.icon}`]: !!this.icon && this.icon !== "false",
+    };
+
+    const content = html`
+      ${this.title ? html`<span class=${classMap(titleClasses)}>${this.title}</span>` : nothing}
+      ${this.desc ? html`<span class="fr-notice__desc">${this.desc}</span>` : nothing}
+      ${
+        this.link
+          ? html`
+          <a target="_blank" rel="noopener external" href=${this.link} class="fr-notice__link" title="${this.linkLabel} - nouvelle fenêtre">
+            ${this.linkLabel}
+          </a>
+        `
+          : nothing
+      }
+    `;
+
     return html`
-            <div class=${classMap(classes)}>
-                <div class="fr-container">
-                    <div class="fr-notice__body">
-                        <p>
-                            <span class="fr-notice__title">${this.title}</span>
-                            ${this.description ? html`<span class="fr-notice__desc">${this.description}</span>` : nothing}
-                            ${
-                              this.link
-                                ? html`
-                                <a target="_blank" rel="noopener external" href=${this.link} class="fr-notice__link" title="${this.linkLabel} - nouvelle fenêtre">
-                                    ${this.linkLabel}
-                                </a>
-                            `
-                                : nothing
-                            }
-                        </p>
-                        ${
-                          this.closeable
-                            ? html`
-                            <button class="fr-btn--close fr-btn" title="Masquer le message" @click=${this._handleClose}>
-                                Masquer le message
-                            </button>
-                        `
-                            : nothing
-                        }
-                    </div>
-                </div>
-            </div>
-        `;
+      <div class=${classMap(classes)}>
+        <div class="fr-container">
+          <div class="fr-notice__body">
+            ${this.renderMarkup(content)}
+            ${
+              this.dismissible
+                ? html`
+                <button class="fr-btn--close fr-btn" title="Masquer le message" @click=${this._handleClose}>
+                  Masquer le message
+                </button>
+              `
+                : nothing
+            }
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  private renderMarkup(content: unknown) {
+    switch (this.markup) {
+      case "h1":
+        return html`<h1>${content}</h1>`;
+      case "h2":
+        return html`<h2>${content}</h2>`;
+      case "h3":
+        return html`<h3>${content}</h3>`;
+      case "h4":
+        return html`<h4>${content}</h4>`;
+      case "h5":
+        return html`<h5>${content}</h5>`;
+      case "h6":
+        return html`<h6>${content}</h6>`;
+      default:
+        return html`<p>${content}</p>`;
+    }
   }
 }
 

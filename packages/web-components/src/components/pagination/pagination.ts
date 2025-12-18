@@ -15,6 +15,9 @@ export class DsfrPagination extends LitElement {
   @property({ type: Number, attribute: "total-pages" })
   totalPages = 1;
 
+  @property({ type: String })
+  ariaLabel = "Pagination";
+
   static styles = [unsafeCSS(coreStyles), unsafeCSS(paginationStyles)];
 
   private _handlePageChange(page: number, event: Event) {
@@ -32,18 +35,18 @@ export class DsfrPagination extends LitElement {
 
   private _renderPageLink(page: number, label?: string, isCurrent = false) {
     return html`
-            <li>
-                <a
-                    class="fr-pagination__link"
-                    aria-current=${isCurrent ? "page" : nothing}
-                    title=${label || `Page ${page}`}
-                    href="#"
-                    @click=${(e: Event) => this._handlePageChange(page, e)}
-                >
-                    ${label || page}
-                </a>
-            </li>
-        `;
+      <li>
+        <a
+          class="fr-pagination__link"
+          aria-current=${isCurrent ? "page" : nothing}
+          title=${label || `Page ${page}`}
+          href=${isCurrent ? nothing : "#"}
+          @click=${(e: Event) => this._handlePageChange(page, e)}
+        >
+          ${label || page}
+        </a>
+      </li>
+    `;
   }
 
   private _renderNavButton(
@@ -66,35 +69,35 @@ export class DsfrPagination extends LitElement {
 
     if (disabled) {
       return html`
-                <li>
-                    <a
-                        class=${classMap(classes)}
-                        aria-disabled="true"
-                        role="link"
-                        title=${labels[type]}
-                    >
-                        ${labels[type]}
-                    </a>
-                </li>
-            `;
+        <li>
+          <a
+            class=${classMap(classes)}
+            aria-disabled="true"
+            role="link"
+            title=${labels[type]}
+          >
+            ${labels[type]}
+          </a>
+        </li>
+      `;
     }
 
     return html`
-            <li>
-                <a
-                    class=${classMap(classes)}
-                    href="#"
-                    title=${labels[type]}
-                    @click=${(e: Event) => this._handlePageChange(targetPage, e)}
-                >
-                    ${labels[type]}
-                </a>
-            </li>
-        `;
+      <li>
+        <a
+          class=${classMap(classes)}
+          href="#"
+          title=${labels[type]}
+          @click=${(e: Event) => this._handlePageChange(targetPage, e)}
+        >
+          ${labels[type]}
+        </a>
+      </li>
+    `;
   }
 
   private _getVisiblePages() {
-    const delta = 2; // Number of pages around current page
+    const delta = 2;
     const range: (number | string)[] = [];
     const left = this.currentPage - delta;
     const right = this.currentPage + delta + 1;
@@ -126,33 +129,33 @@ export class DsfrPagination extends LitElement {
     if (this.totalPages <= 1) return nothing;
 
     return html`
-            <nav role="navigation" class="fr-pagination" aria-label="Pagination">
-                <ul class="fr-pagination__list">
-                    ${this._renderNavButton("first", 1, this.currentPage === 1)}
-                    ${this._renderNavButton("prev", this.currentPage - 1, this.currentPage === 1)}
+      <nav role="navigation" class="fr-pagination" aria-label=${this.ariaLabel}>
+        <ul class="fr-pagination__list">
+          ${this._renderNavButton("first", 1, this.currentPage === 1)}
+          ${this._renderNavButton("prev", this.currentPage - 1, this.currentPage === 1)}
 
-                    ${this._getVisiblePages().map((item) => {
-                      if (item === "...") {
-                        return html`
-                                <li>
-                                    <span class="fr-pagination__link fr-pagination__link--truncation">
-                                        ...
-                                    </span>
-                                </li>
-                            `;
-                      }
-                      return this._renderPageLink(
-                        item as number,
-                        undefined,
-                        item === this.currentPage,
-                      );
-                    })}
+          ${this._getVisiblePages().map((item) => {
+            if (item === "...") {
+              return html`
+                <li>
+                  <a class="fr-pagination__link fr-pagination__link--truncation" title="Pages intermédiaires">
+                    ...
+                  </a>
+                </li>
+              `;
+            }
+            return this._renderPageLink(
+              item as number,
+              undefined,
+              item === this.currentPage,
+            );
+          })}
 
-                    ${this._renderNavButton("next", this.currentPage + 1, this.currentPage === this.totalPages)}
-                    ${this._renderNavButton("last", this.totalPages, this.currentPage === this.totalPages)}
-                </ul>
-            </nav>
-        `;
+          ${this._renderNavButton("next", this.currentPage + 1, this.currentPage === this.totalPages)}
+          ${this._renderNavButton("last", this.totalPages, this.currentPage === this.totalPages)}
+        </ul>
+      </nav>
+    `;
   }
 }
 

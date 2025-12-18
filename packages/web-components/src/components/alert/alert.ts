@@ -21,7 +21,7 @@ export class DsfrAlert extends LitElement {
   description = "";
 
   @property({ type: String })
-  type: AlertType = "info";
+  type: AlertType | "default" = "info";
 
   @property({ type: String })
   size: AlertSize = "md";
@@ -32,8 +32,11 @@ export class DsfrAlert extends LitElement {
   @property({ type: String, attribute: "heading-level" })
   headingLevel = "h3";
 
+  @property({ type: String })
+  icon: string | null = null;
+
   @state()
-  private _closed = false; // Internal state to handle hiding
+  private _closed = false;
 
   static styles = [unsafeCSS(coreStyles), unsafeCSS(alertStyles)];
 
@@ -51,48 +54,46 @@ export class DsfrAlert extends LitElement {
 
     const classes = {
       "fr-alert": true,
-      [`fr-alert--${this.type}`]: true,
+      [`fr-alert--${this.type}`]: this.type !== "default",
       "fr-alert--sm": this.size === "sm",
+      [`fr-icon-${this.icon}`]: !!this.icon,
     };
 
-    // Accessibility roles: error/warning -> alert, info/success -> status
     const role =
       this.type === "error" || this.type === "warning" ? "alert" : "status";
 
-    // Actually, we can do this simply:
-    const renderTitle = () => {
-      if (!this.title) return nothing;
+    const titleMarkup = (content: any) => {
       switch (this.headingLevel) {
         case "h1":
-          return html`<h1 class="fr-alert__title">${this.title}</h1>`;
+          return html`<h1 class="fr-alert__title">${content}</h1>`;
         case "h2":
-          return html`<h2 class="fr-alert__title">${this.title}</h2>`;
+          return html`<h2 class="fr-alert__title">${content}</h2>`;
         case "h4":
-          return html`<h4 class="fr-alert__title">${this.title}</h4>`;
+          return html`<h4 class="fr-alert__title">${content}</h4>`;
         case "h5":
-          return html`<h5 class="fr-alert__title">${this.title}</h5>`;
+          return html`<h5 class="fr-alert__title">${content}</h5>`;
         case "h6":
-          return html`<h6 class="fr-alert__title">${this.title}</h6>`;
+          return html`<h6 class="fr-alert__title">${content}</h6>`;
         default:
-          return html`<h3 class="fr-alert__title">${this.title}</h3>`;
+          return html`<h3 class="fr-alert__title">${content}</h3>`;
       }
     };
 
     return html`
-            <div class=${classMap(classes)} role=${role}>
-                ${renderTitle()}
-                ${this.description ? html`<p>${this.description}</p>` : html`<slot></slot>`}
-                ${
-                  this.closeable
-                    ? html`
-                    <button class="fr-btn--close fr-btn" title="Masquer le message" @click=${this._handleClose}>
-                        Masquer le message
-                    </button>
-                `
-                    : nothing
-                }
-            </div>
-        `;
+      <div class=${classMap(classes)} role=${role}>
+        ${this.title ? titleMarkup(this.title) : nothing}
+        ${this.description ? html`<p>${this.description}</p>` : html`<slot></slot>`}
+        ${
+          this.closeable
+            ? html`
+            <button class="fr-btn--close fr-btn" title="Masquer le message" @click=${this._handleClose}>
+              Masquer le message
+            </button>
+          `
+            : nothing
+        }
+      </div>
+    `;
   }
 }
 

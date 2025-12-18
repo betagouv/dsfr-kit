@@ -1,105 +1,208 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
-
+import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const linkArgTypes = {
+  label: {
+    control: "text",
+    description: "contenu texte",
+  },
+  markup: {
+    control: { type: "select" },
+    description: "balise de l'actionneur du composant (a, button)",
+    options: ["a", "button"],
+  },
+  href: {
+    control: "text",
+    description: "adresse url du lien",
+  },
+  detail: {
+    control: "text",
+    description: "detail du lien de telechargement",
+  },
+  blank: {
+    control: "boolean",
+    description: "si true, target prend la valeur _blank, sinon _self",
+  },
+  disabled: {
+    control: "boolean",
+    description: "si valeur true, link désactivé",
+  },
+  size: {
+    control: { type: "select" },
+    description: "taille du lien",
+    options: ["sm", "md", "lg"],
+  },
+  icon: {
+    control: "text",
+    description: "icon du lien",
+  },
+  download: {
+    control: "boolean",
+    description: "Si true, lien de téléchargement",
+  },
+  iconPlace: {
+    control: { type: "select" },
+    description: "emplacement de l'icone",
+    options: ["left", "right"],
+  },
+  id: {
+    control: "text",
+    description: "id du lien",
+  },
+  assess: {
+    control: "boolean",
+    description:
+      "si true, ajoute l'attribut permettant le remplissage automatique des informations du fichier à télécharger",
+  },
+};
+
+const linkArgs = {
+  label: "Lien simple",
+  markup: "a",
+  href: "#",
+  detail: "",
+  blank: false,
+  disabled: false,
+  size: "md",
+  icon: "",
+  download: false,
+  iconPlace: "left",
+  id: "link",
+  assess: false,
+};
+
+interface LinkArgs {
+  label: string;
+  markup: "a" | "button";
+  href: string;
+  detail: string;
+  blank: boolean;
+  disabled: boolean;
+  size: "sm" | "md" | "lg";
+  icon: string;
+  download: boolean;
+  iconPlace: "left" | "right";
+  id: string;
+  assess: boolean;
+}
+
+const render = (args: LinkArgs) => {
+  return html`
+    <dsfr-link
+      .label=${args.label}
+      .markup=${args.markup}
+      .href=${args.href}
+      .detail=${args.detail}
+      .target=${args.blank ? "_blank" : "_self"}
+      ?disabled=${args.disabled}
+      .size=${args.size}
+      .icon=${args.icon}
+      ?download=${args.download}
+      .icon-place=${args.iconPlace}
+      .id=${args.id}
+      ?assess=${args.assess}
+    >
+    </dsfr-link>
+  `;
+};
+
+const renders = (argsArray: Partial<LinkArgs>[]) =>
+  argsArray.map((args) => render({ ...linkArgs, ...args } as LinkArgs));
+
+const meta: Meta<LinkArgs> = {
   title: "Web Components/Link",
   component: "dsfr-link",
   tags: ["autodocs"],
-  argTypes: {
-    label: { control: "text" },
-    href: { control: "text" },
-    target: { control: "text" },
-    size: {
-      control: "radio",
-      options: ["sm", "md", "lg"],
-    },
-    disabled: { control: "boolean" },
-    download: { control: "boolean" },
-    downloadDetail: { control: "text", if: { arg: "download" } },
-    downloadLabel: { control: "text", if: { arg: "download" } },
-    icon: {
-      control: "select",
-      options: [
-        "",
-        "fr-icon-arrow-right-line",
-        "fr-icon-download-line",
-        "fr-icon-external-link-line",
-        "fr-icon-mail-line",
-      ],
-    },
-    iconRight: { control: "boolean" },
-  },
-  args: {
-    label: "Lien simple",
-    href: "#",
-    target: "_self",
-    size: "md",
-    disabled: false,
-    download: false,
-    icon: "",
-    iconRight: false,
-    downloadDetail: "PDF - 400ko",
-    downloadLabel: "Télécharger",
-  },
+  argTypes: linkArgTypes as any,
+  args: linkArgs as any,
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<LinkArgs>;
 
-export const Default: Story = {};
-
-export const Small: Story = {
-  args: {
-    size: "sm",
-    label: "Petit lien",
-  },
+export const LinkStory: Story = {
+  name: "Link",
+  args: {},
 };
 
-export const Large: Story = {
-  args: {
-    size: "lg",
-    label: "Grand lien",
-  },
+export const TextLinkStory: Story = {
+  name: "Text Link",
+  tags: ["autodocs", "!dev"],
+  render: () => html`
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+    ${render({ ...linkArgs, label: "lien interne", href: "#" } as LinkArgs)}
+    incididunt ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi.</p>
+  `,
 };
 
-export const WithIconLeft: Story = {
-  args: {
-    icon: "fr-icon-arrow-right-line",
-    label: "Lien avec icône à gauche",
-    iconRight: false,
-  },
+export const IconStory: Story = {
+  name: "Icon",
+  tags: ["autodocs", "!dev"],
+  render: () => html`
+    <div style="display: flex; gap: 1rem;">
+      ${renders([
+        { icon: "arrow-left-line", iconPlace: "left", label: "Icône à gauche" },
+        {
+          icon: "arrow-right-line",
+          iconPlace: "right",
+          label: "Icône à droite",
+        },
+      ])}
+    </div>
+  `,
 };
 
-export const WithIconRight: Story = {
-  args: {
-    icon: "fr-icon-arrow-right-line",
-    label: "Lien avec icône à droite",
-    iconRight: true,
-  },
+export const SizesStory: Story = {
+  name: "Sizes",
+  tags: ["autodocs", "!dev"],
+  render: () => html`
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      ${renders([
+        { size: "sm", label: "Petit lien" },
+        { size: "md", label: "Lien moyen" },
+        { size: "lg", label: "Grand lien" },
+      ])}
+    </div>
+  `,
 };
 
-export const External: Story = {
-  args: {
-    label: "Lien externe",
-    target: "_blank",
-    // Usually external links have an icon, DSFR adds it automatically via 'target=_blank' + styles?
-    // Actually DsfrLink adds automatic rel attributes.
-    // A manual icon might be needed for visual feedback if styles don't auto-add it.
-  },
-};
-
-export const Download: Story = {
-  args: {
-    download: true,
-    label: "le document",
-    downloadDetail: "JPG - 400ko",
-  },
-};
-
-export const Disabled: Story = {
+export const DisabledStory: Story = {
+  name: "Disabled",
+  tags: ["autodocs", "!dev"],
   args: {
     disabled: true,
-    label: "Lien désactivé",
+  },
+};
+
+export const DownloadStory: Story = {
+  name: "Download",
+  tags: ["autodocs", "!dev"],
+  args: {
+    label: "Télécharger le document lorem ipsum sit dolores amet",
+    href: "https://gouvfr.github.io/dsfr/example/img/placeholder.16x9.png",
+    download: true,
+    detail: "JPG – 61,88 ko",
+  },
+};
+
+export const ExternalStory: Story = {
+  name: "External",
+  tags: ["autodocs", "!dev"],
+  args: {
+    blank: true,
+    label: "Lien externe",
+  },
+};
+
+export const BackToTopStory: Story = {
+  name: "Back to Top",
+  tags: ["autodocs", "!dev"],
+  args: {
+    label: "Haut de page",
+    href: "#top",
+    icon: "arrow-up-fill",
+    iconPlace: "left",
   },
 };

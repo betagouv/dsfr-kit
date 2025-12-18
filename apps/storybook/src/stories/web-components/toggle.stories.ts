@@ -1,104 +1,146 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const toggleArgTypes = {
+  label: {
+    control: "text",
+    description: "Libellé de l'interrupteur",
+  },
+  hint: {
+    control: "text",
+    description: "Texte additionnel",
+  },
+  checked: {
+    control: "boolean",
+    description: "Coche l'interrupteur",
+  },
+  disabled: {
+    control: "boolean",
+    description: "Désactive l'interrupteur",
+  },
+  state: {
+    control: "boolean",
+    description: "Affiche les libellés activé/désactivé",
+  },
+  left: {
+    control: "boolean",
+    description: "Place le libellé sur la gauche",
+  },
+  border: {
+    control: "boolean",
+    description: "Ajoute une bordure sous l'interrupteur",
+  },
+  error: {
+    control: "text",
+    description: "Texte d'erreur",
+  },
+  valid: {
+    control: "text",
+    description: "Texte de validation",
+  },
+};
+
+const toggleArgs = {
+  label: "Interrupteur",
+  hint: "",
+  checked: false,
+  disabled: false,
+  state: true,
+  left: false,
+  border: false,
+  error: "",
+  valid: "",
+};
+
+interface ToggleArgs {
+  label: string;
+  hint: string;
+  checked: boolean;
+  disabled: boolean;
+  state: boolean;
+  left: boolean;
+  border: boolean;
+  error: string;
+  valid: string;
+}
+
+const render = (args: ToggleArgs) => html`
+  <dsfr-toggle
+    .label=${args.label}
+    .hint=${args.hint}
+    ?checked=${args.checked}
+    ?disabled=${args.disabled}
+    ?state=${args.state}
+    ?left=${args.left}
+    ?border=${args.border}
+    .error=${args.error}
+    .valid=${args.valid}
+  ></dsfr-toggle>
+`;
+
+const meta: Meta<ToggleArgs> = {
   title: "Web Components/Toggle",
   component: "dsfr-toggle",
   tags: ["autodocs"],
-  argTypes: {
-    label: { control: "text" },
-    checked: { control: "boolean" },
-    disabled: { control: "boolean" },
-    hint: { control: "text" },
-    checkedLabel: { control: "text" },
-    uncheckedLabel: { control: "text" },
-    showStatusLabel: { control: "boolean" },
-    labelLeft: { control: "boolean" },
-    borderBottom: { control: "boolean" },
-  },
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: toggleArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: toggleArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<ToggleArgs>;
 
-export const Default: Story = {
+export const ToggleStory: Story = {
+  name: "Toggle",
+  args: {},
+};
+
+export const DefaultStory: Story = {
+  name: "Default",
+  tags: ["autodocs", "!dev"],
+  args: {},
+};
+
+export const DescriptionStory: Story = {
+  name: "Description",
+  tags: ["autodocs", "!dev"],
   args: {
-    label: "Interrupteur",
-    checked: false,
-    disabled: false,
-    hint: "Description optionnelle",
+    hint: "Texte additionnel de l’interrupteur",
   },
 };
 
-export const Checked: Story = {
+export const StateStory: Story = {
+  name: "State",
+  tags: ["autodocs", "!dev"],
   args: {
-    label: "Interrupteur activé",
     checked: true,
-    disabled: false,
   },
 };
 
-export const Disabled: Story = {
+export const ErrorStory: Story = {
+  name: "Error",
+  tags: ["autodocs", "!dev"],
   args: {
-    label: "Interrupteur désactivé",
-    checked: false,
+    error: "Message d'erreur",
+  },
+};
+
+export const ValidStory: Story = {
+  name: "Valid",
+  tags: ["autodocs", "!dev"],
+  args: {
+    valid: "Message de validation",
+  },
+};
+
+export const DisabledStory: Story = {
+  name: "Disabled",
+  tags: ["autodocs", "!dev"],
+  args: {
     disabled: true,
-  },
-};
-
-export const WithHint: Story = {
-  args: {
-    label: "Interrupteur avec description",
-    checked: false,
-    disabled: false,
-    hint: "Texte d'aide pour donner plus de contexte à l'utilisateur",
-  },
-};
-
-export const LabelLeft: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Le label peut être positionné à gauche avec la propriété `label-left`.",
-      },
-    },
-  },
-  args: {
-    label: "Interrupteur avec label à gauche",
-    checked: false,
-    disabled: false,
-    labelLeft: true,
-    hint: "Description alignée",
-  },
-};
-
-export const NoStatusLabel: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: "L'affichage du statut (activé/désactivé) peut être masqué.",
-      },
-    },
-  },
-  args: {
-    label: "Interrupteur sans statut",
-    checked: false,
-    showStatusLabel: false,
-  },
-};
-
-export const BorderBottom: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: "Ajoute une bordure en bas, utile dans les listes.",
-      },
-    },
-  },
-  args: {
-    label: "Interrupteur avec bordure",
-    checked: false,
-    borderBottom: true,
   },
 };

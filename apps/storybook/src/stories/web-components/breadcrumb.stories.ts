@@ -1,46 +1,61 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const breadcrumbArgTypes = {
+  button: {
+    control: "text",
+    description: "Libellé du bouton du Fil d'Ariane en mobile",
+  },
+  links: {
+    control: "object",
+    description: "Tableau de données de chaque segment du fil d'Ariane",
+  },
+};
+
+const breadcrumbArgs = {
+  button: "Voir le fil d’Ariane",
+  links: [
+    { label: "Accueil", href: "/" },
+    { label: "Segment 1", href: "#" },
+    { label: "Segment 2", href: "#" },
+    { label: "Page actuelle" },
+  ],
+};
+
+interface BreadcrumbArgs {
+  button: string;
+  links: any[];
+}
+
+const render = (args: BreadcrumbArgs) => html`
+  <dsfr-breadcrumb
+    .button=${args.button}
+    .links=${args.links}
+  ></dsfr-breadcrumb>
+`;
+
+const meta: Meta<BreadcrumbArgs> = {
   title: "Web Components/Breadcrumb",
   component: "dsfr-breadcrumb",
   tags: ["autodocs"],
-  argTypes: {
-    items: { control: "object" },
-  },
-  args: {
-    items: [
-      { text: "Accueil", href: "/" },
-      { text: "Rubrique", href: "/rubrique" },
-      { text: "Sous-rubrique", href: "/sous-rubrique" },
-      { text: "Page actuelle" },
-    ],
-  },
+  argTypes: breadcrumbArgTypes as any,
+  args: breadcrumbArgs as any,
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<BreadcrumbArgs>;
 
-export const Default: Story = {};
-
-export const Short: Story = {
-  args: {
-    items: [{ text: "Accueil", href: "/" }, { text: "Page actuelle" }],
-  },
+export const BreadcrumbStory: Story = {
+  name: "Breadcrumb",
+  args: {},
 };
 
-export const LongLabels: Story = {
+export const ShortStory: Story = {
+  name: "Short",
+  tags: ["autodocs", "!dev"],
   args: {
-    items: [
-      { text: "Accueil", href: "/" },
-      {
-        text: "Une rubrique avec un nom très long pour tester le retour à la ligne",
-        href: "/long-1",
-      },
-      { text: "Une sous-rubrique également assez longue", href: "/long-2" },
-      {
-        text: "Page actuelle avec un titre à rallonge qui devrait être tronqué ou affiché sur plusieurs lignes selon la largeur",
-      },
-    ],
+    links: [{ label: "Accueil", href: "/" }, { label: "Page actuelle" }],
   },
 };

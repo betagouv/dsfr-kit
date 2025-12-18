@@ -22,20 +22,20 @@ export class DsfrToggle extends LitElement {
   @property({ type: String })
   hint = "";
 
-  @property({ type: String, attribute: "checked-label" })
-  checkedLabel = "Activé";
+  @property({ type: Boolean })
+  state = false;
 
-  @property({ type: String, attribute: "unchecked-label" })
-  uncheckedLabel = "Désactivé";
+  @property({ type: Boolean })
+  left = false;
 
-  @property({ type: Boolean, attribute: "show-status-label" })
-  showStatusLabel = true;
+  @property({ type: Boolean })
+  border = false;
 
-  @property({ type: Boolean, attribute: "label-left" })
-  labelLeft = false;
+  @property({ type: String })
+  error = "";
 
-  @property({ type: Boolean, attribute: "border-bottom" })
-  borderBottom = false;
+  @property({ type: String })
+  valid = "";
 
   @property({ type: String })
   toggleId = `toggle-${Math.random().toString(36).substring(2, 9)}`;
@@ -57,38 +57,51 @@ export class DsfrToggle extends LitElement {
   render() {
     const classes = {
       "fr-toggle": true,
-      "fr-toggle--label-left": this.labelLeft,
-      "fr-toggle--border-bottom": this.borderBottom,
+      "fr-toggle--label-left": this.left,
+      "fr-toggle--border-bottom": this.border,
+      "fr-toggle--error": !!this.error,
+      "fr-toggle--valid": !!this.valid,
     };
 
-    const hintId = this.hint ? `${this.toggleId}-hint` : undefined;
+    const describedby: string[] = [];
+    if (this.hint) describedby.push(`${this.toggleId}-hint`);
+    if (this.error) describedby.push(`${this.toggleId}-error`);
+    if (this.valid) describedby.push(`${this.toggleId}-valid`);
 
     return html`
-            <div class=${classMap(classes)}>
-                <input
-                    type="checkbox"
-                    class="fr-toggle__input"
-                    aria-describedby=${ifDefined(hintId)}
-                    id=${this.toggleId}
-                    ?checked=${this.checked}
-                    ?disabled=${this.disabled}
-                    @change=${this._handleChange}
-                >
-                <label
-                    class="fr-toggle__label"
-                    for=${this.toggleId}
-                    data-fr-checked-label=${ifDefined(this.showStatusLabel ? this.checkedLabel : undefined)}
-                    data-fr-unchecked-label=${ifDefined(this.showStatusLabel ? this.uncheckedLabel : undefined)}
-                >${this.label}</label>
-                ${
-                  this.hint
-                    ? html`
-                    <p class="fr-hint-text" id=${hintId}>${this.hint}</p>
-                `
-                    : nothing
-                }
-            </div>
-        `;
+      <div class=${classMap(classes)}>
+        <input
+          type="checkbox"
+          class="fr-toggle__input"
+          aria-describedby=${ifDefined(describedby.length > 0 ? describedby.join(" ") : undefined)}
+          id=${this.toggleId}
+          ?checked=${this.checked}
+          ?disabled=${this.disabled}
+          @change=${this._handleChange}
+        >
+        <label
+          class="fr-toggle__label"
+          for=${this.toggleId}
+          data-fr-checked-label=${ifDefined(this.state ? "Activé" : undefined)}
+          data-fr-unchecked-label=${ifDefined(this.state ? "Désactivé" : undefined)}
+        >${this.label}</label>
+        ${
+          this.hint
+            ? html`<p class="fr-hint-text" id="${this.toggleId}-hint">${this.hint}</p>`
+            : nothing
+        }
+        ${
+          this.error || this.valid
+            ? html`
+                <div class="fr-messages-group" id="${this.toggleId}-messages" aria-live="polite">
+                  ${this.error ? html`<p class="fr-message fr-message--error" id="${this.toggleId}-error">${this.error}</p>` : nothing}
+                  ${this.valid ? html`<p class="fr-message fr-message--valid" id="${this.toggleId}-valid">${this.valid}</p>` : nothing}
+                </div>
+              `
+            : nothing
+        }
+      </div>
+    `;
   }
 }
 

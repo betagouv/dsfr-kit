@@ -1,117 +1,162 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const inputArgTypes = {
+  label: {
+    control: "text",
+    description: "Libellé du champ",
+  },
+  hint: {
+    control: "text",
+    description: "Texte additionnel",
+  },
+  value: {
+    control: "text",
+    description: "Valeur du champ",
+  },
+  type: {
+    control: { type: "select" },
+    options: [
+      "text",
+      "email",
+      "password",
+      "number",
+      "tel",
+      "url",
+      "date",
+      "search",
+      "textarea",
+    ],
+    description: "Type du champ",
+  },
+  placeholder: {
+    control: "text",
+    description: "Texte d'exemple",
+  },
+  error: {
+    control: "text",
+    description: "Message d'erreur",
+  },
+  valid: {
+    control: "text",
+    description: "Message de validation",
+  },
+  disabled: {
+    control: "boolean",
+    description: "Désactive le champ",
+  },
+  required: {
+    control: "boolean",
+    description: "Champ obligatoire",
+  },
+  icon: {
+    control: "text",
+    description: "Icône associée",
+  },
+};
+
+const inputArgs = {
+  label: "Libellé champ de saisie",
+  hint: "",
+  value: "",
+  type: "text",
+  placeholder: "",
+  error: "",
+  valid: "",
+  disabled: false,
+  required: false,
+  icon: "",
+};
+
+interface InputArgs {
+  label: string;
+  hint: string;
+  value: string;
+  type: string;
+  placeholder: string;
+  error: string;
+  valid: string;
+  disabled: boolean;
+  required: boolean;
+  icon: string;
+}
+
+const render = (args: InputArgs) => html`
+  <dsfr-input
+    .label=${args.label}
+    .hint=${args.hint}
+    .value=${args.value}
+    .type=${args.type}
+    .placeholder=${args.placeholder}
+    .error=${args.error}
+    .valid=${args.valid}
+    ?disabled=${args.disabled}
+    ?required=${args.required}
+    .icon=${args.icon}
+  ></dsfr-input>
+`;
+
+const meta: Meta<InputArgs> = {
   title: "Web Components/Input",
   component: "dsfr-input",
   tags: ["autodocs"],
-  argTypes: {
-    label: { control: "text" },
-    value: { control: "text" },
-    type: {
-      control: "select",
-      options: [
-        "text",
-        "email",
-        "password",
-        "number",
-        "tel",
-        "url",
-        "date",
-        "search",
-      ],
-    },
-    placeholder: { control: "text" },
-    hint: { control: "text" },
-    state: {
-      control: "select",
-      options: ["default", "error", "valid"],
-    },
-    message: { control: "text" },
-    disabled: { control: "boolean" },
-    textarea: { control: "boolean" },
-    icon: {
-      control: "select",
-      options: [
-        "",
-        "fr-icon-user-line",
-        "fr-icon-mail-line",
-        "fr-icon-lock-line",
-      ],
-    },
-  },
-  args: {
-    label: "Libellé du champ",
-    type: "text",
-    state: "default",
-    disabled: false,
-  },
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: inputArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: inputArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<InputArgs>;
 
-export const Default: Story = {
+export const InputStory: Story = {
+  name: "Input",
+  args: {},
+};
+
+export const DefaultStory: Story = {
+  name: "Default",
+  tags: ["autodocs", "!dev"],
   args: {
-    placeholder: "Placeholder...",
+    label: "Champ par défaut",
   },
 };
 
-export const WithHint: Story = {
+export const TextareaStory: Story = {
+  name: "Textarea",
+  tags: ["autodocs", "!dev"],
   args: {
-    label: "Mot de passe",
-    type: "password",
-    hint: "Texte de description additionnel (ex: 8 caractères min)",
+    label: "Champ de saisie de texte long",
+    type: "textarea",
   },
 };
 
-export const TextArea: Story = {
+export const ErrorStory: Story = {
+  name: "Error",
+  tags: ["autodocs", "!dev"],
   args: {
-    label: "Message",
-    textarea: true,
-    placeholder: "Votre message...",
+    label: "Champ en erreur",
+    error: "Message d'erreur",
   },
 };
 
-export const ErrorState: Story = {
+export const ValidStory: Story = {
+  name: "Valid",
+  tags: ["autodocs", "!dev"],
   args: {
-    label: "Email",
-    type: "email",
-    value: "email@invalide",
-    state: "error",
-    message: "Format d'email incorrect",
+    label: "Champ valide",
+    valid: "Message de validation",
   },
 };
 
-export const ValidState: Story = {
+export const IconStory: Story = {
+  name: "With Icon",
+  tags: ["autodocs", "!dev"],
   args: {
-    label: "Email",
-    type: "email",
-    value: "exemple@domain.com",
-    state: "valid",
-    message: "Email valide",
-  },
-};
-
-export const Disabled: Story = {
-  args: {
-    label: "Champ désactivé",
-    value: "Valeur non modifiable",
-    disabled: true,
-  },
-};
-
-export const WithIcon: Story = {
-  args: {
-    label: "Identifiant",
-    value: "utilisateur",
-    icon: "fr-icon-user-line",
-  },
-};
-
-export const DateInput: Story = {
-  args: {
-    label: "Date de naissance",
-    type: "date",
+    label: "Champ avec icône",
+    icon: "user-line",
   },
 };

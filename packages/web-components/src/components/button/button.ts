@@ -19,10 +19,10 @@ export type ButtonSize = "sm" | "md" | "lg";
 @customElement("dsfr-button")
 export class DsfrButton extends LitElement {
   @property({ type: String })
-  label = ""; // Optional if using slot, but strictly speaking DSFR buttons usually have label props for simplicity in Lit wrappers
+  label = "";
 
-  @property({ type: String })
-  variant: ButtonVariant = "primary";
+  @property({ type: Number })
+  kind: 1 | 2 | 3 | 4 = 1;
 
   @property({ type: String })
   size: ButtonSize = "md";
@@ -30,49 +30,84 @@ export class DsfrButton extends LitElement {
   @property({ type: String })
   icon = "";
 
-  @property({ type: Boolean })
-  iconRight = false; // If true, icon is on the right
+  @property({ type: String, attribute: "icon-place" })
+  iconPlace: "left" | "right" | undefined = undefined;
 
   @property({ type: Boolean })
   disabled = false;
 
   @property({ type: String })
+  markup: "button" | "a" | "input" = "button";
+
+  @property({ type: String })
   type: "button" | "submit" | "reset" = "button";
+
+  @property({ type: String })
+  href = "";
+
+  @property({ type: String })
+  target: "_self" | "_blank" = "_self";
+
+  @property({ type: String })
+  title = "";
 
   static styles = [
     unsafeCSS(coreStyles),
     unsafeCSS(utilityStyles),
-    unsafeCSS(iconsStyles), // Icons are needed for buttons with icons
+    unsafeCSS(iconsStyles),
     unsafeCSS(buttonStyles),
   ];
 
   render() {
     const classes = {
       "fr-btn": true,
-      [`fr-btn--secondary`]: this.variant === "secondary",
-      [`fr-btn--tertiary`]: this.variant === "tertiary",
-      [`fr-btn--tertiary-no-outline`]: this.variant === "tertiary-no-outline",
+      "fr-btn--secondary": this.kind === 2,
+      "fr-btn--tertiary": this.kind === 3,
+      "fr-btn--tertiary-no-outline": this.kind === 4,
       [`fr-btn--${this.size}`]: this.size !== "md",
-
-      // Icon handling
-      [`${this.icon}`]: !!this.icon,
-      "fr-btn--icon-left": !!this.icon && !this.iconRight,
-      "fr-btn--icon-right": !!this.icon && this.iconRight,
+      [`fr-icon-${this.icon}`]: !!this.icon,
+      "fr-btn--icon-left": !!this.icon && this.iconPlace === "left",
+      "fr-btn--icon-right": !!this.icon && this.iconPlace === "right",
     };
 
+    const content = html`${this.label}<slot></slot>`;
+
+    if (this.markup === "a") {
+      return html`
+        <a
+          href=${this.href}
+          target=${this.target}
+          class=${classMap(classes)}
+          title=${this.title || this.label}
+          ?disabled=${this.disabled}
+        >
+          ${content}
+        </a>
+      `;
+    }
+
+    if (this.markup === "input") {
+      return html`
+        <input
+          type=${this.type}
+          class=${classMap(classes)}
+          .value=${this.label}
+          ?disabled=${this.disabled}
+          title=${this.title || this.label}
+        />
+      `;
+    }
+
     return html`
-            <button
-                type=${this.type}
-                class=${classMap(classes)}
-                ?disabled=${this.disabled}
-                title=${this.label || (this.icon ? "Bouton" : "")}
-            >
-                ${this.label}
-                <slot></slot>
-            </button>
-        `;
-    // Added slot for flexibility, though props are preferred for strict DSFR structure.
-    // Title added for accessibility if label is empty (icon only), though consumers should provide aria-label in that case.
+      <button
+        type=${this.type}
+        class=${classMap(classes)}
+        ?disabled=${this.disabled}
+        title=${this.title || this.label || (this.icon ? "Bouton" : "")}
+      >
+        ${content}
+      </button>
+    `;
   }
 }
 
