@@ -58,8 +58,11 @@ const meta: Meta<HighlightArgs> = {
   title: "Web Components/Highlight",
   component: "dsfr-highlight",
   tags: ["autodocs"],
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   argTypes: highlightArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   args: highlightArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   render: render as any,
 };
 
@@ -67,36 +70,35 @@ export default meta;
 type Story = StoryObj<HighlightArgs>;
 
 export const HighlightStory: Story = {
-  name: "Highlight",
-  tags: ["!autodocs"],
+  name: "HighlightStory",
   args: {},
 };
 
 export const DefaultStory: Story = {
-  name: "Default",
-  tags: ["autodocs", "!dev"],
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {},
 };
 
-export const SizeSmStory: Story = {
-  name: "Size SM",
-  tags: ["autodocs", "!dev"],
+export const SizesSmStory: Story = {
+  name: "SizesSmStory",
+  tags: ["autodocs"],
   args: {
     size: "sm",
   },
 };
 
 export const SizeLgStory: Story = {
-  name: "Size LG",
-  tags: ["autodocs", "!dev"],
+  name: "SizeLgStory",
+  tags: ["autodocs"],
   args: {
     size: "lg",
   },
 };
 
 export const AccentStory: Story = {
-  name: "Accent",
-  tags: ["autodocs", "!dev"],
+  name: "AccentStory",
+  tags: ["autodocs"],
   args: {
     accent: "green-menthe",
   },
