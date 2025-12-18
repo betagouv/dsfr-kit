@@ -1,7 +1,7 @@
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
-import modalStyles from "@gouvfr/dsfr/dist/component/modal/modal.min.css?inline";
 import buttonStyles from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
-import { html, LitElement, nothing, unsafeCSS, css } from "lit";
+import modalStyles from "@gouvfr/dsfr/dist/component/modal/modal.min.css?inline";
+import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import { css, html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property, query } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
@@ -10,92 +10,92 @@ import { classMap } from "lit/directives/class-map.js";
  */
 @customElement("dsfr-modal")
 export class DsfrModal extends LitElement {
-	@property({ type: String })
-	modalTitle = "";
+  @property({ type: String })
+  modalTitle = "";
 
-	@property({ type: Boolean, reflect: true })
-	open = false;
+  @property({ type: Boolean, reflect: true })
+  open = false;
 
-	@property({ type: String })
-	size: "sm" | "md" | "lg" = "md";
+  @property({ type: String })
+  size: "sm" | "md" | "lg" = "md";
 
-	@property({ type: String })
-	icon = "";
+  @property({ type: String })
+  icon = "";
 
-	@query("dialog")
-	dialog!: HTMLDialogElement;
+  @query("dialog")
+  dialog!: HTMLDialogElement;
 
-	@property({ type: String })
-	modalId = `modal-${Math.random().toString(36).substring(2, 9)}`;
+  @property({ type: String })
+  modalId = `modal-${Math.random().toString(36).substring(2, 9)}`;
 
-	static styles = [
-		unsafeCSS(coreStyles),
-		unsafeCSS(modalStyles),
-		unsafeCSS(buttonStyles),
-		css`
+  static styles = [
+    unsafeCSS(coreStyles),
+    unsafeCSS(modalStyles),
+    unsafeCSS(buttonStyles),
+    css`
             dialog[open] {
                 display: flex !important;
             }
         `,
-	];
+  ];
 
-	updated(changedProperties: Map<string, unknown>) {
-		if (changedProperties.has("open")) {
-			if (this.open) {
-				if (!this.dialog.open) {
-					this.dialog?.showModal();
-					this.dialog.classList.add("fr-modal--opened");
-				}
-			} else {
-				this.dialog?.close();
-				this.dialog.classList.remove("fr-modal--opened");
-			}
-		}
-	}
+  updated(changedProperties: Map<string, unknown>) {
+    if (changedProperties.has("open")) {
+      if (this.open) {
+        if (!this.dialog.open) {
+          this.dialog?.showModal();
+          this.dialog.classList.add("fr-modal--opened");
+        }
+      } else {
+        this.dialog?.close();
+        this.dialog.classList.remove("fr-modal--opened");
+      }
+    }
+  }
 
-	private _handleClose() {
-		this.open = false;
-		this.dialog.classList.remove("fr-modal--opened");
-		this.dispatchEvent(
-			new CustomEvent("dsfr-close", {
-				bubbles: true,
-				composed: true,
-			}),
-		);
-	}
+  private _handleClose() {
+    this.open = false;
+    this.dialog.classList.remove("fr-modal--opened");
+    this.dispatchEvent(
+      new CustomEvent("dsfr-close", {
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
 
-	private _handleDialogClose() {
-		// Catch native close events (e.g. Escape key)
-		if (this.open) {
-			this.open = false;
-			this.dialog.classList.remove("fr-modal--opened");
-			this.dispatchEvent(
-				new CustomEvent("dsfr-close", {
-					bubbles: true,
-					composed: true,
-				}),
-			);
-		}
-	}
+  private _handleDialogClose() {
+    // Catch native close events (e.g. Escape key)
+    if (this.open) {
+      this.open = false;
+      this.dialog.classList.remove("fr-modal--opened");
+      this.dispatchEvent(
+        new CustomEvent("dsfr-close", {
+          bubbles: true,
+          composed: true,
+        }),
+      );
+    }
+  }
 
-	private _handleBackdropClick(e: MouseEvent) {
-		if (e.target === this.dialog) {
-			this._handleClose();
-		}
-	}
+  private _handleBackdropClick(e: MouseEvent) {
+    if (e.target === this.dialog) {
+      this._handleClose();
+    }
+  }
 
-	render() {
-		const colClasses = {
-			"fr-col-12": true,
-			"fr-col-md-6": this.size === "sm",
-			"fr-col-lg-4": this.size === "sm",
-			"fr-col-md-8": this.size === "md",
-			"fr-col-lg-6": this.size === "md",
-			"fr-col-md-10": this.size === "lg",
-			"fr-col-lg-8": this.size === "lg",
-		};
+  render() {
+    const colClasses = {
+      "fr-col-12": true,
+      "fr-col-md-6": this.size === "sm",
+      "fr-col-lg-4": this.size === "sm",
+      "fr-col-md-8": this.size === "md",
+      "fr-col-lg-6": this.size === "md",
+      "fr-col-md-10": this.size === "lg",
+      "fr-col-lg-8": this.size === "lg",
+    };
 
-		return html`
+    return html`
             <dialog
                 id=${this.modalId}
                 class="fr-modal"
@@ -133,11 +133,11 @@ export class DsfrModal extends LitElement {
                 </div>
             </dialog>
         `;
-	}
+  }
 }
 
 declare global {
-	interface HTMLElementTagNameMap {
-		"dsfr-modal": DsfrModal;
-	}
+  interface HTMLElementTagNameMap {
+    "dsfr-modal": DsfrModal;
+  }
 }

@@ -8,34 +8,34 @@ import { customElement, property, state } from "lit/decorators.js";
 
 @customElement("dsfr-accordion")
 export class DsfrAccordion extends LitElement {
-	@property({ type: String })
-	label = "";
+  @property({ type: String })
+  label = "";
 
-	@property({ type: Boolean, reflect: true })
-	expanded = false;
+  @property({ type: Boolean, reflect: true })
+  expanded = false;
 
-	@property({ type: String, attribute: "heading-level" })
-	headingLevel: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" = "h3";
+  @property({ type: String, attribute: "heading-level" })
+  headingLevel: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" = "h3";
 
-	@state()
-	private _uniqueId = `accordion-${Math.random().toString(36).substr(2, 9)}`;
+  @state()
+  private _uniqueId = `accordion-${Math.random().toString(36).substr(2, 9)}`;
 
-	private toggle() {
-		this.expanded = !this.expanded;
-		this.dispatchEvent(
-			new CustomEvent("dsfr-expanded-change", {
-				bubbles: true,
-				composed: true,
-				detail: { expanded: this.expanded },
-			}),
-		);
-	}
+  private toggle() {
+    this.expanded = !this.expanded;
+    this.dispatchEvent(
+      new CustomEvent("dsfr-expanded-change", {
+        bubbles: true,
+        composed: true,
+        detail: { expanded: this.expanded },
+      }),
+    );
+  }
 
-	render() {
-		const contentId = this.id || this._uniqueId;
+  render() {
+    const contentId = this.id || this._uniqueId;
 
-		// Render the button separately to easily reuse it
-		const button = html`
+    // Render the button separately to easily reuse it
+    const button = html`
             <button
                 class="fr-accordion__btn"
                 aria-expanded="${this.expanded}"
@@ -47,29 +47,29 @@ export class DsfrAccordion extends LitElement {
             </button>
         `;
 
-		// Dynamic heading
-		let heading: TemplateResult;
-		switch (this.headingLevel) {
-			case "h1":
-				heading = html`<h1 class="fr-accordion__title">${button}</h1>`;
-				break;
-			case "h2":
-				heading = html`<h2 class="fr-accordion__title">${button}</h2>`;
-				break;
-			case "h4":
-				heading = html`<h4 class="fr-accordion__title">${button}</h4>`;
-				break;
-			case "h5":
-				heading = html`<h5 class="fr-accordion__title">${button}</h5>`;
-				break;
-			case "h6":
-				heading = html`<h6 class="fr-accordion__title">${button}</h6>`;
-				break;
-			default:
-				heading = html`<h3 class="fr-accordion__title">${button}</h3>`;
-		}
+    // Dynamic heading
+    let heading: TemplateResult;
+    switch (this.headingLevel) {
+      case "h1":
+        heading = html`<h1 class="fr-accordion__title">${button}</h1>`;
+        break;
+      case "h2":
+        heading = html`<h2 class="fr-accordion__title">${button}</h2>`;
+        break;
+      case "h4":
+        heading = html`<h4 class="fr-accordion__title">${button}</h4>`;
+        break;
+      case "h5":
+        heading = html`<h5 class="fr-accordion__title">${button}</h5>`;
+        break;
+      case "h6":
+        heading = html`<h6 class="fr-accordion__title">${button}</h6>`;
+        break;
+      default:
+        heading = html`<h3 class="fr-accordion__title">${button}</h3>`;
+    }
 
-		return html`
+    return html`
             <style>
                 ${unsafeCSS(coreStyles)}
                 ${unsafeCSS(schemeStyles)}
@@ -111,11 +111,11 @@ export class DsfrAccordion extends LitElement {
 				</div>
 			</section>
 		`;
-	}
+  }
 }
 
 declare global {
-	interface HTMLElementTagNameMap {
-		"dsfr-accordion": DsfrAccordion;
-	}
+  interface HTMLElementTagNameMap {
+    "dsfr-accordion": DsfrAccordion;
+  }
 }

@@ -3,26 +3,26 @@ import "@dsfr-kit/web-components";
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Web Components/Sidemenu",
-	component: "dsfr-sidemenu",
-	tags: ["autodocs"],
-	argTypes: {
-		title: { control: "text" },
-		sticky: { control: "boolean" },
-		right: { control: "boolean" },
-	},
-	args: {
-		title: "Titre de rubrique",
-		sticky: false,
-		right: false,
-	},
+  title: "Web Components/Sidemenu",
+  component: "dsfr-sidemenu",
+  tags: ["autodocs"],
+  argTypes: {
+    title: { control: "text" },
+    sticky: { control: "boolean" },
+    right: { control: "boolean" },
+  },
+  args: {
+    title: "Titre de rubrique",
+    sticky: false,
+    right: false,
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-	render: (args) => html`
+  render: (args) => html`
         <div class="fr-grid-row">
             <div class="fr-col-12 fr-col-md-4">
                 <dsfr-sidemenu .title=${args.title} .sticky=${args.sticky} .right=${args.right}>

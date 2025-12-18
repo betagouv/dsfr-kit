@@ -3,22 +3,22 @@ import "@dsfr-kit/web-components";
 import { html } from "lit";
 
 const meta: Meta = {
-	title: "Web Components/Tabs",
-	component: "dsfr-tabs",
-	tags: ["autodocs"],
-	argTypes: {
-		label: { control: "text" },
-	},
-	args: {
-		label: "Système d'onglets",
-	},
+  title: "Web Components/Tabs",
+  component: "dsfr-tabs",
+  tags: ["autodocs"],
+  argTypes: {
+    label: { control: "text" },
+  },
+  args: {
+    label: "Système d'onglets",
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-	render: (args) => html`
+  render: (args) => html`
         <dsfr-tabs label=${args.label}>
             <dsfr-tab label="Onglet 1">
                 <p>Contenu de l'onglet 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -34,7 +34,7 @@ export const Default: Story = {
 };
 
 export const WithIcons: Story = {
-	render: (args) => html`
+  render: (args) => html`
         <dsfr-tabs label=${args.label}>
             <dsfr-tab label="Accueil" icon="fr-icon-home-4-line">
                 <p>Contenu de l'onglet Accueil.</p>
