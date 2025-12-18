@@ -176,8 +176,11 @@ const meta: Meta<ButtonArgs> = {
   title: "Web Components/Button",
   component: "dsfr-button",
   tags: ["autodocs"],
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   argTypes: buttonArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   args: buttonArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   render: render as any,
 };
 
@@ -185,58 +188,63 @@ export default meta;
 type Story = StoryObj<ButtonArgs>;
 
 export const ButtonStory: Story = {
-  name: "Button",
+  name: "ButtonStory",
   tags: ["!autodocs"],
   args: {},
 };
 
-export const Primary: Story = {
+export const PrimaryStory: Story = {
+  name: "PrimaryStory",
   args: {
     kind: 1,
     label: "Bouton primaire",
   },
 };
 
-export const Secondary: Story = {
+export const SecondaryStory: Story = {
+  name: "SecondaryStory",
   args: {
     kind: 2,
     label: "Bouton secondaire",
   },
 };
 
-export const Tertiary: Story = {
+export const TertiaryStory: Story = {
+  name: "TertiaryStory",
   args: {
     kind: 3,
     label: "Bouton tertiaire",
   },
 };
 
-export const TertiaryNoOutline: Story = {
-  name: "Tertiary No Outline",
+export const TertiaryNoOutlineStory: Story = {
+  name: "TertiaryNoOutlineStory",
   args: {
     kind: 4,
     label: "Tertiaire sans contour",
   },
 };
 
-export const SizeSM: Story = {
-  name: "Size SM",
-  args: {
-    size: "sm",
-    label: "Petit bouton",
-  },
+export const SizesStory: Story = {
+  name: "SizesStory",
+  render: (args) => html`
+    <style>
+      .demo-sizes {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+    </style>
+    <div class="demo-sizes">
+      ${render({ ...args, size: "sm", label: "Petit bouton" })}
+      ${render({ ...args, size: "md", label: "Bouton moyen" })}
+      ${render({ ...args, size: "lg", label: "Grand bouton" })}
+    </div>
+  `,
 };
 
-export const SizeLG: Story = {
-  name: "Size LG",
-  args: {
-    size: "lg",
-    label: "Grand bouton",
-  },
-};
-
-export const IconLeft: Story = {
-  name: "Icon Left",
+export const IconLeftStory: Story = {
+  name: "IconLeftStory",
   args: {
     hasIcon: true,
     icon: "checkbox-circle-line",
@@ -245,8 +253,8 @@ export const IconLeft: Story = {
   },
 };
 
-export const IconRight: Story = {
-  name: "Icon Right",
+export const IconRightStory: Story = {
+  name: "IconRightStory",
   args: {
     hasIcon: true,
     icon: "checkbox-circle-line",
@@ -255,12 +263,20 @@ export const IconRight: Story = {
   },
 };
 
-export const IconOnly: Story = {
-  name: "Icon Only",
+export const IconOnlyStory: Story = {
+  name: "IconOnlyStory",
   args: {
     hasIcon: true,
     icon: "bank-card-line",
     iconPlace: "only",
     label: "Bouton", // Used for title
+  },
+};
+
+export const DisabledStory: Story = {
+  name: "DisabledStory",
+  args: {
+    label: "Bouton désactivé",
+    disabled: true,
   },
 };

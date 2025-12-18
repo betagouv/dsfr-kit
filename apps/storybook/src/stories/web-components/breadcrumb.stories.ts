@@ -55,11 +55,3 @@ export const BreadcrumbStory: Story = {
   name: "BreadcrumbStory",
   args: {},
 };
-
-export const ShortStory: Story = {
-  name: "ShortStory",
-  tags: ["autodocs"],
-  args: {
-    links: [{ label: "Accueil", href: "/" }, { label: "Page actuelle" }],
-  },
-};
