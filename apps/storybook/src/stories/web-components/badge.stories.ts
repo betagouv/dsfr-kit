@@ -137,28 +137,28 @@ const renders = (argsArray: Record<string, unknown>[]) =>
   );
 
 export const BadgeStory: Story = {
-  name: "Badge",
+  name: "BadgeStory",
   tags: ["!autodocs"],
   args: {},
 };
 
 export const DefaultStory: Story = {
-  name: "Default",
-  tags: ["autodocs", "!dev"],
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {},
 };
 
 export const SizeSMStory: Story = {
-  name: "Size SM",
-  tags: ["autodocs", "!dev"],
+  name: "SizeSMStory",
+  tags: ["autodocs"],
   args: {
     size: "sm",
   },
 };
 
 export const StatusStory: Story = {
-  name: "Status",
-  tags: ["autodocs", "!dev"],
+  name: "StatusStory",
+  tags: ["autodocs"],
   render: () => html`
     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
       ${renders([
@@ -173,8 +173,8 @@ export const StatusStory: Story = {
 };
 
 export const StatusNoIconStory: Story = {
-  name: "Status No Icon",
-  tags: ["autodocs", "!dev"],
+  name: "StatusNoIconStory",
+  tags: ["autodocs"],
   render: () => html`
     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
       ${renders([
@@ -189,8 +189,8 @@ export const StatusNoIconStory: Story = {
 };
 
 export const AccentStory: Story = {
-  name: "Accent",
-  tags: ["autodocs", "!dev"],
+  name: "AccentStory",
+  tags: ["autodocs"],
   render: () => html`
     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
       ${renders([{ displayType: "accent", accent: "green-menthe" }])}
@@ -199,8 +199,8 @@ export const AccentStory: Story = {
 };
 
 export const EllipsisStory: Story = {
-  name: "Ellipsis",
-  tags: ["autodocs", "!dev"],
+  name: "EllipsisStory",
+  tags: ["autodocs"],
   args: {
     ellipsis: true,
     label:
