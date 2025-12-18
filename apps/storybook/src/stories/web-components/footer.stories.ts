@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
+
 import "@dsfr-kit/web-components";
 
 const footerArgTypes = {
@@ -88,7 +88,9 @@ interface FooterArgs {
   operatorLogoAlt: string;
   operatorLogoStyle: string;
   contentDescription: string;
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   contentLinks: any[];
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   bottomLinks: any[];
   bottomCopyright: string;
 }
@@ -123,8 +125,11 @@ const meta: Meta<FooterArgs> = {
   title: "Web Components/Footer",
   component: "dsfr-footer",
   tags: ["autodocs"],
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   argTypes: footerArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   args: footerArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   render: render as any,
 };
 
@@ -132,14 +137,6 @@ export default meta;
 type Story = StoryObj<FooterArgs>;
 
 export const FooterStory: Story = {
-  name: "Footer",
+  name: "FooterStory",
   args: {},
-};
-
-export const WithOperatorStory: Story = {
-  name: "With Operator",
-  args: {
-    operatorLogoSrc: "https://placehold.co/100x100?text=OPERATOR",
-    operatorLogoAlt: "Nom de l'opérateur",
-  },
 };
