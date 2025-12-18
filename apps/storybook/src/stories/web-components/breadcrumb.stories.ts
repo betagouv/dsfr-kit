@@ -25,6 +25,7 @@ const breadcrumbArgs = {
 
 interface BreadcrumbArgs {
   button: string;
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   links: any[];
 }
 
@@ -39,8 +40,11 @@ const meta: Meta<BreadcrumbArgs> = {
   title: "Web Components/Breadcrumb",
   component: "dsfr-breadcrumb",
   tags: ["autodocs"],
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   argTypes: breadcrumbArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   args: breadcrumbArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   render: render as any,
 };
 
@@ -48,13 +52,13 @@ export default meta;
 type Story = StoryObj<BreadcrumbArgs>;
 
 export const BreadcrumbStory: Story = {
-  name: "Breadcrumb",
+  name: "BreadcrumbStory",
   args: {},
 };
 
 export const ShortStory: Story = {
-  name: "Short",
-  tags: ["autodocs", "!dev"],
+  name: "ShortStory",
+  tags: ["autodocs"],
   args: {
     links: [{ label: "Accueil", href: "/" }, { label: "Page actuelle" }],
   },
