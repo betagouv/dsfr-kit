@@ -75,6 +75,7 @@ const render = (args: NoticeArgs) => html`
   <dsfr-notice
     .title=${args.title}
     .desc=${args.desc}
+    // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
     .type=${args.type as any}
     ?dismissible=${args.dismissible}
     .link=${args.link}
@@ -88,8 +89,11 @@ const meta: Meta<NoticeArgs> = {
   title: "Web Components/Notice",
   component: "dsfr-notice",
   tags: ["autodocs"],
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   argTypes: noticeArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   args: noticeArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   render: render as any,
 };
 
@@ -97,14 +101,13 @@ export default meta;
 type Story = StoryObj<NoticeArgs>;
 
 export const NoticeStory: Story = {
-  name: "Notice",
-  tags: ["!autodocs"],
+  name: "NoticeStory",
   args: {},
 };
 
 export const InfoStory: Story = {
-  name: "Info",
-  tags: ["autodocs", "!dev"],
+  name: "InfoStory",
+  tags: ["autodocs"],
   args: {
     type: "info",
     title: "Titre du bandeau d'information importante",
@@ -112,8 +115,8 @@ export const InfoStory: Story = {
 };
 
 export const WarningStory: Story = {
-  name: "Warning",
-  tags: ["autodocs", "!dev"],
+  name: "WarningStory",
+  tags: ["autodocs"],
   args: {
     type: "warning",
     title: "Titre du bandeau d'avertissement",
@@ -121,8 +124,8 @@ export const WarningStory: Story = {
 };
 
 export const AlertStory: Story = {
-  name: "Alert",
-  tags: ["autodocs", "!dev"],
+  name: "AlertStory",
+  tags: ["autodocs"],
   args: {
     type: "alert",
     title: "Titre du bandeau d'alerte",
@@ -130,8 +133,8 @@ export const AlertStory: Story = {
 };
 
 export const WeatherOrangeStory: Story = {
-  name: "Weather Orange",
-  tags: ["autodocs", "!dev"],
+  name: "WeatherOrangeStory",
+  tags: ["autodocs"],
   args: {
     type: "weather-orange",
     title: "Vigilance météo orange",
@@ -139,19 +142,46 @@ export const WeatherOrangeStory: Story = {
 };
 
 export const WeatherRedStory: Story = {
-  name: "Weather Red",
-  tags: ["autodocs", "!dev"],
+  name: "WeatherRedStory",
+  tags: ["autodocs"],
   args: {
     type: "weather-red",
     title: "Vigilance météo rouge",
   },
 };
 
+export const WeatherPurpleStory: Story = {
+  name: "WeatherPurpleStory",
+  tags: ["autodocs"],
+  args: {
+    type: "weather-purple",
+    title: "Vigilance météo violette",
+  },
+};
+
 export const AttackStory: Story = {
-  name: "Attack",
-  tags: ["autodocs", "!dev"],
+  name: "AttackStory",
+  tags: ["autodocs"],
   args: {
     type: "attack",
     title: "Attentat en cours",
+  },
+};
+
+export const WitnessStory: Story = {
+  name: "WitnessStory",
+  tags: ["autodocs"],
+  args: {
+    type: "witness",
+    title: "Appel à témoins",
+  },
+};
+
+export const CyberattackStory: Story = {
+  name: "CyberattackStory",
+  tags: ["autodocs"],
+  args: {
+    type: "cyberattack",
+    title: "Cyberattaque en cours",
   },
 };
