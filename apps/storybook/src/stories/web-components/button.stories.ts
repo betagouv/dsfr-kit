@@ -217,11 +217,11 @@ export const TertiaryStory: Story = {
   },
 };
 
-export const TertiaryNoOutlineStory: Story = {
-  name: "TertiaryNoOutlineStory",
+export const DisabledStory: Story = {
+  name: "DisabledStory",
   args: {
-    kind: 4,
-    label: "Tertiaire sans contour",
+    label: "Bouton désactivé",
+    disabled: true,
   },
 };
 
@@ -273,10 +273,57 @@ export const IconOnlyStory: Story = {
   },
 };
 
-export const DisabledStory: Story = {
-  name: "DisabledStory",
+export const BtnCloseStory: Story = {
+  name: "BtnCloseStory",
   args: {
-    label: "Bouton désactivé",
-    disabled: true,
+    kind: 2,
+    label: "Fermer",
+    hasIcon: true,
+    icon: "close-line",
+    iconPlace: "right",
+  },
+};
+
+export const BtnDisplayStory: Story = {
+  name: "BtnDisplayStory",
+  args: {
+    kind: 4,
+    label: "Paramètre d'affichage",
+    hasIcon: true,
+    icon: "theme-fill",
+    iconPlace: "left",
+  },
+};
+
+export const BtnTeamStory: Story = {
+  name: "BtnTeamStory",
+  args: {
+    kind: 4,
+    label: "Equipe",
+    hasIcon: true,
+    icon: "team-fill",
+    iconPlace: "left",
+  },
+};
+
+export const BtnBriefcaseStory: Story = {
+  name: "BtnBriefcaseStory",
+  args: {
+    kind: 4,
+    label: "Mon espace",
+    hasIcon: true,
+    icon: "briefcase-fill",
+    iconPlace: "left",
+  },
+};
+
+export const BtnAccountStory: Story = {
+  name: "BtnAccountStory",
+  args: {
+    kind: 4,
+    label: "Mon compte",
+    hasIcon: true,
+    icon: "account-fill",
+    iconPlace: "left",
   },
 };
