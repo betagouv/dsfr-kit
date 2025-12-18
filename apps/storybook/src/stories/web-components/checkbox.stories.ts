@@ -91,19 +91,21 @@ export default meta;
 type Story = StoryObj<CheckboxArgs>;
 
 export const CheckboxStory: Story = {
-  name: "Checkbox",
+  name: "CheckboxStory",
   args: {},
 };
 
 export const DefaultStory: Story = {
-  name: "Default",
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {
     label: "Case à cocher par défaut",
   },
 };
 
 export const SizeSmStory: Story = {
-  name: "Small",
+  name: "SizeSmStory",
+  tags: ["autodocs"],
   args: {
     label: "Petite case à cocher",
     size: "sm",
