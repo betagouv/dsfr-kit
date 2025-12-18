@@ -91,8 +91,11 @@ const meta: Meta<CalloutArgs> = {
   title: "Web Components/Callout",
   component: "dsfr-callout",
   tags: ["autodocs"],
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   argTypes: calloutArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   args: calloutArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   render: render as any,
 };
 
@@ -100,20 +103,19 @@ export default meta;
 type Story = StoryObj<CalloutArgs>;
 
 export const CalloutStory: Story = {
-  name: "Callout",
-  tags: ["!autodocs"],
+  name: "CalloutStory",
   args: {},
 };
 
 export const DefaultStory: Story = {
-  name: "Default",
-  tags: ["autodocs", "!dev"],
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {},
 };
 
 export const IconStory: Story = {
-  name: "Icon",
-  tags: ["autodocs", "!dev"],
+  name: "IconStory",
+  tags: ["autodocs"],
   args: {
     hasIcon: true,
     icon: "info-line",
@@ -121,8 +123,8 @@ export const IconStory: Story = {
 };
 
 export const ButtonStory: Story = {
-  name: "Button",
-  tags: ["autodocs", "!dev"],
+  name: "ButtonStory",
+  tags: ["autodocs"],
   args: {
     hasButton: true,
     buttonLabel: "En savoir plus",
@@ -130,8 +132,8 @@ export const ButtonStory: Story = {
 };
 
 export const IconAndButtonStory: Story = {
-  name: "Icon and Button",
-  tags: ["autodocs", "!dev"],
+  name: "IconAndButtonStory",
+  tags: ["autodocs"],
   args: {
     hasIcon: true,
     icon: "info-line",
@@ -141,8 +143,8 @@ export const IconAndButtonStory: Story = {
 };
 
 export const AccentStory: Story = {
-  name: "Accent",
-  tags: ["autodocs", "!dev"],
+  name: "AccentStory",
+  tags: ["autodocs"],
   args: {
     accent: "pink-macaron",
   },
