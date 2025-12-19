@@ -115,53 +115,180 @@ export default meta;
 type Story = StoryObj<TableArgs>;
 
 export const TableStory: Story = {
-  name: "Table",
-  tags: ["!autodocs"],
+  name: "TableStory",
   args: {},
 };
 
 export const DefaultStory: Story = {
-  name: "Default",
-  tags: ["autodocs", "!dev"],
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {},
 };
 
 export const SizeSMStory: Story = {
-  name: "Size SM",
-  tags: ["autodocs", "!dev"],
+  name: "SizeSMStory",
+  tags: ["autodocs"],
   args: {
     size: "sm",
   },
 };
 
+export const SizeMDStory: Story = {
+  name: "SizeMDStory",
+  tags: ["autodocs"],
+  args: {
+    size: "md",
+  },
+};
+
 export const SizeLGStory: Story = {
-  name: "Size LG",
-  tags: ["autodocs", "!dev"],
+  name: "SizeLGStory",
+  tags: ["autodocs"],
   args: {
     size: "lg",
   },
 };
 
 export const VerticalBordersStory: Story = {
-  name: "Vertical Borders",
-  tags: ["autodocs", "!dev"],
+  name: "VerticalBordersStory",
+  tags: ["autodocs"],
   args: {
     bordered: true,
   },
 };
 
 export const NoScrollStory: Story = {
-  name: "No Scroll",
-  tags: ["autodocs", "!dev"],
+  name: "NoScrollStory",
+  tags: ["autodocs"],
   args: {
     noScroll: true,
   },
 };
 
 export const MultilineStory: Story = {
-  name: "Multiline",
-  tags: ["autodocs", "!dev"],
+  name: "MultilineStory",
+  tags: ["autodocs"],
   args: {
     multiline: true,
   },
+};
+
+export const FixedColumnStory: Story = {
+  name: "FixedColumnStory",
+  tags: ["autodocs"],
+  args: {
+    caption: "Tableau avec colonnes figées",
+  },
+  render: (args) => html`
+    <style>
+        /* Styles to simulate fixed columns if not provided by DSFR global CSS effectively in shadow/light DOM mixture without logic */
+        /* Note: Real DSFR Fixed Column often requires specific JS or Layout structure.
+           Here we demonstrate the structure. If the web component doesn't fully support it, this story serves as a target. */
+    </style>
+    <dsfr-table .caption=${args.caption}>
+       <thead>
+            <tr>
+                <th>Colonne figée</th>
+                <th>Colonne normale 1</th>
+                <th>Colonne normale 2</th>
+                <th>Colonne normale 3</th>
+                <th>Colonne normale 4</th>
+                <th>Colonne normale 5</th>
+                <th>Colonne normale 6</th>
+            </tr>
+       </thead>
+       <tbody>
+            <tr>
+                <td>Fixe</td>
+                <td>Donnée 1</td>
+                <td>Donnée 2</td>
+                <td>Donnée 3</td>
+                <td>Donnée 4</td>
+                <td>Donnée 5</td>
+                <td>Donnée 6</td>
+            </tr>
+             <tr>
+                <td>Fixe</td>
+                <td>Donnée 1</td>
+                <td>Donnée 2</td>
+                <td>Donnée 3</td>
+                <td>Donnée 4</td>
+                <td>Donnée 5</td>
+                <td>Donnée 6</td>
+            </tr>
+       </tbody>
+    </dsfr-table>
+  `,
+};
+
+export const SelectableTableStory: Story = {
+  name: "SelectableTableStory",
+  tags: ["autodocs"],
+  args: {
+    caption: "Tableau sélectionnable",
+  },
+  render: (args) => html`
+    <dsfr-table .caption=${args.caption}>
+       <thead>
+            <tr>
+                <th><div class="fr-checkbox-group"><input type="checkbox" id="header-check"><label class="fr-label" for="header-check">&nbsp;</label></div></th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Rôle</th>
+            </tr>
+       </thead>
+       <tbody>
+            <tr>
+                <td><div class="fr-checkbox-group"><input type="checkbox" id="row-1-check"><label class="fr-label" for="row-1-check">&nbsp;</label></div></td>
+                <td>Dupont</td>
+                <td>Jean</td>
+                <td>Utilisateur</td>
+            </tr>
+            <tr>
+                 <td><div class="fr-checkbox-group"><input type="checkbox" id="row-2-check"><label class="fr-label" for="row-2-check">&nbsp;</label></div></td>
+                <td>Martin</td>
+                <td>Marie</td>
+                <td>Admin</td>
+            </tr>
+       </tbody>
+    </dsfr-table>
+  `,
+};
+
+export const ComplexTableStory: Story = {
+  name: "ComplexTableStory",
+  tags: ["autodocs"],
+  args: {
+    caption: "Tableau complexe",
+  },
+  render: (args) => html`
+    <dsfr-table .caption=${args.caption}>
+       <thead>
+            <tr>
+                <th colspan="2">Identité</th>
+                <th colspan="2">Coordonnées</th>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+            </tr>
+       </thead>
+       <tbody>
+            <tr>
+                <td>Dupont</td>
+                <td>Jean</td>
+                <td>jean@example.com</td>
+                <td>0123456789</td>
+            </tr>
+             <tr>
+                <td>Martin</td>
+                <td>Marie</td>
+                <td>marie@example.com</td>
+                <td>0987654321</td>
+            </tr>
+       </tbody>
+    </dsfr-table>
+  `,
 };
