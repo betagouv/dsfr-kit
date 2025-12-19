@@ -45,6 +45,7 @@ const tabsArgs = {
 interface TabsArgs {
   label: string;
   hasIcon: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   tabs: any[];
 }
 
@@ -73,6 +74,6 @@ export default meta;
 type Story = StoryObj<TabsArgs>;
 
 export const TabsStory: Story = {
-  name: "Tabs",
+  name: "TabsStory",
   args: {},
 };
