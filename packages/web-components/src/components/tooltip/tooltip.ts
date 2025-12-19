@@ -17,6 +17,9 @@ export class DsfrTooltip extends LitElement {
   @property({ type: String })
   kind: "hover" | "click" = "hover";
 
+  @property({ type: Boolean })
+  link = false;
+
   @property({ type: String })
   id = `tooltip-${Math.random().toString(36).substring(2, 9)}`;
 
@@ -24,6 +27,27 @@ export class DsfrTooltip extends LitElement {
 
   render() {
     const buttonId = `button-${this.id}`;
+
+    if (this.link) {
+      return html`
+            <a
+                class="fr-link"
+                id=${buttonId}
+                aria-describedby=${this.id}
+                href="#"
+            >
+                ${this.label}
+            </a>
+            <span
+                class="fr-tooltip fr-placement"
+                id=${this.id}
+                role="tooltip"
+                aria-hidden="true"
+            >
+                ${this.content}
+            </span>
+        `;
+    }
 
     return html`
       <button
