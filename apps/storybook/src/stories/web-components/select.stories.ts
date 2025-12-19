@@ -87,30 +87,39 @@ export default meta;
 type Story = StoryObj<SelectArgs>;
 
 export const SelectStory: Story = {
-  name: "Select",
+  name: "SelectStory",
   args: {},
 };
 
 export const DefaultStory: Story = {
-  name: "Default",
-  tags: ["autodocs", "!dev"],
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {
     label: "Liste par défaut",
   },
 };
 
 export const HintStory: Story = {
-  name: "With Hint",
-  tags: ["autodocs", "!dev"],
+  name: "HintStory",
+  tags: ["autodocs"],
   args: {
     label: "Liste avec description",
     hint: "Texte de description additionnel",
   },
 };
 
-export const ErrorStory: Story = {
-  name: "Error",
-  tags: ["autodocs", "!dev"],
+export const DisabledStory: Story = {
+  name: "DisabledStory",
+  tags: ["autodocs"],
+  args: {
+    label: "Liste désactivée",
+    disabled: true,
+  },
+};
+
+export const StatusErrorStory: Story = {
+  name: "StatusErrorStory",
+  tags: ["autodocs"],
   args: {
     label: "Liste en erreur",
     error: "Message d'erreur",
@@ -118,9 +127,9 @@ export const ErrorStory: Story = {
   },
 };
 
-export const ValidStory: Story = {
-  name: "Valid",
-  tags: ["autodocs", "!dev"],
+export const StatusValidStory: Story = {
+  name: "StatusValidStory",
+  tags: ["autodocs"],
   args: {
     label: "Liste valide",
     valid: "Message de validation",
