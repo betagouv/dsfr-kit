@@ -26,20 +26,23 @@ export class DsfrCheckbox extends LitElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
-  @property({ type: Boolean, reflect: true })
-  small = false;
+  @property({ type: String })
+  size: "sm" | "md" = "md";
 
   @property({ type: String })
   hint = "";
 
-  @property({ type: String, reflect: true })
-  state: "default" | "error" | "valid" = "default";
+  @property({ type: String })
+  error = "";
 
   @property({ type: String })
-  message = "";
+  valid = "";
 
   @property({ type: String })
   checkboxId = `checkbox-${Math.random().toString(36).substring(2, 9)}`;
+
+  @property({ type: Boolean })
+  inline = false;
 
   static styles = [
     unsafeCSS(coreStyles),
@@ -62,48 +65,46 @@ export class DsfrCheckbox extends LitElement {
   render() {
     const groupClasses = {
       "fr-checkbox-group": true,
-      "fr-checkbox-group--sm": this.small,
-      "fr-checkbox-group--error": this.state === "error",
-      "fr-checkbox-group--valid": this.state === "valid",
+      "fr-checkbox-group--sm": this.size === "sm",
+      "fr-checkbox-group--error": !!this.error,
+      "fr-checkbox-group--valid": !!this.valid,
     };
 
-    const messageClasses = {
-      "fr-message": true,
-      "fr-message--error": this.state === "error",
-      "fr-message--valid": this.state === "valid",
-    };
+    const describedBy: string[] = [];
+    const errorId = `${this.checkboxId}-error`;
+    const validId = `${this.checkboxId}-valid`;
 
-    const describedBy = [
-      this.message ? `${this.checkboxId}-message` : undefined,
-    ]
-      .filter(Boolean)
-      .join(" ");
+    if (this.error) describedBy.push(errorId);
+    if (this.valid) describedBy.push(validId);
 
     return html`
-            <div class=${classMap(groupClasses)}>
-                <input
-                    name=${ifDefined(this.name || undefined)}
-                    value=${ifDefined(this.value || undefined)}
-                    id=${this.checkboxId}
-                    type="checkbox"
-                    ?checked=${this.checked}
-                    ?disabled=${this.disabled}
-                    aria-describedby=${ifDefined(describedBy || undefined)}
-                    @change=${this._handleChange}
-                >
-                <label class="fr-label" for=${this.checkboxId}>
-                    ${this.label}
-                    ${this.hint ? html`<span class="fr-hint-text">${this.hint}</span>` : nothing}
-                </label>
+      <div class=${classMap(groupClasses)}>
+        <input
+          name=${ifDefined(this.name || undefined)}
+          value=${ifDefined(this.value || undefined)}
+          id=${this.checkboxId}
+          type="checkbox"
+          ?checked=${this.checked}
+          ?disabled=${this.disabled}
+          aria-describedby=${ifDefined(describedBy.length > 0 ? describedBy.join(" ") : undefined)}
+          @change=${this._handleChange}
+        >
+        <label class="fr-label" for=${this.checkboxId}>
+          ${this.label}
+          ${this.hint ? html`<span class="fr-hint-text">${this.hint}</span>` : nothing}
+        </label>
+        ${
+          this.error || this.valid
+            ? html`
                 <div class="fr-messages-group" id="${this.checkboxId}-messages" aria-live="polite">
-                    ${
-                      this.message
-                        ? html`<p class=${classMap(messageClasses)} id="${this.checkboxId}-message">${this.message}</p>`
-                        : nothing
-                    }
+                  ${this.error ? html`<p class="fr-message fr-message--error" id=${errorId}>${this.error}</p>` : nothing}
+                  ${this.valid ? html`<p class="fr-message fr-message--valid" id=${validId}>${this.valid}</p>` : nothing}
                 </div>
-            </div>
-        `;
+              `
+            : nothing
+        }
+      </div>
+    `;
   }
 }
 

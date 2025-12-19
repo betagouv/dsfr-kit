@@ -1,78 +1,113 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const checkboxArgTypes = {
+  label: {
+    control: "text",
+    description: "Libellé de la case à cocher",
+  },
+  hint: {
+    control: "text",
+    description: "Texte additionnel",
+  },
+  status: {
+    control: { type: "select" },
+    options: ["default", "error", "valid"],
+    description: "Statut de la case",
+  },
+  error: {
+    if: { arg: "status", eq: "error" },
+    control: "text",
+    description: "Message d'erreur",
+  },
+  valid: {
+    if: { arg: "status", eq: "valid" },
+    control: "text",
+    description: "Message de succès",
+  },
+  size: {
+    control: { type: "select" },
+    options: ["md", "sm"],
+    description: "Taille de la case",
+  },
+  checked: {
+    control: "boolean",
+    description: "État coché",
+  },
+  disabled: {
+    control: "boolean",
+    description: "État désactivé",
+  },
+};
+
+const checkboxArgs = {
+  label: "Libellé de la case à cocher",
+  hint: "",
+  status: "default",
+  error: "Texte d’erreur",
+  valid: "Texte de succès",
+  size: "md",
+  checked: false,
+  disabled: false,
+};
+
+interface CheckboxArgs {
+  label: string;
+  hint: string;
+  status: string;
+  error: string;
+  valid: string;
+  size: "md" | "sm";
+  checked: boolean;
+  disabled: boolean;
+}
+
+const render = (args: CheckboxArgs) => html`
+  <dsfr-checkbox
+    .label=${args.label}
+    .hint=${args.hint}
+    .size=${args.size}
+    ?checked=${args.checked}
+    ?disabled=${args.disabled}
+    .error=${args.status === "error" ? args.error : ""}
+    .valid=${args.status === "valid" ? args.valid : ""}
+  ></dsfr-checkbox>
+`;
+
+const meta: Meta<CheckboxArgs> = {
   title: "Web Components/Checkbox",
   component: "dsfr-checkbox",
   tags: ["autodocs"],
-  argTypes: {
-    label: { control: "text" },
-    checked: { control: "boolean" },
-    disabled: { control: "boolean" },
-    small: { control: "boolean" },
-    hint: { control: "text" },
-    state: {
-      control: "select",
-      options: ["default", "error", "valid"],
-    },
-    message: { control: "text" },
-  },
-  args: {
-    label: "Libellé de la case à cocher",
-    checked: false,
-    disabled: false,
-    small: false,
-    state: "default",
-  },
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: checkboxArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: checkboxArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<CheckboxArgs>;
 
-export const Default: Story = {};
+export const CheckboxStory: Story = {
+  name: "CheckboxStory",
+  args: {},
+};
 
-export const Checked: Story = {
+export const DefaultStory: Story = {
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {
-    label: "Option sélectionnée",
-    checked: true,
+    label: "Case à cocher par défaut",
   },
 };
 
-export const Small: Story = {
+export const SizeSmStory: Story = {
+  name: "SizeSmStory",
+  tags: ["autodocs"],
   args: {
-    label: "Case à cocher petite taille (sm)",
-    small: true,
-  },
-};
-
-export const WithHint: Story = {
-  args: {
-    label: "Option avec description",
-    hint: "Texte d'aide pour préciser l'option",
-  },
-};
-
-export const ErrorState: Story = {
-  args: {
-    label: "Option en erreur",
-    state: "error",
-    message: "Message d'erreur",
-  },
-};
-
-export const ValidState: Story = {
-  args: {
-    label: "Option valide",
-    checked: true,
-    state: "valid",
-    message: "Message de succès",
-  },
-};
-
-export const Disabled: Story = {
-  args: {
-    label: "Option désactivée",
-    disabled: true,
-    checked: true,
+    label: "Petite case à cocher",
+    size: "sm",
   },
 };

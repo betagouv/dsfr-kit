@@ -1,95 +1,223 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
-import "@dsfr-kit/web-components";
 import { html } from "lit";
+import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const headerArgTypes = {
+  brandLogoTitle: {
+    control: "text",
+    description: "Intitulé officiel",
+  },
+  brandLinkHref: {
+    control: "text",
+    description: "URL du lien de la marque",
+  },
+  brandLinkTitle: {
+    control: "text",
+    description: "Titre du lien de la marque",
+  },
+  brandServiceTitle: {
+    control: "text",
+    description: "Titre du service",
+  },
+  brandServiceTagline: {
+    control: "text",
+    description: "Tagline du service",
+  },
+  operatorLogoSrc: {
+    control: "text",
+    description: "URL du logo opérateur",
+  },
+  operatorLogoAlt: {
+    control: "text",
+    description: "Texte alternatif du logo opérateur",
+  },
+  operatorLogoStyle: {
+    control: "text",
+    description: "Style CSS du logo opérateur",
+  },
+  navigation: {
+    control: "object",
+    description: "Navigation principale",
+  },
+  toolsLinks: {
+    control: "object",
+    description: "Liens d'accès rapide",
+  },
+  searchLabel: {
+    control: "text",
+    description: "Label de recherche",
+  },
+  searchPlaceholder: {
+    control: "text",
+    description: "Placeholder de recherche",
+  },
+};
+
+const headerArgs = {
+  brandLogoTitle: "République<br>Française",
+  brandLinkHref: "/",
+  brandLinkTitle: "Retour à l’accueil du site - République Française",
+  brandServiceTitle: "Nom du Service",
+  brandServiceTagline: "Baseline Nom du Service",
+  operatorLogoSrc: "",
+  operatorLogoAlt: "",
+  operatorLogoStyle: "width: 3.5rem",
+  navigation: [
+    { label: "Lien 1", href: "#" },
+    { label: "Lien 2", href: "#", active: true },
+    { label: "Lien 3", href: "#" },
+  ],
+  toolsLinks: [
+    { label: "Contact", href: "#", icon: "mail-line" },
+    { label: "Se connecter", href: "#", icon: "user-line" },
+  ],
+  searchLabel: "Rechercher",
+  searchPlaceholder: "Rechercher",
+};
+
+interface HeaderArgs {
+  brandLogoTitle: string;
+  brandLinkHref: string;
+  brandLinkTitle: string;
+  brandServiceTitle: string;
+  brandServiceTagline: string;
+  operatorLogoSrc: string;
+  operatorLogoAlt: string;
+  operatorLogoStyle: string;
+  // biome-ignore lint/suspicious/noExplicitAny: Flexible navigation structure
+  navigation: any[];
+  // biome-ignore lint/suspicious/noExplicitAny: Flexible tools links structure
+  toolsLinks: any[];
+  searchLabel: string;
+  searchPlaceholder: string;
+}
+
+const render = (args: HeaderArgs) => html`
+  <dsfr-header
+    .brandLogoTitle=${args.brandLogoTitle}
+    .brandLinkHref=${args.brandLinkHref}
+    .brandLinkTitle=${args.brandLinkTitle}
+    .brandServiceTitle=${args.brandServiceTitle}
+    .brandServiceTagline=${args.brandServiceTagline}
+    .operatorLogoSrc=${args.operatorLogoSrc}
+    .operatorLogoAlt=${args.operatorLogoAlt}
+    .operatorLogoStyle=${args.operatorLogoStyle}
+    .navigation=${args.navigation}
+    .toolsLinks=${args.toolsLinks}
+    .searchLabel=${args.searchLabel}
+    .searchPlaceholder=${args.searchPlaceholder}
+  ></dsfr-header>
+`;
+
+const meta: Meta<HeaderArgs> = {
   title: "Web Components/Header",
   component: "dsfr-header",
   tags: ["autodocs"],
-  argTypes: {
-    serviceTitle: { control: "text" },
-    serviceTagline: { control: "text" },
-    homeLink: { control: "text" },
-    logoText: { control: "text" },
-    operatorLogoSrc: { control: "text" },
-    operatorLogoAlt: { control: "text" },
-    navigation: { control: "object" },
-    toolsLinks: { control: "object" },
-  },
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: headerArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: headerArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
+};
+
+export default meta;
+type Story = StoryObj<HeaderArgs>;
+
+export const HeaderStory: Story = {
+  name: "HeaderStory",
+  args: {},
+};
+
+export const HeaderWithNavigationStory: Story = {
+  name: "HeaderWithNavigationStory",
   args: {
-    logoText: "République\nFrançaise",
-    serviceTitle: "Nom du service",
-    serviceTagline: "Baseline - précisions sur l'organisation",
-    homeLink: "/",
     navigation: [
-      { text: "Accueil", href: "#", active: true },
-      { text: "Rubrique 1", href: "#" },
-      { text: "Rubrique 2", href: "#" },
+      { label: "Rubrique 1", href: "#" },
+      { label: "Rubrique 2", href: "#", active: true },
+      { label: "Rubrique 3", href: "#" },
     ],
+  },
+};
+
+export const HeaderMinimalStory: Story = {
+  name: "HeaderMinimalStory",
+  args: {
+    brandServiceTitle: "",
+    brandServiceTagline: "",
+    navigation: [],
     toolsLinks: [],
   },
 };
 
-export default meta;
-type Story = StoryObj;
-
-export const Default: Story = {
-  render: (args) => html`
-        <dsfr-header
-            .logoText=${args.logoText}
-            .serviceTitle=${args.serviceTitle}
-            .serviceTagline=${args.serviceTagline}
-            .homeLink=${args.homeLink}
-            .navigation=${args.navigation}
-            .toolsLinks=${args.toolsLinks}
-        ></dsfr-header>
-    `,
+export const ServiceStory: Story = {
+  name: "ServiceStory",
+  args: {
+    brandServiceTitle: "Nom du service",
+    brandServiceTagline: "Baseline du service",
+  },
 };
 
-export const WithToolsAndSearch: Story = {
+export const ToolLinksStory: Story = {
+  name: "ToolLinksStory",
   args: {
     toolsLinks: [
-      { text: "Contact", href: "#", icon: "fr-btn--team" },
-      { text: "Espace recruteur", href: "#", icon: "fr-btn--briefcase" },
-      { text: "Espace particulier", href: "#", icon: "fr-btn--account" },
+      { label: "Lien 1", href: "#", icon: "lock-line" },
+      { label: "Lien 2", href: "#", icon: "account-line" },
     ],
   },
-  render: (args) => html`
-        <dsfr-header
-            .logoText=${args.logoText}
-            .serviceTitle=${args.serviceTitle}
-            .serviceTagline=${args.serviceTagline}
-            .homeLink=${args.homeLink}
-            .navigation=${args.navigation}
-            .toolsLinks=${args.toolsLinks}
-        >
-            <div slot="search" class="fr-search-bar" id="header-search" role="search">
-                <label class="fr-label" for="search-input-header">
-                    Rechercher
-                </label>
-                <input class="fr-input" placeholder="Rechercher" type="search" id="search-input-header" name="search-input-header">
-                <button class="fr-btn" title="Rechercher">
-                    Rechercher
-                </button>
-            </div>
-        </dsfr-header>
-    `,
 };
 
-export const OperatorLogo: Story = {
+export const SearchStory: Story = {
+  name: "SearchStory",
   args: {
-    operatorLogoSrc: "https://placehold.co/200x100?text=Logo+Operateur",
-    operatorLogoAlt: "Logo Opérateur",
+    // Search is enabled by default in the component
+    toolsLinks: [],
   },
-  render: (args) => html`
-        <dsfr-header
-            .logoText=${args.logoText}
-            .serviceTitle=${args.serviceTitle}
-            .serviceTagline=${args.serviceTagline}
-            .operatorLogoSrc=${args.operatorLogoSrc}
-            .operatorLogoAlt=${args.operatorLogoAlt}
-            .navigation=${args.navigation}
-            .toolsLinks=${args.toolsLinks}
-        ></dsfr-header>
-    `,
+};
+
+export const ToolLinksSearchStory: Story = {
+  name: "ToolLinksSearchStory",
+  args: {
+    toolsLinks: [
+      { label: "Lien 1", href: "#", icon: "lock-line" },
+      { label: "Lien 2", href: "#", icon: "account-line" },
+    ],
+  },
+};
+
+export const TranslateStory: Story = {
+  name: "TranslateStory",
+  args: {
+    toolsLinks: [{ label: "EN", href: "#", icon: "translate-2" }],
+  },
+};
+
+export const ToolLinksTranslateStory: Story = {
+  name: "ToolLinksTranslateStory",
+  args: {
+    toolsLinks: [
+      { label: "Lien 1", href: "#", icon: "lock-line" },
+      { label: "Lien 2", href: "#", icon: "account-line" },
+      { label: "EN", href: "#", icon: "translate-2" },
+    ],
+  },
+};
+
+export const VerticalOperatorStory: Story = {
+  name: "VerticalOperatorStory",
+  args: {
+    operatorLogoSrc: "https://placehold.co/100x100?text=V",
+    operatorLogoAlt: "Opérateur",
+    operatorLogoStyle: "width: 3.5rem;",
+  },
+};
+
+export const HorizontalOperatorStory: Story = {
+  name: "HorizontalOperatorStory",
+  args: {
+    operatorLogoSrc: "https://placehold.co/200x50?text=Horizontal",
+    operatorLogoAlt: "Opérateur",
+    operatorLogoStyle: "width: 10rem; max-width: 100%;",
+  },
 };

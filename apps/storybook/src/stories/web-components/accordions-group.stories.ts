@@ -48,11 +48,13 @@ interface AccordionItem {
 }
 
 const meta: Meta = {
-  title: "Web Components/Accordions Group",
+  title: "Web Components/Accordion/Accordions Group",
   component: "dsfr-accordion-group",
   tags: ["autodocs"],
-  argTypes: accordionsGroupArgTypes,
-  args: accordionsGroupArgs,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: accordionsGroupArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: accordionsGroupArgs as any,
   render: (args) => html`
     <dsfr-accordion-group ?group=${args.group}>
       ${args.accordions.map(
@@ -72,4 +74,6 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const AccordionsGroupStory: Story = {};
+export const AccordionsGroupStory: Story = {
+  name: "AccordionsGroupStory",
+};

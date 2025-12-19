@@ -5,11 +5,19 @@ import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
+export interface SkiplinkLink {
+  label: string;
+  href: string;
+}
+
 /**
  * @summary DSFR Skiplink Container
  */
 @customElement("dsfr-skiplink")
 export class DsfrSkiplink extends LitElement {
+  @property({ type: Array })
+  links: SkiplinkLink[] = [];
+
   static styles = [
     unsafeCSS(coreStyles),
     unsafeCSS(linkStyles),
@@ -18,14 +26,21 @@ export class DsfrSkiplink extends LitElement {
 
   render() {
     return html`
-            <div class="fr-skiplinks">
-                <nav class="fr-container" role="navigation" aria-label="Accès rapide">
-                    <ul class="fr-skiplinks__list">
-                        <slot></slot>
-                    </ul>
-                </nav>
-            </div>
-        `;
+      <div class="fr-skiplinks">
+        <nav class="fr-container" role="navigation" aria-label="Accès rapide">
+          <ul class="fr-skiplinks__list">
+            ${this.links.map(
+              (link) => html`
+                <li>
+                  <a class="fr-link" href="${link.href}">${link.label}</a>
+                </li>
+              `,
+            )}
+            <slot></slot>
+          </ul>
+        </nav>
+      </div>
+    `;
   }
 }
 
@@ -38,7 +53,7 @@ export class DsfrSkiplinkItem extends LitElement {
   href = "#";
 
   @property({ type: String })
-  text = "";
+  label = "";
 
   static styles = [
     unsafeCSS(coreStyles),
@@ -48,10 +63,10 @@ export class DsfrSkiplinkItem extends LitElement {
 
   render() {
     return html`
-            <li>
-                <a class="fr-link" href="${this.href}">${this.text}</a>
-            </li>
-        `;
+      <li>
+        <a class="fr-link" href="${this.href}">${this.label}</a>
+      </li>
+    `;
   }
 }
 

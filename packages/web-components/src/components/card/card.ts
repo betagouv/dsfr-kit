@@ -26,8 +26,8 @@ export class DsfrCard extends LitElement {
   @property({ type: String })
   href = "#";
 
-  @property({ type: Boolean, attribute: "has-description" })
-  hasDescription = false;
+  @property({ type: Boolean, attribute: "no-link" })
+  noLink = false;
 
   @property({ type: String })
   description = "";
@@ -38,44 +38,29 @@ export class DsfrCard extends LitElement {
   @property({ type: String, attribute: "img-alt" })
   imgAlt = "";
 
-  @property({ type: Boolean, attribute: "has-detail-start" })
-  hasDetailStart = false;
-
-  @property({ type: String, attribute: "detail" })
-  detail = "";
-
-  @property({ type: String, attribute: "detail-icon" })
-  detailIcon = "";
-
-  @property({ type: Boolean, attribute: "has-detail-end" })
-  hasDetailEnd = false;
-
-  @property({ type: String, attribute: "end-detail" })
-  endDetail = "";
-
-  @property({ type: String, attribute: "end-detail-icon" })
-  endDetailIcon = "";
-
-  @property({ type: Boolean, attribute: "has-badge" })
-  hasBadge = false;
-
-  @property({ type: Boolean, attribute: "has-tag" })
-  hasTag = false;
-
-  @property({ type: String, attribute: "heading-level" })
-  headingLevel: "h2" | "h3" | "h4" | "h5" | "h6" = "h3";
-
-  @property({ type: Boolean, reflect: true })
-  horizontal = false;
-
   @property({ type: String })
   size: "sm" | "md" | "lg" = "md";
+
+  @property({ type: String })
+  horizontal: "tier" | "half" | boolean = false;
+
+  @property({ type: Boolean })
+  download = false;
+
+  @property({ type: String })
+  icon = "";
 
   @property({ type: Boolean, attribute: "no-icon" })
   noIcon = false;
 
-  @property({ type: Boolean, attribute: "enlarge-link" })
-  enlargeLink = true;
+  @property({ type: Boolean })
+  enlarge = true;
+
+  @property({ type: Array })
+  variations: ("grey" | "no-border" | "no-background" | "shadow")[] = [];
+
+  @property({ type: String, attribute: "heading-level" })
+  headingLevel: "h2" | "h3" | "h4" | "h5" | "h6" = "h3";
 
   static styles = [
     unsafeCSS(coreStyles),
@@ -86,12 +71,14 @@ export class DsfrCard extends LitElement {
   ];
 
   private renderHeading(): TemplateResult {
-    const content = html`<a href=${this.href}>${this.title}</a>`;
+    const hasLink = !this.noLink && !!this.href;
+    const content = hasLink
+      ? html`<a href=${this.href}>${this.title}</a>`
+      : html`${this.title}`;
+
     switch (this.headingLevel) {
       case "h2":
         return html`<h2 class="fr-card__title">${content}</h2>`;
-      case "h3":
-        return html`<h3 class="fr-card__title">${content}</h3>`;
       case "h4":
         return html`<h4 class="fr-card__title">${content}</h4>`;
       case "h5":
@@ -106,77 +93,64 @@ export class DsfrCard extends LitElement {
   render() {
     const classes = {
       "fr-card": true,
-      "fr-card--horizontal": this.horizontal,
+      "fr-card--horizontal":
+        this.horizontal === true || typeof this.horizontal === "string",
+      "fr-card--horizontal-tier": this.horizontal === "tier",
+      "fr-card--horizontal-half": this.horizontal === "half",
       [`fr-card--${this.size}`]: this.size !== "md",
+      "fr-card--download": this.download,
       "fr-card--no-icon": this.noIcon,
-      "fr-enlarge-link": this.enlargeLink,
+      "fr-enlarge-link": this.enlarge && !this.noLink,
+      [`fr-icon-${this.icon}`]: !!this.icon,
     };
 
-    // "Start" area contains badges, tags, and start-detail.
-    const showStart = this.hasBadge || this.hasTag || this.hasDetailStart;
+    if (this.variations) {
+      for (const variation of this.variations) {
+        classes[`fr-card--${variation}`] = true;
+      }
+    }
 
     return html`
-            <div class=${classMap(classes)}>
-                <div class="fr-card__body">
-                    <div class="fr-card__content">
-                        ${this.renderHeading()}
-
-                        ${
-                          this.hasDescription
-                            ? html`
-                            <p class="fr-card__desc">
-                                ${this.description ? this.description : html`<slot name="description"></slot>`}
-                            </p>`
-                            : nothing
-                        }
-
-                        ${
-                          showStart
-                            ? html`
-                            <div class="fr-card__start">
-                                ${this.hasBadge ? html`<slot name="badge"></slot>` : nothing}
-                                ${this.hasTag ? html`<slot name="tag"></slot>` : nothing}
-                                ${
-                                  this.hasDetailStart
-                                    ? html`
-                                    <slot name="detail">
-                                        <p class="fr-card__detail ${this.detailIcon}">${this.detail}</p>
-                                    </slot>`
-                                    : nothing
-                                }
-                            </div>`
-                            : nothing
-                        }
-
-                        ${
-                          this.hasDetailEnd
-                            ? html`
-                            <div class="fr-card__end">
-                                <slot name="end">
-                                    <p class="fr-card__detail ${this.endDetailIcon}">${this.endDetail}</p>
-                                </slot>
-                            </div>`
-                            : nothing
-                        }
-                    </div>
-                    <div class="fr-card__footer">
-                        <slot name="footer"></slot>
-                    </div>
-                </div>
-                <div class="fr-card__header">
-                    <slot name="image">
-                        ${
-                          this.imgSrc
-                            ? html`
-                            <div class="fr-card__img">
-                                <img class="fr-responsive-img" src=${this.imgSrc} alt=${this.imgAlt} />
-                            </div>`
-                            : nothing
-                        }
-                    </slot>
-                </div>
+      <div class=${classMap(classes)}>
+        <div class="fr-card__body">
+          <div class="fr-card__content">
+            ${this.renderHeading()}
+            ${
+              this.description || this.hasSlot("description")
+                ? html`<p class="fr-card__desc">${this.description || html`<slot name="description"></slot>`}</p>`
+                : nothing
+            }
+            <div class="fr-card__start">
+              <slot name="badge"></slot>
+              <slot name="tag"></slot>
+              <slot name="detail-start"></slot>
             </div>
-        `;
+            <div class="fr-card__end">
+              <slot name="detail-end"></slot>
+            </div>
+          </div>
+          <div class="fr-card__footer">
+            <slot name="footer"></slot>
+          </div>
+        </div>
+        <div class="fr-card__header">
+          <slot name="header">
+            ${
+              this.imgSrc
+                ? html`
+                <div class="fr-card__img">
+                  <img src=${this.imgSrc} class="fr-responsive-img" alt=${this.imgAlt} />
+                </div>`
+                : nothing
+            }
+          </slot>
+        </div>
+      </div>
+    `;
+  }
+
+  private hasSlot(name: string) {
+    return Array.from(this.children).some((child) => child.slot === name);
   }
 }
 

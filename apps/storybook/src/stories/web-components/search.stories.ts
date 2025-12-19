@@ -1,58 +1,87 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
-import "@dsfr-kit/web-components";
 import { html } from "lit";
+import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const searchArgTypes = {
+  inputLabel: {
+    control: "text",
+    description: "Libellé de l'input",
+  },
+  inputPlaceholder: {
+    control: "text",
+    description: "Placeholder de l'input",
+  },
+  buttonLabel: {
+    control: "text",
+    description: "Libellé du bouton",
+  },
+  buttonTitle: {
+    control: "text",
+    description: "Titre du bouton",
+  },
+  size: {
+    control: { type: "select" },
+    options: ["md", "lg"],
+    description: "Taille de la barre de recherche",
+  },
+};
+
+const searchArgs = {
+  inputLabel: "Rechercher",
+  inputPlaceholder: "Rechercher",
+  buttonLabel: "Rechercher",
+  buttonTitle: "Rechercher",
+  size: "md",
+};
+
+interface SearchArgs {
+  inputLabel: string;
+  inputPlaceholder: string;
+  buttonLabel: string;
+  buttonTitle: string;
+  size: "md" | "lg";
+}
+
+const render = (args: SearchArgs) => html`
+  <dsfr-search
+    .inputLabel=${args.inputLabel}
+    .inputPlaceholder=${args.inputPlaceholder}
+    .buttonLabel=${args.buttonLabel}
+    .buttonTitle=${args.buttonTitle}
+    .size=${args.size}
+  ></dsfr-search>
+`;
+
+const meta: Meta<SearchArgs> = {
   title: "Web Components/Search",
   component: "dsfr-search",
   tags: ["autodocs"],
-  argTypes: {
-    label: { control: "text" },
-    placeholder: { control: "text" },
-    value: { control: "text" },
-    buttonLabel: { control: "text" },
-    large: { control: "boolean" },
-  },
-  args: {
-    label: "Rechercher",
-    placeholder: "Rechercher",
-    buttonLabel: "Rechercher",
-    large: false,
-  },
-  parameters: {
-    actions: {
-      handles: ["dsfr-search"],
-    },
-  },
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: searchArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: searchArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<SearchArgs>;
 
-export const Default: Story = {};
-
-export const Large: Story = {
-  args: {
-    large: true,
-    label: "Recherche principale",
-    placeholder: "Que recherchez-vous ?",
-  },
+export const SearchStory: Story = {
+  name: "SearchStory",
+  args: {},
 };
 
-export const CustomLabel: Story = {
+export const DefaultStory: Story = {
+  name: "DefaultStory",
+  tags: ["autodocs"],
+  args: {},
+};
+
+export const SizeLgStory: Story = {
+  name: "SizeLgStory",
+  tags: ["autodocs"],
   args: {
-    label: "Rechercher un document",
-    placeholder: "Ex: Cerfa n°12345",
-    buttonLabel: "Trouver",
+    size: "lg",
   },
-  render: (args) => html`
-        <div style="max-width: 400px;">
-           <dsfr-search
-                label=${args.label}
-                placeholder=${args.placeholder}
-                buttonLabel=${args.buttonLabel}
-                ?large=${args.large}
-            ></dsfr-search>
-        </div>
-    `,
 };

@@ -15,10 +15,13 @@ export interface SummaryLink {
 @customElement("dsfr-summary")
 export class DsfrSummary extends LitElement {
   @property({ type: String })
-  summaryTitle = "Sommaire";
+  title = "Sommaire";
 
   @property({ type: Array })
-  links: SummaryLink[] = [];
+  list: SummaryLink[] = [];
+
+  @property({ type: String })
+  markup = "p";
 
   @property({ type: String })
   summaryId = `summary-${Math.random().toString(36).substring(2, 9)}`;
@@ -29,28 +32,47 @@ export class DsfrSummary extends LitElement {
     if (!items || items.length === 0) return nothing;
 
     return html`
-            <ol>
-                ${items.map(
-                  (link) => html`
-                    <li>
-                        <a class="fr-summary__link" href=${link.href}>${link.label}</a>
-                        ${this._renderList(link.items || [])}
-                    </li>
-                `,
-                )}
-            </ol>
-        `;
+      <ol>
+        ${items.map(
+          (link) => html`
+            <li>
+              <a class="fr-summary__link" href=${link.href}>${link.label}</a>
+              ${this._renderList(link.items || [])}
+            </li>
+          `,
+        )}
+      </ol>
+    `;
   }
 
   render() {
-    if (this.links.length === 0) return nothing;
+    if (this.list.length === 0) return nothing;
 
     return html`
-            <nav class="fr-summary" role="navigation" aria-labelledby=${this.summaryId}>
-                <div class="fr-summary__title" id=${this.summaryId}>${this.summaryTitle}</div>
-                ${this._renderList(this.links)}
-            </nav>
-        `;
+      <nav class="fr-summary" role="navigation" aria-labelledby=${this.summaryId}>
+        ${this.renderTitle()}
+        ${this._renderList(this.list)}
+      </nav>
+    `;
+  }
+
+  private renderTitle() {
+    switch (this.markup) {
+      case "h1":
+        return html`<h1 class="fr-summary__title" id=${this.summaryId}>${this.title}</h1>`;
+      case "h2":
+        return html`<h2 class="fr-summary__title" id=${this.summaryId}>${this.title}</h2>`;
+      case "h3":
+        return html`<h3 class="fr-summary__title" id=${this.summaryId}>${this.title}</h3>`;
+      case "h4":
+        return html`<h4 class="fr-summary__title" id=${this.summaryId}>${this.title}</h4>`;
+      case "h5":
+        return html`<h5 class="fr-summary__title" id=${this.summaryId}>${this.title}</h5>`;
+      case "h6":
+        return html`<h6 class="fr-summary__title" id=${this.summaryId}>${this.title}</h6>`;
+      default:
+        return html`<div class="fr-summary__title" id=${this.summaryId}>${this.title}</div>`;
+    }
   }
 }
 

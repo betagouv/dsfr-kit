@@ -1,9 +1,10 @@
 import buttonStyles from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
 import modalStyles from "@gouvfr/dsfr/dist/component/modal/modal.min.css?inline";
 import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
-import { css, html, LitElement, nothing, unsafeCSS } from "lit";
+import { css, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property, query } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
+import { html, unsafeStatic } from "lit/static-html.js";
 
 /**
  * @summary DSFR Modal component
@@ -11,7 +12,10 @@ import { classMap } from "lit/directives/class-map.js";
 @customElement("dsfr-modal")
 export class DsfrModal extends LitElement {
   @property({ type: String })
-  modalTitle = "";
+  title = "";
+
+  @property({ type: String })
+  titleMarkup = "h1";
 
   @property({ type: Boolean, reflect: true })
   open = false;
@@ -21,6 +25,12 @@ export class DsfrModal extends LitElement {
 
   @property({ type: String })
   icon = "";
+
+  @property({ type: Boolean })
+  top = false;
+
+  @property({ type: Boolean })
+  concealingBackdrop = true;
 
   @query("dialog")
   dialog!: HTMLDialogElement;
@@ -33,10 +43,10 @@ export class DsfrModal extends LitElement {
     unsafeCSS(modalStyles),
     unsafeCSS(buttonStyles),
     css`
-            dialog[open] {
-                display: flex !important;
-            }
-        `,
+      dialog[open] {
+        display: flex !important;
+      }
+    `,
   ];
 
   updated(changedProperties: Map<string, unknown>) {
@@ -65,7 +75,6 @@ export class DsfrModal extends LitElement {
   }
 
   private _handleDialogClose() {
-    // Catch native close events (e.g. Escape key)
     if (this.open) {
       this.open = false;
       this.dialog.classList.remove("fr-modal--opened");
@@ -79,12 +88,17 @@ export class DsfrModal extends LitElement {
   }
 
   private _handleBackdropClick(e: MouseEvent) {
-    if (e.target === this.dialog) {
+    if (this.concealingBackdrop && e.target === this.dialog) {
       this._handleClose();
     }
   }
 
   render() {
+    const modalClasses = {
+      "fr-modal": true,
+      "fr-modal--top": this.top,
+    };
+
     const colClasses = {
       "fr-col-12": true,
       "fr-col-md-6": this.size === "sm",
@@ -95,44 +109,45 @@ export class DsfrModal extends LitElement {
       "fr-col-lg-8": this.size === "lg",
     };
 
+    const iconName =
+      this.icon && !this.icon.startsWith("fr-icon-")
+        ? `fr-icon-${this.icon}`
+        : this.icon;
+
+    const titleMarkup = unsafeStatic(this.titleMarkup);
+
     return html`
-            <dialog
-                id=${this.modalId}
-                class="fr-modal"
-                aria-labelledby=${`${this.modalId}-title`}
-                data-fr-concealing-backdrop="true"
-                @close=${this._handleDialogClose}
-                @click=${this._handleBackdropClick}
-            >
-                <div class="fr-container fr-container--fluid fr-container-md">
-                    <div class="fr-grid-row fr-grid-row--center">
-                        <div class=${classMap(colClasses)}>
-                            <div class="fr-modal__body">
-                                <div class="fr-modal__header">
-                                    <button
-                                        class="fr-btn--close fr-btn"
-                                        title="Fermer"
-                                        @click=${this._handleClose}
-                                    >
-                                        Fermer
-                                    </button>
-                                </div>
-                                <div class="fr-modal__content">
-                                    <h1 id=${`${this.modalId}-title`} class="fr-modal__title">
-                                        ${this.icon ? html`<span class="${this.icon} fr-icon--lg" aria-hidden="true"></span>` : nothing}
-                                        ${this.modalTitle}
-                                    </h1>
-                                    <slot></slot>
-                                </div>
-                                <div class="fr-modal__footer">
-                                    <slot name="footer"></slot>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+      <dialog
+        id=${this.modalId}
+        class=${classMap(modalClasses)}
+        aria-labelledby=${`${this.modalId}-title`}
+        data-fr-concealing-backdrop=${this.concealingBackdrop}
+        @close=${this._handleDialogClose}
+        @click=${this._handleBackdropClick}
+      >
+        <div class="fr-container fr-container--fluid fr-container-md">
+          <div class="fr-grid-row fr-grid-row--center">
+            <div class=${classMap(colClasses)}>
+              <div class="fr-modal__body">
+                <div class="fr-modal__header">
+                  <button class="fr-btn--close fr-btn" title="Fermer" @click=${this._handleClose}>Fermer</button>
                 </div>
-            </dialog>
-        `;
+                <div class="fr-modal__content">
+                  <${titleMarkup} id=${`${this.modalId}-title`} class="fr-modal__title">
+                    ${this.icon ? html`<span class="${iconName} fr-icon--lg" aria-hidden="true"></span>` : nothing}
+                    ${this.title}
+                  </${titleMarkup}>
+                  <slot></slot>
+                </div>
+                <div class="fr-modal__footer">
+                  <slot name="footer"></slot>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </dialog>
+    `;
   }
 }
 

@@ -16,8 +16,8 @@ export class DsfrQuote extends LitElement {
   @property({ type: String })
   author = "";
 
-  @property({ type: String })
-  source = "";
+  @property({ type: Array })
+  sources: string[] = [];
 
   @property({ type: String, attribute: "source-url" })
   sourceUrl = "";
@@ -28,52 +28,71 @@ export class DsfrQuote extends LitElement {
   @property({ type: String, attribute: "image-alt" })
   imageAlt = "";
 
-  @property({ type: Array })
-  details: string[] = [];
+  @property({ type: String })
+  size: "sm" | "md" | "lg" = "md";
+
+  @property({ type: String })
+  accent: string | null = null;
 
   static styles = [unsafeCSS(coreStyles), unsafeCSS(quoteStyles)];
 
   render() {
     const classes = {
       "fr-quote": true,
+      [`fr-quote--${this.accent}`]: !!this.accent,
+      "fr-quote--column": !!this.imageUrl,
     };
 
+    const sizeClasses = {
+      [`fr-text--${this.size}`]: this.size !== "md",
+    };
+
+    const renderedSources = this.sources.map((source, index) => {
+      // If it's the first source and we have a sourceUrl, we might want to wrap it in a cite
+      // but let's stick to the simple string array for now as per ejs
+      return html`<li>${source}</li>`;
+    });
+
+    if (this.sourceUrl) {
+      renderedSources.push(
+        html`<li><a target="_blank" rel="noopener external" href=${this.sourceUrl}>${this.sourceUrl}</a></li>`,
+      );
+    }
+
     return html`
-            <figure class=${classMap(classes)}>
-                <blockquote cite=${ifDefined(this.sourceUrl)}>
-                    <p>« ${this.text || html`<slot></slot>`} »</p>
-                </blockquote>
-                <figcaption>
-                    ${this.author ? html`<p class="fr-quote__author">${this.author}</p>` : nothing}
+      <figure class=${classMap(classes)}>
+        <blockquote cite=${ifDefined(this.sourceUrl || undefined)}>
+          <p class=${classMap(sizeClasses)}>
+            « ${this.text || html`<slot></slot>`} »
+          </p>
+        </blockquote>
+        <figcaption>
+          ${this.author ? html`<p class="fr-quote__author">${this.author}</p>` : nothing}
 
-                    <ul class="fr-quote__source">
-                        <li>
-                            <cite>${this.source}</cite>
-                        </li>
-                        ${this.details.map((detail) => html`<li>${detail}</li>`)}
-                        ${
-                          this.sourceUrl
-                            ? html`
-                             <li>
-                                <a target="_blank" href=${this.sourceUrl}>${this.sourceUrl}</a>
-                             </li>
-                        `
-                            : nothing
-                        }
-                    </ul>
+          ${
+            renderedSources.length > 1
+              ? html`
+              <ul class="fr-quote__source">
+                ${renderedSources}
+              </ul>
+            `
+              : renderedSources.length === 1
+                ? html`<div class="fr-quote__source">${renderedSources[0]}</div>`
+                : nothing
+          }
 
-                    ${
-                      this.imageUrl
-                        ? html`
-                        <div class="fr-quote__image">
-                            <img src=${this.imageUrl} class="fr-responsive-img" alt=${this.imageAlt} />
-                        </div>
-                    `
-                        : nothing
-                    }
-                </figcaption>
-            </figure>
-        `;
+          ${
+            this.imageUrl
+              ? html`
+              <div class="fr-quote__image">
+                <img src=${this.imageUrl} class="fr-responsive-img" alt=${this.imageAlt} />
+              </div>
+            `
+              : nothing
+          }
+        </figcaption>
+      </figure>
+    `;
   }
 }
 

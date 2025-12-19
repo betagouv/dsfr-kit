@@ -24,8 +24,11 @@ export class DsfrTable extends LitElement {
   @property({ type: Boolean, attribute: "no-scroll" })
   noScroll = false;
 
+  @property({ type: Boolean })
+  multiline = false;
+
   @property({ type: String })
-  density: "sm" | "md" | "lg" = "md";
+  size: "sm" | "md" | "lg" = "md";
 
   static styles = [unsafeCSS(coreStyles), unsafeCSS(tableStyles)];
 
@@ -36,26 +39,33 @@ export class DsfrTable extends LitElement {
       "fr-table--caption-bottom": this.bottomCaption,
       "fr-table--no-caption": this.noCaption,
       "fr-table--bordered": this.bordered,
-      "fr-table--sm": this.density === "sm",
-      "fr-table--lg": this.density === "lg",
+      "fr-table--multiline": this.multiline,
+      "fr-table--sm": this.size === "sm",
+      "fr-table--lg": this.size === "lg",
     };
 
     return html`
-            <div class=${classMap(tableClasses)}>
-                <div class="fr-table__wrapper">
-                    <div class="fr-table__container">
-                        <div class="fr-table__content">
-                            <table>
-                                <caption>
-                                    <slot name="caption">${this.caption}</slot>
-                                </caption>
-                                <slot></slot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+      <div class=${classMap(tableClasses)}>
+        <div class="fr-table__header">
+          <slot name="header"></slot>
+        </div>
+        <div class="fr-table__wrapper">
+          <div class="fr-table__container">
+            <div class="fr-table__content">
+              <table>
+                <caption>
+                  <slot name="caption">${this.caption}</slot>
+                </caption>
+                <slot></slot>
+              </table>
             </div>
-        `;
+          </div>
+        </div>
+        <div class="fr-table__footer">
+          <slot name="footer"></slot>
+        </div>
+      </div>
+    `;
   }
 }
 

@@ -21,22 +21,31 @@ export class DsfrInput extends LitElement {
   type = "text";
 
   @property({ type: String })
+  name = "";
+
+  @property({ type: String })
+  autocomplete = "";
+
+  @property({ type: Boolean, attribute: "dsfr-spellcheck" })
+  dsfrSpellcheck?: boolean;
+
+  @property({ type: String })
   placeholder = "";
 
   @property({ type: String })
   hint = "";
 
-  @property({ type: String, reflect: true })
-  state: "default" | "error" | "valid" = "default";
+  @property({ type: String })
+  error = "";
 
   @property({ type: String })
-  message = "";
+  valid = "";
 
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
   @property({ type: Boolean, reflect: true })
-  textarea = false;
+  required = false;
 
   @property({ type: String })
   icon = "";
@@ -77,83 +86,90 @@ export class DsfrInput extends LitElement {
   render() {
     const groupClasses = {
       "fr-input-group": true,
-      "fr-input-group--error": this.state === "error",
-      "fr-input-group--valid": this.state === "valid",
+      "fr-input-group--error": !!this.error,
+      "fr-input-group--valid": !!this.valid,
       "fr-input-group--disabled": this.disabled,
     };
 
     const inputClasses = {
       "fr-input": true,
-      "fr-input--error": this.state === "error",
-      "fr-input--valid": this.state === "valid",
+      "fr-input--error": !!this.error,
+      "fr-input--valid": !!this.valid,
     };
 
-    const messageClasses = {
-      "fr-message": true,
-      "fr-message--error": this.state === "error",
-      "fr-message--valid": this.state === "valid",
-    };
+    const describedBy: string[] = [];
+    if (this.hint) describedBy.push(`${this.inputId}-hint`);
+    if (this.error) describedBy.push(`${this.inputId}-error`);
+    if (this.valid) describedBy.push(`${this.inputId}-valid`);
 
-    const describedBy = [
-      this.hint ? `${this.inputId}-hint` : undefined,
-      this.message ? `${this.inputId}-message` : undefined,
-    ]
-      .filter(Boolean)
-      .join(" ");
+    const iconClass =
+      this.icon && !this.icon.startsWith("fr-icon-")
+        ? `fr-icon-${this.icon}`
+        : this.icon;
 
-    const inputElement = this.textarea
-      ? html`
-                <textarea
-                    class=${classMap(inputClasses)}
-                    id=${this.inputId}
-                    name=${this.inputId}
-                    ?disabled=${this.disabled}
-                    placeholder=${ifDefined(this.placeholder || undefined)}
-                    aria-describedby=${ifDefined(describedBy || undefined)}
-                    .value=${this.value}
-                    @change=${this._handleChange}
-                    @input=${this._handleInput}
-                ></textarea>
-              `
-      : html`
-                <input
-                    class=${classMap(inputClasses)}
-                    id=${this.inputId}
-                    name=${this.inputId}
-                    type=${this.type}
-                    ?disabled=${this.disabled}
-                    placeholder=${ifDefined(this.placeholder || undefined)}
-                    aria-describedby=${ifDefined(describedBy || undefined)}
-                    .value=${this.value}
-                    @change=${this._handleChange}
-                    @input=${this._handleInput}
-                />
-              `;
+    const inputElement =
+      this.type === "textarea"
+        ? html`
+        <textarea
+          class=${classMap(inputClasses)}
+          id=${this.inputId}
+          name=${this.name || this.inputId}
+          ?disabled=${this.disabled}
+          ?required=${this.required}
+          spellcheck=${ifDefined(this.dsfrSpellcheck !== undefined ? String(this.dsfrSpellcheck) : undefined)}
+          placeholder=${ifDefined(this.placeholder || undefined)}
+          autocomplete=${ifDefined(this.autocomplete || undefined)}
+          aria-describedby=${ifDefined(describedBy.length > 0 ? describedBy.join(" ") : undefined)}
+          .value=${this.value}
+          @change=${this._handleChange}
+          @input=${this._handleInput}
+        ></textarea>
+      `
+        : html`
+        <input
+          class=${classMap(inputClasses)}
+          id=${this.inputId}
+          name=${this.name || this.inputId}
+          type=${this.type}
+          ?disabled=${this.disabled}
+          ?required=${this.required}
+          spellcheck=${ifDefined(this.dsfrSpellcheck !== undefined ? String(this.dsfrSpellcheck) : undefined)}
+          placeholder=${ifDefined(this.placeholder || undefined)}
+          autocomplete=${ifDefined(this.autocomplete || undefined)}
+          aria-describedby=${ifDefined(describedBy.length > 0 ? describedBy.join(" ") : undefined)}
+          .value=${this.value}
+          @change=${this._handleChange}
+          @input=${this._handleInput}
+        />
+      `;
 
     const wrappedInput = this.icon
       ? html`
-                <div class="fr-input-wrap ${this.icon}">
-                    ${inputElement}
-                </div>
-              `
+        <div class="fr-input-wrap ${iconClass}">
+          ${inputElement}
+        </div>
+      `
       : inputElement;
 
     return html`
-            <div class=${classMap(groupClasses)}>
-                <label class="fr-label" for=${this.inputId}>
-                    ${this.label}
-                    ${this.hint ? html`<span class="fr-hint-text" id="${this.inputId}-hint">${this.hint}</span>` : nothing}
-                </label>
-                ${wrappedInput}
-                <div class="fr-messages-group" id="${this.inputId}-messages" aria-live="polite">
-                    ${
-                      this.message
-                        ? html`<p class=${classMap(messageClasses)} id="${this.inputId}-message">${this.message}</p>`
-                        : nothing
-                    }
-                </div>
-            </div>
-        `;
+      <div class=${classMap(groupClasses)}>
+        <label class="fr-label" for=${this.inputId}>
+          ${this.label}
+          ${this.hint ? html`<span class="fr-hint-text" id="${this.inputId}-hint">${this.hint}</span>` : nothing}
+        </label>
+        ${wrappedInput}
+        ${
+          this.error
+            ? html`<div class="fr-messages-group" id="${this.inputId}-error-messages" aria-live="polite"><p class="fr-message fr-message--error" id="${this.inputId}-error">${this.error}</p></div>`
+            : nothing
+        }
+        ${
+          this.valid
+            ? html`<div class="fr-messages-group" id="${this.inputId}-valid-messages" aria-live="polite"><p class="fr-message fr-message--valid" id="${this.inputId}-valid">${this.valid}</p></div>`
+            : nothing
+        }
+      </div>
+    `;
   }
 }
 

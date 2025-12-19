@@ -1,63 +1,67 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
-import "@dsfr-kit/web-components";
 import { html } from "lit";
+import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const paginationArgTypes = {
+  currentPage: {
+    control: "number",
+    description: "Index de la page courante",
+  },
+  totalPages: {
+    control: "number",
+    description: "Nombre total de pages",
+  },
+  ariaLabel: {
+    control: "text",
+    description: "Label aria du composant",
+  },
+};
+
+const paginationArgs = {
+  currentPage: 1,
+  totalPages: 10,
+  ariaLabel: "Pagination",
+};
+
+interface PaginationArgs {
+  currentPage: number;
+  totalPages: number;
+  ariaLabel: string;
+}
+
+const render = (args: PaginationArgs) => html`
+  <dsfr-pagination
+    .current-page=${args.currentPage}
+    .total-pages=${args.totalPages}
+    .ariaLabel=${args.ariaLabel}
+  >
+  </dsfr-pagination>
+`;
+
+const meta: Meta<PaginationArgs> = {
   title: "Web Components/Pagination",
   component: "dsfr-pagination",
   tags: ["autodocs"],
-  argTypes: {
-    currentPage: { control: "number" },
-    totalPages: { control: "number" },
-  },
-  args: {
-    currentPage: 1,
-    totalPages: 10,
-  },
-  parameters: {
-    actions: {
-      handles: ["dsfr-page-change"],
-    },
-  },
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: paginationArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: paginationArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<PaginationArgs>;
 
-const Template: Story = {
-  render: (args) => html`
-        <dsfr-pagination
-            current-page=${args.currentPage}
-            total-pages=${args.totalPages}
-            @dsfr-page-change=${(e: CustomEvent) => console.log("Page changed:", e.detail.page)}
-        ></dsfr-pagination>
-    `,
+export const PaginationStory: Story = {
+  name: "PaginationStory",
+  args: {},
 };
 
-export const Default: Story = {
-  ...Template,
-};
-
-export const ManyPages: Story = {
-  ...Template,
-  args: {
-    currentPage: 50,
-    totalPages: 100,
-  },
-};
-
-export const FirstPage: Story = {
-  ...Template,
-  args: {
-    currentPage: 1,
-    totalPages: 10,
-  },
-};
-
-export const LastPage: Story = {
-  ...Template,
+export const LastPageStory: Story = {
+  name: "LastPageStory",
+  tags: ["autodocs"],
   args: {
     currentPage: 10,
-    totalPages: 10,
   },
 };

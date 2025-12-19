@@ -3,50 +3,24 @@ import { html, nothing } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import "@dsfr-kit/web-components";
 
-const buttonCloseArgTypes = {
-  buttonCloseLabel: {
-    if: { arg: "dismissible", eq: true },
-    control: "text",
-    description: "Libellé du bouton de fermeture",
-    table: {
-      category: "button close",
-      type: { summary: "string" },
-    },
-  },
-  buttonCloseOnClick: {
-    if: { arg: "dismissible", eq: true },
-    control: "text",
-    description:
-      "Code JavaScript à exécuter lors du clic sur le bouton de fermeture",
-    table: {
-      category: "button close",
-      type: { summary: "string" },
-    },
-  },
-};
-
 const alertArgTypes = {
   hasTitle: {
     control: "boolean",
     description: "L'alerte a un titre (obligatoire en taille md)",
-    table: { type: { summary: "boolean" } },
   },
   title: {
     if: { arg: "hasTitle", eq: true },
     control: "text",
     description: "Titre de l'alerte",
-    table: { type: { summary: "string" } },
   },
   hasDescription: {
     control: "boolean",
     description: "L'alerte a une description (obligatoire en taille sm)",
-    table: { type: { summary: "boolean" } },
   },
   text: {
     if: { arg: "hasDescription", eq: true },
     control: "text",
     description: "Description de l'alerte",
-    table: { type: { summary: "string" } },
   },
   type: {
     control: {
@@ -59,39 +33,65 @@ const alertArgTypes = {
         warning: "Attention",
       },
     },
-    description: "Type d'alerte",
+    description:
+      "Type d'alerte<br>Valeurs :<br>- Défaut : Alerte sans couleur<br>- Succès : Alerte verte pour indiquer une action ou une tâche terminée avec succès.<br>- Erreur : Alerte rouge à utiliser quand il y a plusieurs erreurs dans un formulaire, ou des erreurs bloquantes à remonter pour l’utilisateur.<br>- Information : Alerte bleue à utiliser pour mettre en exergue des informations importantes.<br>- Attention : Alerte orange à utiliser à utiliser pour mettre en exergue des risques ou points d’attention importants.",
     options: ["default", "success", "error", "info", "warning"],
-    table: { type: { summary: "string" } },
   },
   size: {
     control: { type: "select" },
     description: "Taille de l'alerte",
     options: ["sm", "md"],
-    table: { type: { summary: "string" } },
   },
   id: {
     control: "text",
     description: "Attribut 'id' de l'alerte",
     table: {
       category: "attributes",
-      type: { summary: "string" },
     },
   },
   dismissible: {
     control: "boolean",
     description: "L'alerte est refermable",
-    table: { type: { summary: "boolean" } },
   },
   icon: {
     if: { arg: "type", eq: "default" },
     control: "text",
     description: "Icône personnalisée sur l'alerte",
-    table: { type: { summary: "string" } },
   },
-  ...buttonCloseArgTypes,
-} as const;
+  buttonCloseLabel: {
+    if: { arg: "dismissible", eq: true },
+    control: "text",
+    description: "Libellé du bouton de fermeture",
+    table: {
+      category: "button close",
+    },
+  },
+  buttonCloseOnClick: {
+    if: { arg: "dismissible", eq: true },
+    control: "text",
+    description:
+      "Code JavaScript à exécuter lors du clic sur le bouton de fermeture",
+    table: {
+      category: "button close",
+    },
+  },
+};
 
-const alertArgs = {
+interface AlertArgs {
+  hasTitle: boolean;
+  title: string;
+  hasDescription: boolean;
+  text: string;
+  type: "default" | "success" | "error" | "info" | "warning";
+  size: "sm" | "md";
+  id: string;
+  icon: string;
+  dismissible: boolean;
+  buttonCloseLabel: string;
+  buttonCloseOnClick: string;
+}
+
+const alertArgs: AlertArgs = {
   hasTitle: true,
   hasDescription: true,
   title: "Lorem ipsum dolor",
@@ -106,31 +106,14 @@ const alertArgs = {
     "const alert = this.parentNode; alert.parentNode.removeChild(alert)",
 };
 
-interface AlertArgs {
-  hasTitle: boolean;
-  hasDescription: boolean;
-  title: string;
-  text: string;
-  type: string;
-  size: "sm" | "md";
-  id: string;
-  icon: string;
-  dismissible: boolean;
-  buttonCloseLabel: string;
-  buttonCloseOnClick: string;
-}
-
-const render = (inputArgs: any) => {
-  const args = inputArgs as AlertArgs;
-  // Map 'default' type to 'info' or handle it if component supports it.
-  const type = args.type === "default" ? "info" : args.type;
-
+const render = (args: AlertArgs) => {
   return html`
     <dsfr-alert
       .title=${args.hasTitle ? args.title : ""}
-      .type=${type}
+      .type=${args.type}
       .size=${args.size}
       ?closeable=${args.dismissible}
+      .icon=${args.type === "default" ? args.icon : null}
       id=${args.id || nothing}
     >
       ${args.hasDescription ? unsafeHTML(args.text) : nothing}
@@ -138,7 +121,6 @@ const render = (inputArgs: any) => {
   `;
 };
 
-// Helper to render multiple alerts for stories that show a list
 const renders = (argsArray: Partial<AlertArgs>[]) =>
   html`
   <div style="display: flex; flex-direction: column; gap: 2rem;">
@@ -146,25 +128,29 @@ const renders = (argsArray: Partial<AlertArgs>[]) =>
   </div>
 `;
 
-const meta: Meta = {
+const meta: Meta<AlertArgs> = {
   title: "Web Components/Alert",
   component: "dsfr-alert",
   tags: ["autodocs"],
-  argTypes: alertArgTypes as any, // Cast to any to avoid strict Storybook type incompatibility with custom DSFR argTypes structure if needed, or refine types.
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: alertArgTypes as any,
   args: alertArgs,
-  render: render,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<AlertArgs>;
 
 export const AlertStory: Story = {
+  name: "AlertStory",
   tags: ["!autodocs"],
   args: {},
 };
 
 export const TitleStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "TitleStory",
+  tags: ["autodocs"],
   args: {
     hasTitle: true,
     title: "Titre de l'alerte contenant l'intitulé de son type",
@@ -173,7 +159,8 @@ export const TitleStory: Story = {
 };
 
 export const DescriptionStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "DescriptionStory",
+  tags: ["autodocs"],
   args: {
     hasTitle: true,
     title: "Titre de l'alerte contenant l'intitulé de son type",
@@ -183,7 +170,8 @@ export const DescriptionStory: Story = {
 };
 
 export const SuccessStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "SuccessStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -196,7 +184,8 @@ export const SuccessStory: Story = {
 };
 
 export const ErrorStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "ErrorStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -209,7 +198,8 @@ export const ErrorStory: Story = {
 };
 
 export const InformationStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "InformationStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -222,7 +212,8 @@ export const InformationStory: Story = {
 };
 
 export const WarningStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "WarningStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -235,7 +226,8 @@ export const WarningStory: Story = {
 };
 
 export const SizeSmStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "SizeSmStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -270,7 +262,8 @@ export const SizeSmStory: Story = {
 };
 
 export const SizeMdStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "SizeMdStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -297,7 +290,8 @@ export const SizeMdStory: Story = {
 };
 
 export const DismissibleStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "DismissibleStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -311,7 +305,8 @@ export const DismissibleStory: Story = {
 };
 
 export const DismissibleNoJsStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "DismissibleNoJsStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {
@@ -319,13 +314,14 @@ export const DismissibleNoJsStory: Story = {
         hasTitle: true,
         text: "Cliquer sur la croix pour fermer l'alerte",
         dismissible: true,
-        buttonCloseOnClick: "", // Use empty string instead of null for string type
+        buttonCloseOnClick: "",
       },
     ]),
 };
 
 export const IconCustomStory: Story = {
-  tags: ["autodocs", "!dev"],
+  name: "IconCustomStory",
+  tags: ["autodocs"],
   render: () =>
     renders([
       {

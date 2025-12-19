@@ -19,7 +19,7 @@ export class DsfrLink extends LitElement {
   href = "";
 
   @property({ type: String })
-  target = "_self";
+  target: "_self" | "_blank" = "_self";
 
   @property({ type: String })
   size: "sm" | "md" | "lg" = "md";
@@ -27,8 +27,8 @@ export class DsfrLink extends LitElement {
   @property({ type: String })
   icon = "";
 
-  @property({ type: Boolean })
-  iconRight = false; // If true, icon is on the right
+  @property({ type: String, attribute: "icon-place" })
+  iconPlace: "left" | "right" | undefined = undefined;
 
   @property({ type: Boolean })
   disabled = false;
@@ -37,10 +37,13 @@ export class DsfrLink extends LitElement {
   download = false;
 
   @property({ type: String })
-  downloadDetail = ""; // e.g., "PDF - 400ko"
+  detail = "";
 
   @property({ type: String })
-  downloadLabel = "Télécharger"; // The prefix text for accessible download links
+  markup: "a" | "button" = "a";
+
+  @property({ type: String })
+  assess: string | boolean | undefined = undefined;
 
   static styles = [
     unsafeCSS(coreStyles),
@@ -50,58 +53,50 @@ export class DsfrLink extends LitElement {
   ];
 
   render() {
-    // Classes
     const classes = {
       "fr-link": true,
       [`fr-link--${this.size}`]: this.size !== "md",
       "fr-link--download": this.download,
-      // Icon handling
-      [`${this.icon}`]: !!this.icon && !this.download, // Icons on utility links
-      "fr-link--icon-left": !!this.icon && !this.iconRight && !this.download,
-      "fr-link--icon-right": !!this.icon && this.iconRight && !this.download,
+      [`fr-icon-${this.icon}`]: !!this.icon,
+      "fr-link--icon-left": !!this.icon && this.iconPlace === "left",
+      "fr-link--icon-right": !!this.icon && this.iconPlace === "right",
     };
 
-    // Attributes for disabled state
     const hrefValue = this.disabled ? undefined : this.href;
-    const roleValue = this.disabled ? "link" : undefined;
-    const ariaDisabled = this.disabled ? "true" : undefined;
-
-    // External link attributes
     const isExternal = this.target === "_blank";
     const relValue = isExternal ? "noopener external" : undefined;
-    // Automatically add title for external links if not provided?
-    // For simplicity, we assume label is enough or user adds title via standard attr?
-    // Lit prop reflection handles title if user sets it on host, but we need it on <a>.
-    // We will leave title management to the consumer for now to avoid complexity,
-    // OR we could compute it: `this.label + " - nouvelle fenêtre"`
 
-    if (this.download) {
+    const labelContent = html`
+      ${this.label}
+      ${this.detail ? html`<span class="fr-link__detail">${this.detail}</span>` : nothing}
+    `;
+
+    if (this.markup === "button") {
       return html`
-                <a
-                    href=${ifDefined(hrefValue)}
-                    download
-                    class=${classMap(classes)}
-                    ?aria-disabled=${this.disabled}
-                    role=${ifDefined(roleValue)}
-                >
-                    ${this.downloadLabel} ${this.label}
-                    ${this.downloadDetail ? html`<span class="fr-link__detail">${this.downloadDetail}</span>` : nothing}
-                </a>
-            `;
+        <button
+          class=${classMap(classes)}
+          ?disabled=${this.disabled}
+          title=${this.label}
+        >
+          ${labelContent}
+        </button>
+      `;
     }
 
     return html`
-            <a
-                href=${ifDefined(hrefValue)}
-                target=${this.target}
-                rel=${ifDefined(relValue)}
-                class=${classMap(classes)}
-                aria-disabled=${ifDefined(ariaDisabled)}
-                role=${ifDefined(roleValue)}
-            >
-                ${this.label}
-            </a>
-        `;
+      <a
+        href=${ifDefined(hrefValue)}
+        target=${this.target}
+        rel=${ifDefined(relValue)}
+        class=${classMap(classes)}
+        ?download=${this.download}
+        aria-disabled=${ifDefined(this.disabled ? "true" : undefined)}
+        role=${ifDefined(this.disabled ? "link" : undefined)}
+        data-fr-assess-file=${ifDefined(typeof this.assess === "string" ? this.assess : this.assess ? "" : undefined)}
+      >
+        ${labelContent}
+      </a>
+    `;
   }
 }
 

@@ -1,42 +1,63 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
-import "@dsfr-kit/web-components";
 import { html } from "lit";
+import "@dsfr-kit/web-components";
 
-const meta: Meta = {
+const skiplinkArgTypes = {
+  links: {
+    control: "object",
+    description: "Tableau de liens d'évitement",
+  },
+};
+
+const skiplinkArgs = {
+  links: [
+    { label: "Contenu", href: "#content" },
+    { label: "Menu", href: "#header-navigation" },
+    { label: "Recherche", href: "#header-search" },
+    { label: "Pied de page", href: "#footer" },
+  ],
+};
+
+interface SkiplinkArgs {
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  links: any[];
+}
+
+const render = (args: SkiplinkArgs) => html`
+  <dsfr-skiplink .links=${args.links}></dsfr-skiplink>
+  <div style="padding: 2rem;">
+    <p>Appuyez sur la touche <strong>Tab</strong> pour faire apparaître les liens d'évitement.</p>
+    <div id="header-navigation" style="margin-top: 50vh;">Navigation</div>
+    <div id="header-search" style="margin-top: 50vh;">Recherche</div>
+    <div id="content" style="margin-top: 50vh;">Contenu</div>
+    <div id="footer" style="margin-top: 50vh;">Pied de page</div>
+  </div>
+`;
+
+const meta: Meta<SkiplinkArgs> = {
   title: "Web Components/Skiplink",
   component: "dsfr-skiplink",
   tags: ["autodocs"],
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  argTypes: skiplinkArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  args: skiplinkArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+  render: render as any,
   parameters: {
     docs: {
       description: {
-        component: "Press Tab key to reveal the skiplinks.",
+        component:
+          "Appuyez sur la touche tab pour faire apparaitre les liens d'évitement.",
       },
     },
   },
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<SkiplinkArgs>;
 
-export const Default: Story = {
-  render: () => html`
-        <dsfr-skiplink>
-            <dsfr-skiplink-item href="#content" text="Contenu"></dsfr-skiplink-item>
-            <dsfr-skiplink-item href="#header" text="Menu"></dsfr-skiplink-item>
-            <dsfr-skiplink-item href="#footer" text="Pied de page"></dsfr-skiplink-item>
-        </dsfr-skiplink>
-
-        <div id="header" style="margin-top: 2rem; padding: 1rem; background: #eee;">
-            Header (Anchor target)
-        </div>
-
-        <main id="content" style="margin-top: 2rem; padding: 1rem; background: #ddd; height: 500px;">
-            <h1>Main Content</h1>
-            <p>Press Tab to see the skiplinks at the top.</p>
-        </main>
-
-        <div id="footer" style="margin-top: 2rem; padding: 1rem; background: #ccc;">
-            Footer (Anchor target)
-        </div>
-    `,
+export const SkiplinkStory: Story = {
+  name: "SkiplinkStory",
+  args: {},
 };

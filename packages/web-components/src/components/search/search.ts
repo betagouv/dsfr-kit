@@ -6,6 +6,7 @@ import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 
 /**
  * @summary DSFR Search Bar component
@@ -13,10 +14,10 @@ import { classMap } from "lit/directives/class-map.js";
 @customElement("dsfr-search")
 export class DsfrSearch extends LitElement {
   @property({ type: String })
-  label = "Rechercher";
+  inputLabel = "Rechercher";
 
   @property({ type: String })
-  placeholder = "Rechercher";
+  inputPlaceholder = "Rechercher";
 
   @property({ type: String })
   value = "";
@@ -24,11 +25,14 @@ export class DsfrSearch extends LitElement {
   @property({ type: String })
   buttonLabel = "Rechercher";
 
-  @property({ type: Boolean, reflect: true })
-  large = false;
+  @property({ type: String })
+  buttonTitle = "Rechercher";
 
   @property({ type: String })
-  searchId = `search-${Math.random().toString(36).substring(2, 9)}`;
+  size: "md" | "lg" = "md";
+
+  @property({ type: String })
+  inputId = `search-input-${Math.random().toString(36).substring(2, 9)}`;
 
   static styles = [
     unsafeCSS(coreStyles),
@@ -62,32 +66,28 @@ export class DsfrSearch extends LitElement {
   render() {
     const barClasses = {
       "fr-search-bar": true,
-      "fr-search-bar--lg": this.large,
+      "fr-search-bar--lg": this.size === "lg",
     };
 
     return html`
-            <div class=${classMap(barClasses)} role="search">
-                <label class="fr-label" for=${this.searchId}>
-                    ${this.label}
-                </label>
-                <input
-                    class="fr-input"
-                    id=${this.searchId}
-                    type="search"
-                    placeholder=${this.placeholder}
-                    .value=${this.value}
-                    @input=${this._handleChange}
-                    @keydown=${this._handleKeyDown}
-                >
-                <button
-                    class="fr-btn"
-                    title=${this.buttonLabel}
-                    @click=${this._handleSearch}
-                >
-                    ${this.buttonLabel}
-                </button>
-            </div>
-        `;
+      <div class=${classMap(barClasses)} id=${ifDefined(this.id)} role="search">
+        <label class="fr-label" for=${this.inputId}>
+          ${this.inputLabel}
+        </label>
+        <input
+          class="fr-input"
+          id=${this.inputId}
+          type="search"
+          placeholder=${this.inputPlaceholder}
+          .value=${this.value}
+          @input=${this._handleChange}
+          @keydown=${this._handleKeyDown}
+        />
+        <button class="fr-btn" title=${this.buttonTitle} @click=${this._handleSearch}>
+          ${this.buttonLabel}
+        </button>
+      </div>
+    `;
   }
 }
 
