@@ -59,13 +59,13 @@ export default meta;
 type Story = StoryObj<SummaryArgs>;
 
 export const SummaryStory: Story = {
-  name: "Summary",
+  name: "SummaryStory",
   args: {},
 };
 
-export const WithHierarchy: Story = {
-  name: "With Hierarchy",
-  tags: ["autodocs", "!dev"],
+export const HierarchyStory: Story = {
+  name: "HierarchyStory",
+  tags: ["autodocs"],
   args: {
     list: [
       {
