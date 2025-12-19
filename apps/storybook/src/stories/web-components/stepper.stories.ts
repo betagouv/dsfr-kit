@@ -68,6 +68,6 @@ export default meta;
 type Story = StoryObj<StepperArgs>;
 
 export const StepperStory: Story = {
-  name: "Stepper",
+  name: "StepperStory",
   args: {},
 };
