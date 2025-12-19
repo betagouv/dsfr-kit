@@ -54,22 +54,14 @@ export default meta;
 type Story = StoryObj<PaginationArgs>;
 
 export const PaginationStory: Story = {
-  name: "Pagination",
+  name: "PaginationStory",
   args: {},
 };
 
 export const LastPageStory: Story = {
-  name: "Last Page",
-  tags: ["autodocs", "!dev"],
+  name: "LastPageStory",
+  tags: ["autodocs"],
   args: {
     currentPage: 10,
-  },
-};
-
-export const MiddlePageStory: Story = {
-  name: "Middle Page",
-  tags: ["autodocs", "!dev"],
-  args: {
-    currentPage: 5,
   },
 };
