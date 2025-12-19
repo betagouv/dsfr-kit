@@ -12,3 +12,15 @@ tasks:
     command: "storybook build"
     outputs:
       - "storybook-static"
+
+  vrt:
+    command: "pnpx playwright test --config vrt.config.ts"
+    inputs:
+      - "tests/**/*"
+      - "vrt.config.ts"
+
+  vrt-update:
+    command: "pnpx playwright test --config vrt.config.ts --update-snapshots"
+    inputs:
+      - "tests/**/*"
+      - "vrt.config.ts"
