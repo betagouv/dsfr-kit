@@ -126,19 +126,19 @@ export default meta;
 type Story = StoryObj<TileArgs>;
 
 export const TileStory: Story = {
-  name: "Tile",
+  name: "TileStory",
   args: {},
 };
 
 export const DefaultStory: Story = {
-  name: "Default",
-  tags: ["autodocs", "!dev"],
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {},
 };
 
 export const SizeSmStory: Story = {
-  name: "Size SM",
-  tags: ["autodocs", "!dev"],
+  name: "SizeSmStory",
+  tags: ["autodocs"],
   args: {
     size: "sm",
     detail: "Détail (optionnel)",
@@ -146,8 +146,8 @@ export const SizeSmStory: Story = {
 };
 
 export const HorizontalStory: Story = {
-  name: "Horizontal",
-  tags: ["autodocs", "!dev"],
+  name: "HorizontalStory",
+  tags: ["autodocs"],
   args: {
     horizontal: true,
     detail: "Détail (optionnel)",
@@ -155,8 +155,8 @@ export const HorizontalStory: Story = {
 };
 
 export const HorizontalVerticalFromMdStory: Story = {
-  name: "Horizontal Vertical From Md",
-  tags: ["autodocs", "!dev"],
+  name: "HorizontalVerticalFromMdStory",
+  tags: ["autodocs"],
   args: {
     horizontal: true,
     verticalBreakpoint: "md",
@@ -165,8 +165,8 @@ export const HorizontalVerticalFromMdStory: Story = {
 };
 
 export const DownloadStory: Story = {
-  name: "Download",
-  tags: ["autodocs", "!dev"],
+  name: "DownloadStory",
+  tags: ["autodocs"],
   args: {
     title: "Télécharger le document XX",
     download: true,
@@ -175,9 +175,84 @@ export const DownloadStory: Story = {
 };
 
 export const NoLinkStory: Story = {
-  name: "No Link",
-  tags: ["autodocs", "!dev"],
+  name: "NoLinkStory",
+  tags: ["autodocs"],
   args: {
+    actionMarkup: "false",
+    detail: "Détail (optionnel)",
+  },
+};
+
+export const WithTagStory: Story = {
+  name: "WithTagStory",
+  tags: ["autodocs"],
+  render: (args) => html`
+    <dsfr-tile
+      .title=${args.title}
+      .description=${args.description}
+      .url=${args.url}
+      .imageUrl=${args.imageUrl}
+    >
+      <div class="fr-tile__start">
+        <dsfr-tag label="Label tag"></dsfr-tag>
+      </div>
+    </dsfr-tile>
+  `,
+  args: {
+    // biome-ignore lint/suspicious/noExplicitAny: generic args
+    ...(tileArgs as any),
+    title: "Tuile avec Tag",
+  },
+};
+
+export const WithBadgeStory: Story = {
+  name: "WithBadgeStory",
+  tags: ["autodocs"],
+  render: (args) => html`
+    <dsfr-tile
+      .title=${args.title}
+      .description=${args.description}
+      .url=${args.url}
+      .imageUrl=${args.imageUrl}
+    >
+        <div class="fr-tile__start">
+            <dsfr-badge label="Label badge" type="info"></dsfr-badge>
+        </div>
+    </dsfr-tile>
+  `,
+  args: {
+    // biome-ignore lint/suspicious/noExplicitAny: generic args
+    ...(tileArgs as any),
+    title: "Tuile avec Badge",
+  },
+};
+
+export const SizeSmHorizontalStory: Story = {
+  name: "SizeSmHorizontalStory",
+  tags: ["autodocs"],
+  args: {
+    size: "sm",
+    horizontal: true,
+    detail: "Détail (optionnel)",
+  },
+};
+
+export const DownloadButtonStory: Story = {
+  name: "DownloadButtonStory",
+  tags: ["autodocs"],
+  args: {
+    title: "Télécharger le document XX",
+    download: true,
+    actionMarkup: "button",
+    detail: "PDF - 2Mo",
+  },
+};
+
+export const HorizontalNoLinkStory: Story = {
+  name: "HorizontalNoLinkStory",
+  tags: ["autodocs"],
+  args: {
+    horizontal: true,
     actionMarkup: "false",
     detail: "Détail (optionnel)",
   },

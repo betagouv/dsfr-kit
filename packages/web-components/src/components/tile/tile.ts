@@ -90,6 +90,7 @@ export class DsfrTile extends LitElement {
                 ? html`<p class="fr-tile__detail">${this.startDetail ? html`${this.startDetail}&nbsp;` : nothing}${this.detail}${this.endDetail ? html`&nbsp;${this.endDetail}` : nothing}</p>`
                 : nothing
             }
+            <slot></slot>
           </div>
         </div>
         ${
