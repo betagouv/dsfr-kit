@@ -95,52 +95,100 @@ export default meta;
 type Story = StoryObj<ToggleArgs>;
 
 export const ToggleStory: Story = {
-  name: "Toggle",
+  name: "ToggleStory",
   args: {},
 };
 
 export const DefaultStory: Story = {
-  name: "Default",
-  tags: ["autodocs", "!dev"],
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {},
 };
 
 export const DescriptionStory: Story = {
-  name: "Description",
-  tags: ["autodocs", "!dev"],
+  name: "DescriptionStory",
+  tags: ["autodocs"],
   args: {
     hint: "Texte additionnel de l’interrupteur",
   },
 };
 
 export const StateStory: Story = {
-  name: "State",
-  tags: ["autodocs", "!dev"],
+  name: "StateStory",
+  tags: ["autodocs"],
   args: {
     checked: true,
   },
 };
 
 export const ErrorStory: Story = {
-  name: "Error",
-  tags: ["autodocs", "!dev"],
+  name: "ErrorStory",
+  tags: ["autodocs"],
   args: {
     error: "Message d'erreur",
   },
 };
 
 export const ValidStory: Story = {
-  name: "Valid",
-  tags: ["autodocs", "!dev"],
+  name: "ValidStory",
+  tags: ["autodocs"],
   args: {
     valid: "Message de validation",
   },
 };
 
 export const DisabledStory: Story = {
-  name: "Disabled",
-  tags: ["autodocs", "!dev"],
+  name: "DisabledStory",
+  tags: ["autodocs"],
   args: {
     disabled: true,
   },
+};
+
+export const ToggleGroupStory: Story = {
+  name: "ToggleGroupStory",
+  tags: ["autodocs"],
+  render: () => html`
+    <ul class="fr-toggle__list">
+        <li><dsfr-toggle label="Interrupteur 1"></dsfr-toggle></li>
+        <li><dsfr-toggle label="Interrupteur 2"></dsfr-toggle></li>
+        <li><dsfr-toggle label="Interrupteur 3"></dsfr-toggle></li>
+    </ul>
+  `,
+};
+
+export const DefaultGroupStory: Story = {
+  name: "DefaultGroupStory",
+  tags: ["autodocs"],
+  render: () => html`
+    <ul class="fr-toggle__list">
+        <li><dsfr-toggle label="Interrupteur 1" hint="Description 1"></dsfr-toggle></li>
+        <li><dsfr-toggle label="Interrupteur 2" hint="Description 2"></dsfr-toggle></li>
+        <li><dsfr-toggle label="Interrupteur 3" hint="Description 3"></dsfr-toggle></li>
+    </ul>
+  `,
+};
+
+export const StateGroupStory: Story = {
+  name: "StateGroupStory",
+  tags: ["autodocs"],
+  render: () => html`
+    <ul class="fr-toggle__list">
+        <li><dsfr-toggle label="Interrupteur 1" checked></dsfr-toggle></li>
+        <li><dsfr-toggle label="Interrupteur 2" checked hint="Description 2"></dsfr-toggle></li>
+        <li><dsfr-toggle label="Interrupteur 3"></dsfr-toggle></li>
+    </ul>
+  `,
+};
+
+export const BorderGroupStory: Story = {
+  name: "BorderGroupStory",
+  tags: ["autodocs"],
+  render: () => html`
+    <ul class="fr-toggle__list">
+        <li><dsfr-toggle label="Interrupteur 1" border></dsfr-toggle></li>
+        <li><dsfr-toggle label="Interrupteur 2" border></dsfr-toggle></li>
+        <li><dsfr-toggle label="Interrupteur 3" border></dsfr-toggle></li>
+    </ul>
+  `,
 };
