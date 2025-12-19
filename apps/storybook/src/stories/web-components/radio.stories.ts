@@ -117,15 +117,6 @@ export default meta;
 type Story = StoryObj<RadioArgs>;
 
 export const RadioStory: Story = {
-  name: "Radio",
+  name: "RadioStory",
   args: {},
-};
-
-export const RichStory: Story = {
-  name: "Rich",
-  args: {
-    label: "Option riche",
-    rich: true,
-    hint: "Description de l'option riche",
-  },
 };
