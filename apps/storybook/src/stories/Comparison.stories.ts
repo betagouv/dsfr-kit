@@ -5,6 +5,7 @@ import { renderComparison } from "./comparison-utils";
 // Import native stories (wrappers already exist but we might want the originals for pure comparison)
 // For demonstration, let's try to compare Accordion
 import { AccordionStory as WCAccordion } from "./web-components/accordion.stories";
+import "@dsfr-kit/web-components";
 
 const meta: Meta = {
   title: "Comparison/Accordion",
@@ -15,40 +16,29 @@ export default meta;
 
 export const AccordionComparison: StoryObj = {
   render: (args) => {
-    // This is a bit tricky because native stories in DSFR often use a template function
-    // and WC stories use a render function with Lit.
+    // Manually construct the Native DSFR HTML to ensure it renders correctly without EJS dependencies
+    const nativeOutput = `
+      <div class="fr-accordion">
+          <h3 class="fr-accordion__title">
+              <button class="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-106">
+                  Intitulé de l'accordéon
+              </button>
+          </h3>
+          <div class="fr-collapse" id="accordion-106">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          </div>
+      </div>
+    `;
 
-    // For now, let's assume we can call the render functions.
-    // Native stories in the wrapper re-export the original story object.
-
-    // Note: This implementation might need refinement based on how the native DSFR
-    // templates are actually exposed/rendered in the storybook environment.
-
-    const nativeOutput = "<!-- Native DSFR content would go here -->"; // Placeholder for complexity
-    const wcOutput = WCAccordion.render
-      ? // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex and require any for custom render context
-        (WCAccordion.render as any)(args, {
-          // Storybook's render function expects a context object as the second argument.
-          // We provide a minimal one here.
-          id: "wc-accordion-story",
-          name: "WC Accordion Story",
-          title: "WC Accordion Story",
-          argTypes: {},
-          globals: {},
-          parameters: {},
-          viewMode: "story",
-          originalStoryFn: () => {},
-          loaded: {},
-          abort: false,
-          canvasElement: document.createElement("div"),
-          storyContext: {},
-          // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-        } as any)
-      : html``;
+    // Manually render the Web Component using the tag
+    // We Map args to props if needed, but for this demo we'll use a standard example
+    const wcOutput = html`
+      <dsfr-accordion label="Intitulé de l'accordéon">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      </dsfr-accordion>
+    `;
 
     return renderComparison(nativeOutput, wcOutput);
   },
-  args: {
-    ...(WCAccordion.args || {}),
-  },
+  args: {},
 };
