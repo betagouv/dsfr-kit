@@ -15,12 +15,24 @@ tasks:
 
   vrt:
     command: "pnpm exec playwright test --config vrt.config.ts"
+    env:
+      VRT_MODE: "compare"
+    inputs:
+      - "tests/**/*"
+      - "vrt.config.ts"
+
+  vrt-baseline:
+    command: "pnpm exec playwright test --config vrt.config.ts --update-snapshots"
+    env:
+      VRT_MODE: "baseline"
     inputs:
       - "tests/**/*"
       - "vrt.config.ts"
 
   vrt-update:
     command: "pnpm exec playwright test --config vrt.config.ts --update-snapshots"
+    env:
+      VRT_MODE: "compare"
     inputs:
       - "tests/**/*"
       - "vrt.config.ts"

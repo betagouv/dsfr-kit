@@ -34,30 +34,29 @@ const commonComponents = [
 ];
 
 test.describe("DSFR vs Web Components Comparison", () => {
+  const mode = process.env.VRT_MODE || "compare"; // 'baseline' (DSFR) or 'compare' (WC)
+
   for (const component of commonComponents) {
-    test(`Compare ${component}`, async ({ page }) => {
-      // DSFR Version
-      const dsfrUrl = `/iframe.html?id=dsfr-${component}--${component}-story&viewMode=story`;
-      await page.goto(dsfrUrl);
-      await page.waitForSelector("body");
-      // Wait for any potential animations
-      await page.waitForTimeout(500);
+    test(`Compare ${component} [mode: ${mode}]`, async ({ page }) => {
+      let url: string;
 
-      // Web Component Version
-      const wcUrl = `/iframe.html?id=web-components-${component}--${component}-story&viewMode=story`;
-      await page.goto(wcUrl);
-      await page.waitForSelector("body");
-      // Wait for any potential animations
-      await page.waitForTimeout(500);
+      if (mode === "baseline") {
+        // Native DSFR URL
+        url = `/iframe.html?id=dsfr-${component}--${component}-story&viewMode=story`;
+      } else {
+        // Web Component URL
+        url = `/iframe.html?id=web-components-${component}--${component}-story&viewMode=story`;
+      }
 
-      // Compare WC screenshot with DSFR screenshot reference
-      expect(await page.screenshot()).toMatchSnapshot(
+      await page.goto(url);
+      await page.waitForSelector("body");
+      // Wait for any potential animations or fonts
+      await page.waitForTimeout(1000);
+
+      // Take screenshot and compare/save to the same snapshot name
+      // This allows the 'baseline' run to write the file, and the 'compare' run to read it.
+      expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(
         `${component}-comparison.png`,
-        {
-          // We use the DSFR version as the reference implicitly by naming it the same or using a manual diff logic
-          // But Playwright's toMatchSnapshot compares against a saved baseline.
-          // For a true "compare A to B in one run", we might need a custom matcher or just take both and save them.
-        },
       );
     });
   }
