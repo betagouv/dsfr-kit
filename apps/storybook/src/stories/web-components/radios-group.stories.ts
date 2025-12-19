@@ -3,16 +3,8 @@ import { html, nothing } from "lit";
 import "@dsfr-kit/web-components";
 
 // Helper interface for rendering
-interface RadiosGroupArgs {
-  legend: string;
-  hintGroup: string;
-  status: "default" | "error" | "valid";
-  message: string;
-  inline: boolean;
-  size: "md" | "sm";
-  rich: boolean;
-  hasPictogram: boolean;
-}
+// Helper interface for rendering, mimicking what might pass to a future group component or just for story args
+// biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
 
 const defaultItems = [
   { label: "Label radio 1", value: "1" },
@@ -43,7 +35,7 @@ const richItems = [
 ];
 
 const renderGroup = (args: any, items: any[]) => {
-  conststatusClass =
+  const statusClass =
     args.status !== "default" ? `fr-fieldset--${args.status}` : "";
   const inlineClass = args.inline ? "fr-fieldset--inline" : "";
 

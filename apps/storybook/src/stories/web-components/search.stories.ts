@@ -68,12 +68,19 @@ export default meta;
 type Story = StoryObj<SearchArgs>;
 
 export const SearchStory: Story = {
-  name: "Search Bar",
+  name: "SearchStory",
+  args: {},
+};
+
+export const DefaultStory: Story = {
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {},
 };
 
 export const SizeLgStory: Story = {
-  name: "Large",
+  name: "SizeLgStory",
+  tags: ["autodocs"],
   args: {
     size: "lg",
   },
