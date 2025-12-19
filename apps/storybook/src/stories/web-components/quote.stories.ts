@@ -108,38 +108,46 @@ export default meta;
 type Story = StoryObj<QuoteArgs>;
 
 export const QuoteStory: Story = {
-  name: "Quote",
-  tags: ["!autodocs"],
+  name: "QuoteStory",
   args: {},
 };
 
 export const DefaultStory: Story = {
-  name: "Default",
-  tags: ["autodocs", "!dev"],
+  name: "DefaultStory",
+  tags: ["autodocs"],
   args: {},
 };
 
 export const AuthorlessStory: Story = {
-  name: "Authorless",
-  tags: ["autodocs", "!dev"],
+  name: "AuthorlessStory",
+  tags: ["autodocs"],
   args: {
     author: "",
   },
 };
 
-export const AccentStory: Story = {
-  name: "Accent",
-  tags: ["autodocs", "!dev"],
+export const SourcelessStory: Story = {
+  name: "SourcelessStory",
+  tags: ["autodocs"],
   args: {
-    accent: "green-menthe",
+    sources: [],
+    imageUrl: "https://www.systeme-de-design.gouv.fr/img/placeholder.1x1.png",
+    imageAlt: "Portrait de l'auteur",
   },
 };
 
-export const WithImageStory: Story = {
-  name: "With Image",
-  tags: ["autodocs", "!dev"],
+export const ImagelessStory: Story = {
+  name: "ImagelessStory",
+  tags: ["autodocs"],
   args: {
-    imageUrl: "https://www.systeme-de-design.gouv.fr/img/placeholder.1x1.png",
-    imageAlt: "Portrait de l'auteur",
+    imageUrl: "",
+  },
+};
+
+export const AccentStory: Story = {
+  name: "AccentStory",
+  tags: ["autodocs"],
+  args: {
+    accent: "green-menthe",
   },
 };
