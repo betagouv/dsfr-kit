@@ -19,6 +19,7 @@ const skiplinkArgs = {
 };
 
 interface SkiplinkArgs {
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   links: any[];
 }
 
@@ -37,8 +38,11 @@ const meta: Meta<SkiplinkArgs> = {
   title: "Web Components/Skiplink",
   component: "dsfr-skiplink",
   tags: ["autodocs"],
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   argTypes: skiplinkArgTypes as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   args: skiplinkArgs as any,
+  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
   render: render as any,
   parameters: {
     docs: {
@@ -54,6 +58,6 @@ export default meta;
 type Story = StoryObj<SkiplinkArgs>;
 
 export const SkiplinkStory: Story = {
-  name: "Skiplink",
+  name: "SkiplinkStory",
   args: {},
 };
