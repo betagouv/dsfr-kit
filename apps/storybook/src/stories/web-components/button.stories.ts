@@ -1,8 +1,24 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const buttonArgTypes = {
+interface ButtonArgs {
+  label: string;
+  kind: 1 | 2 | 3 | 4;
+  size: "sm" | "md" | "lg";
+  disabled: boolean;
+  hasIcon: boolean;
+  icon: string;
+  iconPlace: "only" | "left" | "right";
+  markup: "button" | "a" | "input";
+  type: "button" | "submit" | "reset";
+  href: string;
+  target: "self" | "blank";
+  id?: string;
+  title?: string;
+}
+
+const buttonArgTypes: ArgTypes<ButtonArgs> = {
   label: {
     control: "text",
     description: "Libellé du bouton",
@@ -46,7 +62,7 @@ const buttonArgTypes = {
   },
   hasIcon: {
     control: "boolean",
-    description: "Le bouton a une icône",
+    description: "Le badge a une icône",
     table: { category: "icon" },
   },
   icon: {
@@ -119,7 +135,7 @@ const buttonArgTypes = {
   },
 };
 
-const buttonArgs = {
+const buttonArgs: ButtonArgs = {
   label: "libellé du bouton",
   kind: 1,
   size: "md",
@@ -132,22 +148,6 @@ const buttonArgs = {
   href: "",
   target: "self",
 };
-
-interface ButtonArgs {
-  label: string;
-  kind: 1 | 2 | 3 | 4;
-  size: "sm" | "md" | "lg";
-  disabled: boolean;
-  hasIcon: boolean;
-  icon: string;
-  iconPlace: "only" | "left" | "right";
-  markup: "button" | "a" | "input";
-  type: "button" | "submit" | "reset";
-  href: string;
-  target: "self" | "blank";
-  id?: string;
-  title?: string;
-}
 
 const render = (args: ButtonArgs) => {
   const iconPlace = args.iconPlace === "only" ? undefined : args.iconPlace;
@@ -176,12 +176,9 @@ const meta: Meta<ButtonArgs> = {
   title: "Web Components/Button",
   component: "dsfr-button",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: buttonArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: buttonArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: buttonArgTypes,
+  args: buttonArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

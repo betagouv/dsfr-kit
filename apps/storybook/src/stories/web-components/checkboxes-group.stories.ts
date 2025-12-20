@@ -3,17 +3,23 @@ import { html, nothing } from "lit";
 import "@dsfr-kit/web-components";
 
 // Helper interface for rendering, mimicking what might pass to a future group component or just for story args
+interface CheckboxItem {
+  label: string;
+  hint?: string;
+  checked?: boolean;
+  disabled?: boolean;
+}
+
 interface CheckboxGroupArgs {
   legend: string;
   hintGroup: string;
   status: "default" | "error" | "valid";
-  message: string; // Error or valid message
+  message: string;
   inline: boolean;
   size: "md" | "sm";
-  // For simplicity in stories, we might just define items inline in render or use args
 }
 
-const renderGroup = (args: any, items: any[]) => {
+const renderGroup = (args: CheckboxGroupArgs, items: CheckboxItem[]) => {
   const statusClass =
     args.status !== "default" ? `fr-fieldset--${args.status}` : "";
   const inlineClass = args.inline ? "fr-fieldset--inline" : "";
@@ -26,7 +32,7 @@ const renderGroup = (args: any, items: any[]) => {
       </legend>
       <div class="fr-fieldset__element">
         ${items.map(
-          (item, index) => html`
+          (item, _index) => html`
           <dsfr-checkbox
             .label=${item.label}
             .hint=${item.hint}
@@ -34,7 +40,7 @@ const renderGroup = (args: any, items: any[]) => {
             ?checked=${item.checked}
             ?disabled=${item.disabled}
             name="checkboxes-group"
-            value=${index}
+            value=${_index}
           ></dsfr-checkbox>
         `,
         )}
@@ -52,13 +58,13 @@ const renderGroup = (args: any, items: any[]) => {
   `;
 };
 
-const defaultItems = [
+const defaultItems: CheckboxItem[] = [
   { label: "Label checkbox 1" },
   { label: "Label checkbox 2" },
   { label: "Label checkbox 3" },
 ];
 
-const meta: Meta = {
+const meta: Meta<CheckboxGroupArgs> = {
   title: "Web Components/Checkbox/Checkboxes Group",
   tags: ["autodocs"],
   argTypes: {
@@ -83,24 +89,21 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<CheckboxGroupArgs>;
 
 export const CheckboxesGroupStory: Story = {
   name: "CheckboxesGroupStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const DefaultGroupStory: Story = {
   name: "DefaultGroupStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const HintStory: Story = {
   name: "HintStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) =>
+  render: (args) =>
     renderGroup(args, [
       { label: "Label checkbox 1", hint: "Description additionnelle 1" },
       { label: "Label checkbox 2", hint: "Description additionnelle 2" },
@@ -113,8 +116,7 @@ export const HintGroupStory: Story = {
   args: {
     hintGroup: "Texte de description additionnel pour le groupe",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const InlineStory: Story = {
@@ -122,8 +124,7 @@ export const InlineStory: Story = {
   args: {
     inline: true,
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const SizeMdStory: Story = {
@@ -131,8 +132,7 @@ export const SizeMdStory: Story = {
   args: {
     size: "md",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const SizeSmStory: Story = {
@@ -140,14 +140,12 @@ export const SizeSmStory: Story = {
   args: {
     size: "sm",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const DisabledStory: Story = {
   name: "DisabledStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) =>
+  render: (args) =>
     renderGroup(args, [
       { label: "Label checkbox 1", disabled: true },
       { label: "Label checkbox 2", disabled: true, checked: true },
@@ -161,8 +159,7 @@ export const ErrorStory: Story = {
     status: "error",
     message: "Texte d'erreur",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const SuccessStory: Story = {
@@ -171,6 +168,5 @@ export const SuccessStory: Story = {
     status: "valid",
     message: "Texte de succès",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };

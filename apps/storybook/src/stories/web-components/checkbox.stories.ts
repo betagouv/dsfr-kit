@@ -1,8 +1,19 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const checkboxArgTypes = {
+interface CheckboxArgs {
+  label: string;
+  hint: string;
+  status: string;
+  error: string;
+  valid: string;
+  size: "md" | "sm";
+  checked: boolean;
+  disabled: boolean;
+}
+
+const checkboxArgTypes: ArgTypes<CheckboxArgs> = {
   label: {
     control: "text",
     description: "Libellé de la case à cocher",
@@ -41,7 +52,7 @@ const checkboxArgTypes = {
   },
 };
 
-const checkboxArgs = {
+const checkboxArgs: CheckboxArgs = {
   label: "Libellé de la case à cocher",
   hint: "",
   status: "default",
@@ -51,17 +62,6 @@ const checkboxArgs = {
   checked: false,
   disabled: false,
 };
-
-interface CheckboxArgs {
-  label: string;
-  hint: string;
-  status: string;
-  error: string;
-  valid: string;
-  size: "md" | "sm";
-  checked: boolean;
-  disabled: boolean;
-}
 
 const render = (args: CheckboxArgs) => html`
   <dsfr-checkbox
@@ -79,12 +79,9 @@ const meta: Meta<CheckboxArgs> = {
   title: "Web Components/Checkbox",
   component: "dsfr-checkbox",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: checkboxArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: checkboxArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: checkboxArgTypes,
+  args: checkboxArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

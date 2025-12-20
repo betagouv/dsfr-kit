@@ -1,8 +1,21 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const inputArgTypes = {
+interface InputArgs {
+  label: string;
+  hint: string;
+  value: string;
+  type: string;
+  placeholder: string;
+  error: string;
+  valid: string;
+  disabled: boolean;
+  required: boolean;
+  icon: string;
+}
+
+const inputArgTypes: ArgTypes<InputArgs> = {
   label: {
     control: "text",
     description: "Libellé du champ",
@@ -56,7 +69,7 @@ const inputArgTypes = {
   },
 };
 
-const inputArgs = {
+const inputArgs: InputArgs = {
   label: "Libellé champ de saisie",
   hint: "",
   value: "",
@@ -68,19 +81,6 @@ const inputArgs = {
   required: false,
   icon: "",
 };
-
-interface InputArgs {
-  label: string;
-  hint: string;
-  value: string;
-  type: string;
-  placeholder: string;
-  error: string;
-  valid: string;
-  disabled: boolean;
-  required: boolean;
-  icon: string;
-}
 
 const render = (args: InputArgs) => html`
   <dsfr-input
@@ -101,12 +101,9 @@ const meta: Meta<InputArgs> = {
   title: "Web Components/Input",
   component: "dsfr-input",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: inputArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: inputArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: inputArgTypes,
+  args: inputArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

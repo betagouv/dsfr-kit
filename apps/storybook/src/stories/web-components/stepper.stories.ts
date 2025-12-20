@@ -1,8 +1,16 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const stepperArgTypes = {
+interface StepperArgs {
+  title: string;
+  currentStep: number;
+  stepCount: number;
+  nextStep: string;
+  markup: string;
+}
+
+const stepperArgTypes: ArgTypes<StepperArgs> = {
   title: {
     control: "text",
     description: "Titre de l'indicateur d'étapes",
@@ -26,21 +34,13 @@ const stepperArgTypes = {
   },
 };
 
-const stepperArgs = {
+const stepperArgs: StepperArgs = {
   title: "Intitulé de l’étape en cours",
   currentStep: 1,
   stepCount: 3,
   nextStep: "Intitulé de l’étape suivante",
   markup: "h2",
 };
-
-interface StepperArgs {
-  title: string;
-  currentStep: number;
-  stepCount: number;
-  nextStep: string;
-  markup: string;
-}
 
 const render = (args: StepperArgs) => html`
   <dsfr-stepper
@@ -56,12 +56,9 @@ const meta: Meta<StepperArgs> = {
   title: "Web Components/Stepper",
   component: "dsfr-stepper",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: stepperArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: stepperArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: stepperArgTypes,
+  args: stepperArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

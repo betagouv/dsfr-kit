@@ -1,8 +1,15 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const tooltipArgTypes = {
+interface TooltipArgs {
+  label: string;
+  content: string;
+  kind?: "hover" | "click";
+  link?: boolean;
+}
+
+const tooltipArgTypes: ArgTypes<TooltipArgs> = {
   label: {
     control: "text",
     description: "Libellé du bouton survolé",
@@ -13,17 +20,10 @@ const tooltipArgTypes = {
   },
 };
 
-const tooltipArgs = {
+const tooltipArgs: TooltipArgs = {
   label: "Survoler pour afficher l'infobulle",
   content: "Contenu de l'infobulle",
 };
-
-interface TooltipArgs {
-  label: string;
-  content: string;
-  kind?: "hover" | "click";
-  link?: boolean;
-}
 
 const render = (args: TooltipArgs) => html`
   <div style="margin: 5rem;">
@@ -40,12 +40,9 @@ const meta: Meta<TooltipArgs> = {
   title: "Web Components/Tooltip",
   component: "dsfr-tooltip",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: tooltipArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: tooltipArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: tooltipArgTypes,
+  args: tooltipArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

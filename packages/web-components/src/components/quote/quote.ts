@@ -47,7 +47,7 @@ export class DsfrQuote extends LitElement {
       [`fr-text--${this.size}`]: this.size !== "md",
     };
 
-    const renderedSources = this.sources.map((source, index) => {
+    const renderedSources = this.sources.map((source, _index) => {
       // If it's the first source and we have a sourceUrl, we might want to wrap it in a cite
       // but let's stick to the simple string array for now as per ejs
       return html`<li>${source}</li>`;

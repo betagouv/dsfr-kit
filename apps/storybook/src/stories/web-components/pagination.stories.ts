@@ -1,8 +1,14 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const paginationArgTypes = {
+interface PaginationArgs {
+  currentPage: number;
+  totalPages: number;
+  ariaLabel: string;
+}
+
+const paginationArgTypes: ArgTypes<PaginationArgs> = {
   currentPage: {
     control: "number",
     description: "Index de la page courante",
@@ -17,22 +23,16 @@ const paginationArgTypes = {
   },
 };
 
-const paginationArgs = {
+const paginationArgs: PaginationArgs = {
   currentPage: 1,
   totalPages: 10,
   ariaLabel: "Pagination",
 };
 
-interface PaginationArgs {
-  currentPage: number;
-  totalPages: number;
-  ariaLabel: string;
-}
-
 const render = (args: PaginationArgs) => html`
   <dsfr-pagination
-    .current-page=${args.currentPage}
-    .total-pages=${args.totalPages}
+    .currentPage=${args.currentPage}
+    .totalPages=${args.totalPages}
     .ariaLabel=${args.ariaLabel}
   >
   </dsfr-pagination>
@@ -42,12 +42,9 @@ const meta: Meta<PaginationArgs> = {
   title: "Web Components/Pagination",
   component: "dsfr-pagination",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: paginationArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: paginationArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: paginationArgTypes,
+  args: paginationArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

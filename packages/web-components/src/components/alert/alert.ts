@@ -62,7 +62,7 @@ export class DsfrAlert extends LitElement {
     const role =
       this.type === "error" || this.type === "warning" ? "alert" : "status";
 
-    const titleMarkup = (content: any) => {
+    const titleMarkup = (content: unknown) => {
       switch (this.headingLevel) {
         case "h1":
           return html`<h1 class="fr-alert__title">${content}</h1>`;

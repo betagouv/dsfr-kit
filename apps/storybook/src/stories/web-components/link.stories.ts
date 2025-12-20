@@ -1,8 +1,23 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const linkArgTypes = {
+interface LinkArgs {
+  label: string;
+  markup: "a" | "button";
+  href: string;
+  detail: string;
+  blank: boolean;
+  disabled: boolean;
+  size: "sm" | "md" | "lg";
+  icon: string;
+  download: boolean;
+  iconPlace: "left" | "right";
+  id: string;
+  assess: boolean;
+}
+
+const linkArgTypes: ArgTypes<LinkArgs> = {
   label: {
     control: "text",
     description: "contenu texte",
@@ -57,7 +72,7 @@ const linkArgTypes = {
   },
 };
 
-const linkArgs = {
+const linkArgs: LinkArgs = {
   label: "Lien simple",
   markup: "a",
   href: "#",
@@ -72,21 +87,6 @@ const linkArgs = {
   assess: false,
 };
 
-interface LinkArgs {
-  label: string;
-  markup: "a" | "button";
-  href: string;
-  detail: string;
-  blank: boolean;
-  disabled: boolean;
-  size: "sm" | "md" | "lg";
-  icon: string;
-  download: boolean;
-  iconPlace: "left" | "right";
-  id: string;
-  assess: boolean;
-}
-
 const render = (args: LinkArgs) => {
   return html`
     <dsfr-link
@@ -99,7 +99,7 @@ const render = (args: LinkArgs) => {
       .size=${args.size}
       .icon=${args.icon}
       ?download=${args.download}
-      .icon-place=${args.iconPlace}
+      .iconPlace=${args.iconPlace}
       .id=${args.id}
       ?assess=${args.assess}
     >
@@ -108,18 +108,15 @@ const render = (args: LinkArgs) => {
 };
 
 const renders = (argsArray: Partial<LinkArgs>[]) =>
-  argsArray.map((args) => render({ ...linkArgs, ...args } as LinkArgs));
+  argsArray.map((args) => render({ ...linkArgs, ...args }));
 
 const meta: Meta<LinkArgs> = {
   title: "Web Components/Link",
   component: "dsfr-link",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: linkArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: linkArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: linkArgTypes,
+  args: linkArgs,
+  render: (args) => render(args),
 };
 
 export default meta;
@@ -133,9 +130,9 @@ export const LinkStory: Story = {
 export const TextLinkStory: Story = {
   name: "TextLinkStory",
   tags: ["autodocs"],
-  render: () => html`
+  render: (args) => html`
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-    ${render({ ...linkArgs, label: "lien interne", href: "#" } as LinkArgs)}
+    ${render({ ...args, label: "lien interne", href: "#" })}
     incididunt ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi.</p>
   `,
 };

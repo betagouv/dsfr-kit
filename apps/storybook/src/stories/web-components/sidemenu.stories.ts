@@ -1,25 +1,45 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import "@dsfr-kit/web-components";
 import { html } from "lit";
 
-const meta: Meta = {
-  title: "Web Components/Sidemenu",
-  component: "dsfr-sidemenu",
-  tags: ["autodocs"],
-  argTypes: {
-    title: { control: "text" },
-    sticky: { control: "boolean" },
-    right: { control: "boolean" },
+interface SidemenuArgs {
+  title: string;
+  sticky: boolean;
+  right: boolean;
+}
+
+const sidemenuArgTypes: ArgTypes<SidemenuArgs> = {
+  title: {
+    control: "text",
+    description: "Titre du menu latéral",
   },
-  args: {
-    title: "Titre de rubrique",
-    sticky: false,
-    right: false,
+  sticky: {
+    control: "boolean",
+    description: "Si true, le menu suit le scroll",
+  },
+  right: {
+    control: "boolean",
+    description:
+      "Si true, positionne le menu à droite (uniquement visuel dans cette story)",
   },
 };
 
+const sidemenuArgs: SidemenuArgs = {
+  title: "Titre de rubrique",
+  sticky: false,
+  right: false,
+};
+
+const meta: Meta<SidemenuArgs> = {
+  title: "Web Components/Sidemenu",
+  component: "dsfr-sidemenu",
+  tags: ["autodocs"],
+  argTypes: sidemenuArgTypes,
+  args: sidemenuArgs,
+};
+
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<SidemenuArgs>;
 
 export const SidemenuStory: Story = {
   name: "SidemenuStory",

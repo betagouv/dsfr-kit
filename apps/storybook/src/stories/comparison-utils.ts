@@ -1,5 +1,4 @@
 import { html } from "lit";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 /**
  * Renders a side-by-side comparison of a native DSFR component and a Web Component.

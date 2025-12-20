@@ -1,8 +1,21 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const radioArgTypes = {
+interface RadioArgs {
+  label: string;
+  hint: string;
+  rich: boolean;
+  hasPictogram: boolean;
+  pictogramName: string;
+  size: "md" | "sm";
+  checked: boolean;
+  disabled: boolean;
+  name: string;
+  value: string;
+}
+
+const radioArgTypes: ArgTypes<RadioArgs> = {
   label: {
     control: "text",
     description: "Libellé de l'option radio",
@@ -49,7 +62,7 @@ const radioArgTypes = {
   },
 };
 
-const radioArgs = {
+const radioArgs: RadioArgs = {
   label: "Libellé radio",
   hint: "",
   rich: false,
@@ -61,19 +74,6 @@ const radioArgs = {
   name: "radio",
   value: "option-1",
 };
-
-interface RadioArgs {
-  label: string;
-  hint: string;
-  rich: boolean;
-  hasPictogram: boolean;
-  pictogramName: string;
-  size: "md" | "sm";
-  checked: boolean;
-  disabled: boolean;
-  name: string;
-  value: string;
-}
 
 const render = (args: RadioArgs) => html`
   <dsfr-radio
@@ -105,12 +105,9 @@ const meta: Meta<RadioArgs> = {
   title: "Web Components/Radio",
   component: "dsfr-radio",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: radioArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: radioArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: radioArgTypes,
+  args: radioArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

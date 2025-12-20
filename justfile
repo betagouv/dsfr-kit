@@ -31,9 +31,14 @@ dev:
 
 # Lint all packages
 # Runs both Biome (JS/TS) and Ruff (Python)
-lint:
+lint *args:
     @echo "🔍 Linting in parallel..."
-    moon run :lint
+    moon run :lint {{args}}
+
+# Fix fixable issues in all packages (using unsafe fixes for Biome)
+fix:
+    @echo "🛠️  Fixing issues in parallel..."
+    moon run :fix
 
 lint-biome:
     @echo "🔍 Linting JS/TS with Biome..."
@@ -44,9 +49,9 @@ lint-ruff:
     moon run :lint-ruff
 
 # Format all packages
-format:
+format *args:
     @echo "✨ Formatting in parallel..."
-    moon run :format
+    moon run :format {{args}}
 
 format-biome:
     @echo "✨ Formatting JS/TS with Biome..."

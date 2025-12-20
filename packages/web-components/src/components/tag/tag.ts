@@ -3,7 +3,7 @@ import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
 import schemeStyles from "@gouvfr/dsfr/dist/scheme/scheme.min.css?inline";
 import iconsStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
 import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline";
-import { html, LitElement, nothing, unsafeCSS } from "lit";
+import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { ifDefined } from "lit/directives/if-defined.js";

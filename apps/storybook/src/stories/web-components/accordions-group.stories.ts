@@ -1,7 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import "@dsfr-kit/web-components";
+
+interface AccordionItem {
+  id: string;
+  label: string;
+  content: string;
+}
+
+interface AccordionsGroupArgs {
+  group: boolean;
+  accordions: AccordionItem[];
+}
 
 // Duplicate of accordionArgs from accordion.stories.ts to avoid circular deps or complex imports
 const baseAccordionArgs = {
@@ -20,7 +31,7 @@ const getAccordionArgs = (id: number) => {
   };
 };
 
-const accordionsGroupArgTypes = {
+const accordionsGroupArgTypes: ArgTypes<AccordionsGroupArgs> = {
   group: {
     control: "boolean",
     description:
@@ -29,9 +40,12 @@ const accordionsGroupArgTypes = {
       type: { summary: "boolean" },
     },
   },
-} as const;
+  accordions: {
+    control: "object",
+  },
+};
 
-const accordionsGroupArgs = {
+const accordionsGroupArgs: AccordionsGroupArgs = {
   group: true,
   accordions: [
     getAccordionArgs(1),
@@ -41,24 +55,16 @@ const accordionsGroupArgs = {
   ],
 };
 
-interface AccordionItem {
-  id: string;
-  label: string;
-  content: string;
-}
-
-const meta: Meta = {
+const meta: Meta<AccordionsGroupArgs> = {
   title: "Web Components/Accordion/Accordions Group",
   component: "dsfr-accordion-group",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: accordionsGroupArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: accordionsGroupArgs as any,
+  argTypes: accordionsGroupArgTypes,
+  args: accordionsGroupArgs,
   render: (args) => html`
     <dsfr-accordion-group ?group=${args.group}>
       ${args.accordions.map(
-        (accordion: AccordionItem) => html`
+        (accordion) => html`
         <dsfr-accordion
           id=${accordion.id}
           label=${accordion.label}
@@ -72,7 +78,7 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<AccordionsGroupArgs>;
 
 export const AccordionsGroupStory: Story = {
   name: "AccordionsGroupStory",

@@ -1,8 +1,20 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const summaryArgTypes = {
+interface SummaryItem {
+  label: string;
+  href: string;
+  items?: SummaryItem[];
+}
+
+interface SummaryArgs {
+  title: string;
+  list: SummaryItem[];
+  markup: string;
+}
+
+const summaryArgTypes: ArgTypes<SummaryArgs> = {
   title: {
     control: "text",
     description: "Titre du sommaire",
@@ -18,7 +30,7 @@ const summaryArgTypes = {
   },
 };
 
-const summaryArgs = {
+const summaryArgs: SummaryArgs = {
   title: "Sommaire",
   list: [
     { label: "Titre de la section 1", href: "#section-1" },
@@ -27,13 +39,6 @@ const summaryArgs = {
   ],
   markup: "p",
 };
-
-interface SummaryArgs {
-  title: string;
-  // biome-ignore lint/suspicious/noExplicitAny: Flexible list structure
-  list: any[];
-  markup: string;
-}
 
 const render = (args: SummaryArgs) => html`
   <dsfr-summary
@@ -47,12 +52,9 @@ const meta: Meta<SummaryArgs> = {
   title: "Web Components/Summary",
   component: "dsfr-summary",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: summaryArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: summaryArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: summaryArgTypes,
+  args: summaryArgs,
+  render: (args) => render(args),
 };
 
 export default meta;
