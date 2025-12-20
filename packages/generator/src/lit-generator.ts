@@ -1,3 +1,6 @@
+// node-html-parser is an ESM module in recent versions or requires synthetic default?
+// It exports 'parse'.
+import { HTMLElement, parse } from "node-html-parser";
 import type { ComponentProperty, ParsedComponent } from "./ejs-parser.js";
 import type { SourceLocation } from "./source-locator.js";
 import { findStyles } from "./style-resolver.js";
@@ -29,55 +32,75 @@ function defaultValue(prop: ComponentProperty): string {
   }
 }
 
-function convertTemplate(template: string, variableName: string): string {
-  let processed = template;
+// Function to recursively replace EJS vars in an AST node
+function traverseAndReplace(node: any, variableName: string) {
+  // Replace in text content
+  if (node.nodeType === 3) {
+    // Text node
+    let text = node.rawText; // Use rawText to preserve everything
+    // Replace <%- variableName.prop %> -> ${this.prop}
+    text = text.replace(
+      new RegExp(`<%[-=]\\s*${variableName}\\.([\\w]+)\\s*%>`, "g"),
+      "${this.$1}",
+    );
+    // Replace <%= prop %> -> ${this.prop}
+    text = text.replace(/<%[-=]\s*([a-zA-Z0-9_]+)\s*%>/g, "${this.$1}");
 
-  // Replace <%- variableName.prop %> with ${this.prop}
-  // e.g. <%- accordion.label %> -> ${this.label}
-  const varRegex = new RegExp(
-    `<%[-=]\\s*${variableName}\\.([\\w]+)\\s*%>`,
-    "g",
-  );
-  // biome-ignore lint/suspicious/noGlobalIsNan: This rule is not applicable here, it's a regex replacement.
-  processed = processed.replace(varRegex, "${this.$1}");
+    if (text !== node.rawText) {
+      node.rawText = text;
+    }
+  }
 
-  // Replace direct variables like <%= isExpanded %> if they match properties
-  // We need to know the list of properties to be safe, but for now specific regex
-  // Let's assume standalone variables that look like props are props
-  // But wait, the parser found 'isExpanded' as 'accordion.isExpanded' in comments?
-  // No, the comment said * accordion.isExpanded.
-  // But the template uses <%= isExpanded %>.
-  // So we need to handle standalone variable access too.
+  // Replace in attributes
+  if (node instanceof HTMLElement) {
+    const attrs = node.attributes;
+    for (const key in attrs) {
+      let val = attrs[key];
+      // Check for <%- includeClasses(...) %> in the key itself if parsed weirdly (as seen in test-parser.js)
+      // node-html-parser might parse <div class="..." <%- include... %>> as an attribute key "<%- include..."
 
-  // Regex for <%= var %> where var is NOT namespaced
-  processed = processed.replace(
-    /<%[-=]\s*([a-zA-Z0-9_]+)\s*%>/g,
-    (match, varName) => {
-      // If we had the props list we could verify
-      return `\${this.${varName}}`;
-    },
-  );
+      // Handle standard value replacement
+      let newVal = val.replace(
+        new RegExp(`<%[-=]\\s*${variableName}\\.([\\w]+)\\s*%>`, "g"),
+        "${this.$1}",
+      );
+      newVal = newVal.replace(/<%[-=]\s*([a-zA-Z0-9_]+)\s*%>/g, "${this.$1}");
 
-  // Handle includeClasses and includeAttrs - simplified for prototype
-  // <%- includeClasses(arr) %> -> class=${...} ??
-  // For now, let's just strip them or replace with safe defaults to prevent runtime errors
-  // parsing "call-like" strings is hard with regex.
-  // Assumption: they are inside tag attributes.
-  processed = processed.replace(
-    /<%-\s*includeClasses\([^)]+\)\s*%>/g,
-    'class=${this.classes || ""}',
-  );
-  processed = processed.replace(
-    /<%-\s*includeAttrs\([^)]+\)[^%]*%>/g,
-    '${this.attributes || ""}',
-  );
+      if (newVal !== val) {
+        node.setAttribute(key, newVal);
+      }
 
-  // Handle complex EJS tags (eval, if, etc)
-  // For now, strip them or comment them?
-  // Strip lines starting with <%
-  processed = processed.replace(/<%[^=-].*?%>/gs, "");
+      // Handle "weird" keys from EJS tags in attributes
+      if (key.includes("<%")) {
+        // This is likely an includeAttrs or includeClasses that was parsed as an attribute name
+        if (key.includes("includeAttrs")) {
+          node.removeAttribute(key);
+          // We want to add ${this.attributes || ""} to the tag output.
+          // node-html-parser doesn't make it easy to inject arbitrary strings into the tag opening.
+          // But we can add a dummy attribute and replace it in the final string?
+          // Or we simply handle it by replacing the whole key with a 'token' attribute?
+          node.setAttribute("__LIT_ATTRIBUTES__", "");
+        } else if (key.includes("includeClasses")) {
+          // Often parsing: class="..." <%- includeClasses %>
+          // It might end up as an attribute key.
+          node.removeAttribute(key);
+          // We want to merge it into class.
+          // If class exists:
+          const currentClass = node.getAttribute("class") || "";
+          node.setAttribute("class", `${currentClass} \${this.classes || ""}`);
+        }
+      }
 
-  return processed;
+      // Also check the value for includeClasses if it ended up there
+      if (typeof val === "string" && val.includes("includeClasses")) {
+        // It's inside a value? Unlikely for includeClasses usually distinct.
+      }
+    }
+  }
+
+  for (const child of node.childNodes) {
+    traverseAndReplace(child, variableName);
+  }
 }
 
 export function generateLitComponent(
@@ -93,34 +116,75 @@ export function generateLitComponent(
     })
     .join("\n  ");
 
-  // Add prefix default if not present (it usually isn't in props list)
   if (!parsed.properties.find((p) => p.name === "prefix")) {
     props += '\n  @property({ type: String }) prefix = "fr";';
   }
 
-  // Heuristics for Logic
-  let litTemplate = convertTemplate(parsed.template, source.variableName);
+  // Pre-process template logic to make it HTML-parser friendly
+  // specific helpers: includeClasses, includeAttrs
+  let processedTemplate = parsed.template;
+  processedTemplate = processedTemplate.replace(
+    /<%-\s*includeClasses\(([^)]+)\)\s*%>/g,
+    'data-ejs-include-classes="$1"',
+  );
+  processedTemplate = processedTemplate.replace(
+    /<%-\s*includeAttrs\(([^)]+)\)[^%]*%>/g,
+    'data-ejs-include-attrs="$1"',
+  );
+
+  const root = parse(processedTemplate);
+
+  // Traverse and replace bindings
+  traverseAndReplace(root, source.variableName);
+
   let extraLogic = "";
 
-  // 1. Toggle Logic
-  // If we have 'isExpanded' prop and 'aria-expanded', let's bin a toggle
+  // Heuristic: Toggle Logic
   const hasExpanded = parsed.properties.find((p) => p.name === "isExpanded");
   if (hasExpanded) {
-    // Look for element with aria-expanded="${this.isExpanded}"
-    // And add @click=${this.toggle}
-    if (litTemplate.includes('aria-expanded="${this.isExpanded}"')) {
-      litTemplate = litTemplate.replace(
-        'aria-expanded="${this.isExpanded}"',
-        'aria-expanded="${this.isExpanded}" @click=${this.toggle}',
-      );
-
-      extraLogic += `
+    // Queries in AST are safer!
+    const trigger = root.querySelector("[aria-expanded]");
+    if (trigger) {
+      // It has check if the attribute value binds to isExpanded?
+      // We already replaced variables.
+      const attrVal = trigger.getAttribute("aria-expanded");
+      if (
+        attrVal &&
+        (attrVal.includes("${this.isExpanded}") ||
+          attrVal.includes(source.variableName + ".isExpanded"))
+      ) {
+        trigger.setAttribute("@click", "${this.toggle}");
+        extraLogic += `
   toggle() {
     this.isExpanded = !this.isExpanded;
   }
 `;
+      }
     }
   }
+
+  // Serialize back to string
+  let litTemplate = root.toString();
+
+  // Post-processing
+  // Replace markers with actual Lit bindings
+  litTemplate = litTemplate.replace(
+    /data-ejs-include-classes="[^"]*"/g,
+    'class="${this.classes || ""}"',
+  );
+  // For attributes, we want to inject into the tag.
+  // node-html-parser outputs attributes as key="value".
+  // data-ejs-include-attrs="attributes" -> ${this.attributes || ""}
+  // We can just regex replace the whole attribute output.
+  litTemplate = litTemplate.replace(
+    /data-ejs-include-attrs="[^"]*"/g,
+    '${this.attributes || ""}',
+  );
+
+  // Cleanup literal ${this...} if they were escaped? No, we fixed that.
+
+  // Cleanup empty EJS tags if any remain
+  litTemplate = litTemplate.replace(/<%[^=-].*?%>/gs, "");
 
   const styles = findStyles(source);
   const styleImports = styles
