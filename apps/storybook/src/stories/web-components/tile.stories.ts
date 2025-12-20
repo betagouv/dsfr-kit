@@ -1,8 +1,24 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const tileArgTypes = {
+interface TileArgs {
+  title: string;
+  description: string;
+  url: string;
+  imageUrl: string;
+  imageAlt: string;
+  size: "md" | "sm";
+  horizontal: boolean;
+  verticalBreakpoint: "md" | "lg" | "";
+  enlarge: boolean;
+  noIcon: boolean;
+  download: boolean;
+  detail: string;
+  actionMarkup: "a" | "button" | "false";
+}
+
+const tileArgTypes: ArgTypes<TileArgs> = {
   title: {
     control: "text",
     description: "Titre de la tuile",
@@ -60,7 +76,7 @@ const tileArgTypes = {
   },
 };
 
-const tileArgs = {
+const tileArgs: TileArgs = {
   title: "Titre de la tuile",
   description: "Description (optionnelle)",
   url: "#",
@@ -76,37 +92,21 @@ const tileArgs = {
   actionMarkup: "a",
 };
 
-interface TileArgs {
-  title: string;
-  description: string;
-  url: string;
-  imageUrl: string;
-  imageAlt: string;
-  size: "md" | "sm";
-  horizontal: boolean;
-  verticalBreakpoint: "md" | "lg" | "";
-  enlarge: boolean;
-  noIcon: boolean;
-  download: boolean;
-  detail: string;
-  actionMarkup: "a" | "button" | "false";
-}
-
 const render = (args: TileArgs) => html`
   <dsfr-tile
     .title=${args.title}
     .description=${args.description}
     .url=${args.url}
-    .image-url=${args.imageUrl}
-    .image-alt=${args.imageAlt}
+    .imageUrl=${args.imageUrl}
+    .imageAlt=${args.imageAlt}
     .size=${args.size}
     ?horizontal=${args.horizontal}
-    .vertical-breakpoint=${args.verticalBreakpoint}
+    .verticalBreakpoint=${args.verticalBreakpoint}
     ?enlarge=${args.enlarge}
-    ?no-icon=${args.noIcon}
+    ?noIcon=${args.noIcon}
     ?download=${args.download}
     .detail=${args.detail}
-    .action-markup=${args.actionMarkup}
+    .actionMarkup=${args.actionMarkup}
   ></dsfr-tile>
 `;
 
@@ -114,12 +114,9 @@ const meta: Meta<TileArgs> = {
   title: "Web Components/Tile",
   component: "dsfr-tile",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: tileArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: tileArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: tileArgTypes,
+  args: tileArgs,
+  render: (args) => render(args),
 };
 
 export default meta;
@@ -199,8 +196,7 @@ export const WithTagStory: Story = {
     </dsfr-tile>
   `,
   args: {
-    // biome-ignore lint/suspicious/noExplicitAny: generic args
-    ...(tileArgs as any),
+    ...tileArgs,
     title: "Tuile avec Tag",
   },
 };
@@ -221,8 +217,7 @@ export const WithBadgeStory: Story = {
     </dsfr-tile>
   `,
   args: {
-    // biome-ignore lint/suspicious/noExplicitAny: generic args
-    ...(tileArgs as any),
+    ...tileArgs,
     title: "Tuile avec Badge",
   },
 };

@@ -1,8 +1,20 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const toggleArgTypes = {
+interface ToggleArgs {
+  label: string;
+  hint: string;
+  checked: boolean;
+  disabled: boolean;
+  state: boolean;
+  left: boolean;
+  border: boolean;
+  error: string;
+  valid: string;
+}
+
+const toggleArgTypes: ArgTypes<ToggleArgs> = {
   label: {
     control: "text",
     description: "Libellé de l'interrupteur",
@@ -41,7 +53,7 @@ const toggleArgTypes = {
   },
 };
 
-const toggleArgs = {
+const toggleArgs: ToggleArgs = {
   label: "Interrupteur",
   hint: "",
   checked: false,
@@ -52,18 +64,6 @@ const toggleArgs = {
   error: "",
   valid: "",
 };
-
-interface ToggleArgs {
-  label: string;
-  hint: string;
-  checked: boolean;
-  disabled: boolean;
-  state: boolean;
-  left: boolean;
-  border: boolean;
-  error: string;
-  valid: string;
-}
 
 const render = (args: ToggleArgs) => html`
   <dsfr-toggle
@@ -83,12 +83,9 @@ const meta: Meta<ToggleArgs> = {
   title: "Web Components/Toggle",
   component: "dsfr-toggle",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: toggleArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: toggleArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: toggleArgTypes,
+  args: toggleArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

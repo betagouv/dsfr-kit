@@ -1,8 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const tableArgTypes = {
+interface TableArgs {
+  caption: string;
+  noCaption: boolean;
+  bottomCaption: boolean;
+  bordered: boolean;
+  noScroll: boolean;
+  multiline: boolean;
+  size: "sm" | "md" | "lg";
+}
+
+const tableArgTypes: ArgTypes<TableArgs> = {
   caption: {
     control: "text",
     description: "Titre du tableau",
@@ -34,7 +44,7 @@ const tableArgTypes = {
   },
 };
 
-const tableArgs = {
+const tableArgs: TableArgs = {
   caption: "Titre du tableau",
   noCaption: false,
   bottomCaption: false,
@@ -43,16 +53,6 @@ const tableArgs = {
   multiline: false,
   size: "md",
 };
-
-interface TableArgs {
-  caption: string;
-  noCaption: boolean;
-  bottomCaption: boolean;
-  bordered: boolean;
-  noScroll: boolean;
-  multiline: boolean;
-  size: "sm" | "md" | "lg";
-}
 
 const tableContent = html`
   <thead>
@@ -88,10 +88,10 @@ const tableContent = html`
 const render = (args: TableArgs) => html`
   <dsfr-table
     .caption=${args.caption}
-    ?no-caption=${args.noCaption}
-    ?bottom-caption=${args.bottomCaption}
+    ?noCaption=${args.noCaption}
+    ?bottomCaption=${args.bottomCaption}
     ?bordered=${args.bordered}
-    ?no-scroll=${args.noScroll}
+    ?noScroll=${args.noScroll}
     ?multiline=${args.multiline}
     .size=${args.size}
   >
@@ -103,12 +103,9 @@ const meta: Meta<TableArgs> = {
   title: "Web Components/Table",
   component: "dsfr-table",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: tableArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: tableArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: tableArgTypes,
+  args: tableArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

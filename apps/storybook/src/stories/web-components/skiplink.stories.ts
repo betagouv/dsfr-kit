@@ -1,15 +1,24 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const skiplinkArgTypes = {
+interface SkiplinkItem {
+  label: string;
+  href: string;
+}
+
+interface SkiplinkArgs {
+  links: SkiplinkItem[];
+}
+
+const skiplinkArgTypes: ArgTypes<SkiplinkArgs> = {
   links: {
     control: "object",
     description: "Tableau de liens d'évitement",
   },
 };
 
-const skiplinkArgs = {
+const skiplinkArgs: SkiplinkArgs = {
   links: [
     { label: "Contenu", href: "#content" },
     { label: "Menu", href: "#header-navigation" },
@@ -17,11 +26,6 @@ const skiplinkArgs = {
     { label: "Pied de page", href: "#footer" },
   ],
 };
-
-interface SkiplinkArgs {
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  links: any[];
-}
 
 const render = (args: SkiplinkArgs) => html`
   <dsfr-skiplink .links=${args.links}></dsfr-skiplink>
@@ -38,12 +42,9 @@ const meta: Meta<SkiplinkArgs> = {
   title: "Web Components/Skiplink",
   component: "dsfr-skiplink",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: skiplinkArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: skiplinkArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: skiplinkArgTypes,
+  args: skiplinkArgs,
+  render: (args) => render(args),
   parameters: {
     docs: {
       description: {

@@ -1,8 +1,35 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const headerArgTypes = {
+interface NavLink {
+  label: string;
+  href: string;
+  active?: boolean;
+}
+
+interface ToolLink {
+  label: string;
+  href: string;
+  icon?: string;
+}
+
+interface HeaderArgs {
+  brandLogoTitle: string;
+  brandLinkHref: string;
+  brandLinkTitle: string;
+  brandServiceTitle: string;
+  brandServiceTagline: string;
+  operatorLogoSrc: string;
+  operatorLogoAlt: string;
+  operatorLogoStyle: string;
+  navigation: NavLink[];
+  toolsLinks: ToolLink[];
+  searchLabel: string;
+  searchPlaceholder: string;
+}
+
+const headerArgTypes: ArgTypes<HeaderArgs> = {
   brandLogoTitle: {
     control: "text",
     description: "Intitulé officiel",
@@ -53,7 +80,7 @@ const headerArgTypes = {
   },
 };
 
-const headerArgs = {
+const headerArgs: HeaderArgs = {
   brandLogoTitle: "République<br>Française",
   brandLinkHref: "/",
   brandLinkTitle: "Retour à l’accueil du site - République Française",
@@ -74,23 +101,6 @@ const headerArgs = {
   searchLabel: "Rechercher",
   searchPlaceholder: "Rechercher",
 };
-
-interface HeaderArgs {
-  brandLogoTitle: string;
-  brandLinkHref: string;
-  brandLinkTitle: string;
-  brandServiceTitle: string;
-  brandServiceTagline: string;
-  operatorLogoSrc: string;
-  operatorLogoAlt: string;
-  operatorLogoStyle: string;
-  // biome-ignore lint/suspicious/noExplicitAny: Flexible navigation structure
-  navigation: any[];
-  // biome-ignore lint/suspicious/noExplicitAny: Flexible tools links structure
-  toolsLinks: any[];
-  searchLabel: string;
-  searchPlaceholder: string;
-}
 
 const render = (args: HeaderArgs) => html`
   <dsfr-header
@@ -113,12 +123,9 @@ const meta: Meta<HeaderArgs> = {
   title: "Web Components/Header",
   component: "dsfr-header",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: headerArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: headerArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: headerArgTypes,
+  args: headerArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

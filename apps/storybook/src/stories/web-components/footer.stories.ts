@@ -1,9 +1,27 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
-
 import "@dsfr-kit/web-components";
 
-const footerArgTypes = {
+interface FooterLink {
+  label: string;
+  href: string;
+  blank?: boolean;
+}
+
+interface FooterArgs {
+  brandLogoTitle: string;
+  brandLinkHref: string;
+  brandLinkTitle: string;
+  operatorLogoSrc: string;
+  operatorLogoAlt: string;
+  operatorLogoStyle: string;
+  contentDescription: string;
+  contentLinks: FooterLink[];
+  bottomLinks: FooterLink[];
+  bottomCopyright: string;
+}
+
+const footerArgTypes: ArgTypes<FooterArgs> = {
   brandLogoTitle: {
     control: "text",
     description: "Intitulé officiel",
@@ -46,7 +64,7 @@ const footerArgTypes = {
   },
 };
 
-const footerArgs = {
+const footerArgs: FooterArgs = {
   brandLogoTitle: "République<br>Française",
   brandLinkHref: "/",
   brandLinkTitle: "Retour à l’accueil du site - République Française",
@@ -80,21 +98,6 @@ const footerArgs = {
     'Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous <a href="https://github.com/etalab/licence-ouverte/blob/master/LO.md" target="_blank" rel="noopener external" title="Licence etalab - nouvelle fenêtre">licence etalab-2.0</a>',
 };
 
-interface FooterArgs {
-  brandLogoTitle: string;
-  brandLinkHref: string;
-  brandLinkTitle: string;
-  operatorLogoSrc: string;
-  operatorLogoAlt: string;
-  operatorLogoStyle: string;
-  contentDescription: string;
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  contentLinks: any[];
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  bottomLinks: any[];
-  bottomCopyright: string;
-}
-
 const render = (args: FooterArgs) => html`
   <dsfr-footer
     .brandLogoTitle=${args.brandLogoTitle}
@@ -125,12 +128,9 @@ const meta: Meta<FooterArgs> = {
   title: "Web Components/Footer",
   component: "dsfr-footer",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: footerArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: footerArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: footerArgTypes,
+  args: footerArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

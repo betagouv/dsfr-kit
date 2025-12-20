@@ -1,8 +1,19 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const quoteArgTypes = {
+interface QuoteArgs {
+  text: string;
+  author: string;
+  sources: string[];
+  sourceUrl: string;
+  imageUrl: string;
+  imageAlt: string;
+  size: "sm" | "md" | "lg";
+  accent: string | null;
+}
+
+const quoteArgTypes: ArgTypes<QuoteArgs> = {
   text: {
     control: "text",
     description: "Texte de la citation",
@@ -57,7 +68,7 @@ const quoteArgTypes = {
   },
 };
 
-const quoteArgs = {
+const quoteArgs: QuoteArgs = {
   text: "Déployer de nouveaux services publics numériques plus simples, plus faciles d’accès et plus efficaces pour tous les Français. Elle porte aussi l’enjeu de la souveraineté numérique de l’État.",
   author: "Auteur de la citation",
   sources: ["Ouvrage de référence", "Détail 1", "Détail 2"],
@@ -68,25 +79,14 @@ const quoteArgs = {
   accent: null,
 };
 
-interface QuoteArgs {
-  text: string;
-  author: string;
-  sources: string[];
-  sourceUrl: string;
-  imageUrl: string;
-  imageAlt: string;
-  size: "sm" | "md" | "lg";
-  accent: string | null;
-}
-
 const render = (args: QuoteArgs) => html`
   <dsfr-quote
     .text=${args.text}
     .author=${args.author}
     .sources=${args.sources}
-    .source-url=${args.sourceUrl}
-    .image-url=${args.imageUrl}
-    .image-alt=${args.imageAlt}
+    .sourceUrl=${args.sourceUrl}
+    .imageUrl=${args.imageUrl}
+    .imageAlt=${args.imageAlt}
     .size=${args.size}
     .accent=${args.accent}
   ></dsfr-quote>
@@ -96,12 +96,9 @@ const meta: Meta<QuoteArgs> = {
   title: "Web Components/Quote",
   component: "dsfr-quote",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: quoteArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: quoteArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: quoteArgTypes,
+  args: quoteArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

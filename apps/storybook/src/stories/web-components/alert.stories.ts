@@ -1,9 +1,23 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html, nothing } from "lit";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import "@dsfr-kit/web-components";
 
-const alertArgTypes = {
+interface AlertArgs {
+  hasTitle: boolean;
+  title: string;
+  hasDescription: boolean;
+  text: string;
+  type: "default" | "success" | "error" | "info" | "warning";
+  size: "sm" | "md";
+  id: string;
+  icon: string;
+  dismissible: boolean;
+  buttonCloseLabel: string;
+  buttonCloseOnClick: string;
+}
+
+const alertArgTypes: ArgTypes<AlertArgs> = {
   hasTitle: {
     control: "boolean",
     description: "L'alerte a un titre (obligatoire en taille md)",
@@ -77,20 +91,6 @@ const alertArgTypes = {
   },
 };
 
-interface AlertArgs {
-  hasTitle: boolean;
-  title: string;
-  hasDescription: boolean;
-  text: string;
-  type: "default" | "success" | "error" | "info" | "warning";
-  size: "sm" | "md";
-  id: string;
-  icon: string;
-  dismissible: boolean;
-  buttonCloseLabel: string;
-  buttonCloseOnClick: string;
-}
-
 const alertArgs: AlertArgs = {
   hasTitle: true,
   hasDescription: true,
@@ -132,11 +132,9 @@ const meta: Meta<AlertArgs> = {
   title: "Web Components/Alert",
   component: "dsfr-alert",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: alertArgTypes as any,
+  argTypes: alertArgTypes,
   args: alertArgs,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  render: (args) => render(args),
 };
 
 export default meta;

@@ -1,8 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const breadcrumbArgTypes = {
+interface BreadcrumbLink {
+  label: string;
+  href?: string;
+}
+
+interface BreadcrumbArgs {
+  button: string;
+  links: BreadcrumbLink[];
+}
+
+const breadcrumbArgTypes: ArgTypes<BreadcrumbArgs> = {
   button: {
     control: "text",
     description: "Libellé du bouton du Fil d'Ariane en mobile",
@@ -13,7 +23,7 @@ const breadcrumbArgTypes = {
   },
 };
 
-const breadcrumbArgs = {
+const breadcrumbArgs: BreadcrumbArgs = {
   button: "Voir le fil d’Ariane",
   links: [
     { label: "Accueil", href: "/" },
@@ -22,12 +32,6 @@ const breadcrumbArgs = {
     { label: "Page actuelle" },
   ],
 };
-
-interface BreadcrumbArgs {
-  button: string;
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  links: any[];
-}
 
 const render = (args: BreadcrumbArgs) => html`
   <dsfr-breadcrumb
@@ -40,12 +44,9 @@ const meta: Meta<BreadcrumbArgs> = {
   title: "Web Components/Breadcrumb",
   component: "dsfr-breadcrumb",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: breadcrumbArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: breadcrumbArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: breadcrumbArgTypes,
+  args: breadcrumbArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

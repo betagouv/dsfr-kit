@@ -1,8 +1,16 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const searchArgTypes = {
+interface SearchArgs {
+  inputLabel: string;
+  inputPlaceholder: string;
+  buttonLabel: string;
+  buttonTitle: string;
+  size: "md" | "lg";
+}
+
+const searchArgTypes: ArgTypes<SearchArgs> = {
   inputLabel: {
     control: "text",
     description: "Libellé de l'input",
@@ -26,21 +34,13 @@ const searchArgTypes = {
   },
 };
 
-const searchArgs = {
+const searchArgs: SearchArgs = {
   inputLabel: "Rechercher",
   inputPlaceholder: "Rechercher",
   buttonLabel: "Rechercher",
   buttonTitle: "Rechercher",
   size: "md",
 };
-
-interface SearchArgs {
-  inputLabel: string;
-  inputPlaceholder: string;
-  buttonLabel: string;
-  buttonTitle: string;
-  size: "md" | "lg";
-}
 
 const render = (args: SearchArgs) => html`
   <dsfr-search
@@ -56,12 +56,9 @@ const meta: Meta<SearchArgs> = {
   title: "Web Components/Search",
   component: "dsfr-search",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: searchArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: searchArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: searchArgTypes,
+  args: searchArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

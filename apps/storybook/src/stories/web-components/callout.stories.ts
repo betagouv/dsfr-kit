@@ -1,8 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const calloutArgTypes = {
+interface CalloutArgs {
+  title: string;
+  text: string;
+  hasIcon: boolean;
+  icon: string;
+  hasButton: boolean;
+  buttonLabel: string;
+  accent: string | null;
+}
+
+const calloutArgTypes: ArgTypes<CalloutArgs> = {
   title: {
     control: "text",
     description: "Titre de la mise en avant",
@@ -54,7 +64,7 @@ const calloutArgTypes = {
   },
 };
 
-const calloutArgs = {
+const calloutArgs: CalloutArgs = {
   title: "Titre de la mise en avant",
   text: "Les mises en avant permettent de valoriser une information importante au sein d’un contenu éditorial. Elles ne doivent pas être confondues avec les alertes ou les mises en exergue.",
   hasIcon: false,
@@ -63,16 +73,6 @@ const calloutArgs = {
   buttonLabel: "En savoir plus",
   accent: null,
 };
-
-interface CalloutArgs {
-  title: string;
-  text: string;
-  hasIcon: boolean;
-  icon: string;
-  hasButton: boolean;
-  buttonLabel: string;
-  accent: string | null;
-}
 
 const render = (args: CalloutArgs) => {
   return html`
@@ -91,12 +91,9 @@ const meta: Meta<CalloutArgs> = {
   title: "Web Components/Callout",
   component: "dsfr-callout",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: calloutArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: calloutArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: calloutArgTypes,
+  args: calloutArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

@@ -1,8 +1,24 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const selectArgTypes = {
+interface SelectOption {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
+
+interface SelectArgs {
+  label: string;
+  hint: string;
+  value: string;
+  options: SelectOption[];
+  disabled: boolean;
+  error: string;
+  valid: string;
+}
+
+const selectArgTypes: ArgTypes<SelectArgs> = {
   label: {
     control: "text",
     description: "Libellé de la liste déroulante",
@@ -33,7 +49,7 @@ const selectArgTypes = {
   },
 };
 
-const selectArgs = {
+const selectArgs: SelectArgs = {
   label: "Libellé liste déroulante",
   hint: "",
   value: "",
@@ -47,17 +63,6 @@ const selectArgs = {
   error: "",
   valid: "",
 };
-
-interface SelectArgs {
-  label: string;
-  hint: string;
-  value: string;
-  // biome-ignore lint/suspicious/noExplicitAny: Flexible options structure
-  options: any[];
-  disabled: boolean;
-  error: string;
-  valid: string;
-}
 
 const render = (args: SelectArgs) => html`
   <dsfr-select
@@ -75,12 +80,9 @@ const meta: Meta<SelectArgs> = {
   title: "Web Components/Select",
   component: "dsfr-select",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: selectArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: selectArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: selectArgTypes,
+  args: selectArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

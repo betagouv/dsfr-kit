@@ -1,8 +1,14 @@
-import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import type { ArgTypes, Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const highlightArgTypes = {
+interface HighlightArgs {
+  text: string;
+  size: "sm" | "md" | "lg";
+  accent: string | null;
+}
+
+const highlightArgTypes: ArgTypes<HighlightArgs> = {
   text: {
     control: "text",
     description: "Contenu texte de la mise en exergue",
@@ -37,17 +43,11 @@ const highlightArgTypes = {
   },
 };
 
-const highlightArgs = {
+const highlightArgs: HighlightArgs = {
   text: "Les mises en exergue permettent de distinguer une information importante au sein d’un contenu éditorial.",
   size: "md",
   accent: null,
 };
-
-interface HighlightArgs {
-  text: string;
-  size: "sm" | "md" | "lg";
-  accent: string | null;
-}
 
 const render = (args: HighlightArgs) => html`
   <dsfr-highlight .text=${args.text} .size=${args.size} .accent=${args.accent}>
@@ -58,12 +58,9 @@ const meta: Meta<HighlightArgs> = {
   title: "Web Components/Highlight",
   component: "dsfr-highlight",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: highlightArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: highlightArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: highlightArgTypes,
+  args: highlightArgs,
+  render: (args) => render(args),
 };
 
 export default meta;
