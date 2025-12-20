@@ -54,7 +54,7 @@ function traverseAndReplace(node: any, variableName: string) {
   if (node instanceof HTMLElement) {
     const attrs = node.attributes;
     for (const key in attrs) {
-      let val = attrs[key];
+      const val = attrs[key];
       // Check for <%- includeClasses(...) %> in the key itself if parsed weirdly (as seen in test-parser.js)
       // node-html-parser might parse <div class="..." <%- include... %>> as an attribute key "<%- include..."
 
