@@ -1,0 +1,31 @@
+{
+  "name": "@dsfr-kit/generator",
+  "version": "0.0.1",
+  "description": "Core logic for generating DSFR web components",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --dts --watch",
+    "lint": "biome lint .",
+    "format": "biome format ."
+  },
+  "dependencies": {
+    "ejs": "^3.1.9"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.8",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3",
+    "@types/node": "^20.11.24",
+    "@types/ejs": "^3.1.5",
+    "@gouvfr/dsfr": "^1.14.2"
+  }
+}
