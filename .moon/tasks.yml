@@ -65,6 +65,30 @@ tasks:
     options:
       runInCI: true
 
+  fix-biome:
+    command: "sh -c 'if [ -f package.json ]; then $MOON_WORKSPACE_ROOT/node_modules/.bin/biome check --write --unsafe . || exit 1; fi'"
+    platform: system
+    inputs:
+      - '@group(sources)'
+      - '/biome.json'
+    options:
+      cache: false
+
+  fix-ruff:
+    command: "sh -c 'if [ -f pyproject.toml ]; then uv run --project $MOON_WORKSPACE_ROOT ruff check --fix . || exit 1; fi'"
+    platform: system
+    inputs:
+      - '@group(sources)'
+      - '/pyproject.toml'
+    options:
+      cache: false
+
+  fix:
+    deps:
+      - 'fix-biome'
+      - 'fix-ruff'
+      - 'format'
+
   format-biome:
     command: "sh -c 'if [ -f package.json ]; then $MOON_WORKSPACE_ROOT/node_modules/.bin/biome format --write . || exit 1; fi'"
     platform: system
