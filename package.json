@@ -27,5 +27,9 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.8"
+	},
+	"dependencies": {
+		"comment-parser": "^1.4.1",
+		"node-html-parser": "^7.0.1"
 	}
 }
