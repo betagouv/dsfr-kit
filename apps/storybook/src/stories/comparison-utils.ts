@@ -16,7 +16,7 @@ export const renderComparison = (nativeStoryId: string, wcStoryId: string) => {
         <h3 style="margin: 0; padding: 0.5rem 1rem; background: #f5f5f5; color: #666; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid #ddd;">Native DSFR</h3>
         <iframe
           src="${nativeUrl}"
-          style="border: none; width: 100%; height: 200px; resize: vertical; overflow: auto;"
+          style="border: none; width: 100%; height: 200px; min-height: 200px; resize: vertical; overflow: auto;"
           @load=${(e: Event) => {
             const iframe = e.target as HTMLIFrameElement;
             const doc = iframe.contentWindow?.document;
@@ -34,7 +34,7 @@ export const renderComparison = (nativeStoryId: string, wcStoryId: string) => {
         <h3 style="margin: 0; padding: 0.5rem 1rem; background: #f5f5f5; color: #666; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid #ddd;">Web Component</h3>
         <iframe
           src="${wcUrl}"
-          style="border: none; width: 100%; height: 200px; resize: vertical; overflow: auto;"
+          style="border: none; width: 100%; height: 200px; min-height: 200px; resize: vertical; overflow: auto;"
           @load=${(e: Event) => {
             const iframe = e.target as HTMLIFrameElement;
             const doc = iframe.contentWindow?.document;
