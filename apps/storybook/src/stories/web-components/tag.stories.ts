@@ -2,7 +2,20 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const tagArgTypes = {
+import type { ArgTypes } from "@storybook/web-components-vite";
+
+interface TagArgs {
+  label: string;
+  type: "default" | "clickable" | "pressable" | "dismissible";
+  size: "sm" | "md";
+  href: string;
+  pressed: boolean;
+  icon: string;
+  accent: string;
+  disabled: boolean;
+}
+
+const tagArgTypes: ArgTypes<TagArgs> = {
   label: {
     control: "text",
     description: "Libellé du tag",
@@ -41,7 +54,7 @@ const tagArgTypes = {
   },
 };
 
-const tagArgs = {
+const tagArgs: TagArgs = {
   label: "Libellé tag",
   type: "default",
   size: "md",
@@ -51,17 +64,6 @@ const tagArgs = {
   accent: "",
   disabled: false,
 };
-
-interface TagArgs {
-  label: string;
-  type: "default" | "clickable" | "pressable" | "dismissible";
-  size: "sm" | "md";
-  href: string;
-  pressed: boolean;
-  icon: string;
-  accent: string;
-  disabled: boolean;
-}
 
 const render = (args: TagArgs) => html`
   <dsfr-tag
@@ -80,9 +82,9 @@ const meta: Meta<TagArgs> = {
   title: "Web Components/Tag",
   component: "dsfr-tag",
   tags: ["autodocs"],
-  argTypes: tagArgTypes as any,
-  args: tagArgs as any,
-  render: render as any,
+  argTypes: tagArgTypes,
+  args: tagArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

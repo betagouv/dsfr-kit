@@ -2,7 +2,22 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const tabsArgTypes = {
+import type { ArgTypes } from "@storybook/web-components-vite";
+
+interface TabItem {
+  id: string;
+  label: string;
+  content: string;
+  icon?: string;
+}
+
+interface TabsArgs {
+  label: string;
+  hasIcon: boolean;
+  tabs: TabItem[];
+}
+
+const tabsArgTypes: ArgTypes<TabsArgs> = {
   label: {
     control: "text",
     description: "Label du système d'onglets (aria-label)",
@@ -17,7 +32,7 @@ const tabsArgTypes = {
   },
 };
 
-const tabsArgs = {
+const tabsArgs: TabsArgs = {
   label: "Système d'onglets",
   hasIcon: false,
   tabs: [
@@ -42,13 +57,6 @@ const tabsArgs = {
   ],
 };
 
-interface TabsArgs {
-  label: string;
-  hasIcon: boolean;
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  tabs: any[];
-}
-
 const render = (args: TabsArgs) => html`
   <dsfr-tabs .label=${args.label}>
     ${args.tabs.map(
@@ -65,9 +73,9 @@ const meta: Meta<TabsArgs> = {
   title: "Web Components/Tabs",
   component: "dsfr-tabs",
   tags: ["autodocs"],
-  argTypes: tabsArgTypes as any,
-  args: tabsArgs as any,
-  render: render as any,
+  argTypes: tabsArgTypes,
+  args: tabsArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

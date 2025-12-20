@@ -1,9 +1,29 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
-import { html, nothing } from "lit";
+import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-// Helper for rendering groups of links
-const renderGroup = (args: any, items: any[]) => {
+import type { ArgTypes } from "@storybook/web-components-vite";
+
+interface LinkItem {
+  label: string;
+  href?: string;
+  size?: "sm" | "md" | "lg";
+  icon?: string;
+  iconPlace?: "left" | "right";
+  disabled?: boolean;
+  download?: boolean;
+  detail?: string;
+}
+
+interface LinksGroupArgs {
+  size: "sm" | "md" | "lg";
+  align?: "center" | "right" | "inline";
+  icon?: string;
+  iconPlace?: "left" | "right";
+  download?: boolean;
+}
+
+const renderGroup = (args: LinksGroupArgs, items: LinkItem[]) => {
   const groupClasses = `fr-links-group ${args.align ? `fr-links-group--${args.align}` : ""}`;
 
   return html`
@@ -16,7 +36,7 @@ const renderGroup = (args: any, items: any[]) => {
             .href=${item.href || "#"}
             .size=${args.size || item.size || "md"}
             .icon=${args.icon || item.icon}
-            .icon-place=${args.iconPlace || item.iconPlace}
+            .iconPlace=${args.iconPlace || item.iconPlace}
             ?disabled=${item.disabled}
             ?download=${item.download || args.download}
             .detail=${item.detail}
@@ -28,36 +48,35 @@ const renderGroup = (args: any, items: any[]) => {
   `;
 };
 
-const defaultItems = [
+const defaultItems: LinkItem[] = [
   { label: "Label link #1" },
   { label: "Label link #2" },
   { label: "Label link #3" },
 ];
 
-const meta: Meta = {
+const meta: Meta<LinksGroupArgs> = {
   title: "Web Components/Link/Links Group",
   tags: ["autodocs"],
   argTypes: {
     size: { control: { type: "select" }, options: ["sm", "md", "lg"] },
     align: {
       control: { type: "select" },
-      options: [null, "center", "right", "inline"],
+      options: [undefined, "center", "right", "inline"],
     }, // approximation of dsfr classes
     icon: { control: "text" },
     iconPlace: { control: { type: "select" }, options: ["left", "right"] },
-  },
+  } as ArgTypes<LinksGroupArgs>,
   args: {
     size: "md",
   },
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<LinksGroupArgs>;
 
 export const LinksGroupStory: Story = {
   name: "LinksGroupStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const SizeSMStory: Story = {
@@ -65,8 +84,7 @@ export const SizeSMStory: Story = {
   args: {
     size: "sm",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const SizeMDStory: Story = {
@@ -74,8 +92,7 @@ export const SizeMDStory: Story = {
   args: {
     size: "md",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const SizeLGStory: Story = {
@@ -83,14 +100,12 @@ export const SizeLGStory: Story = {
   args: {
     size: "lg",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const DownloadStory: Story = {
   name: "DownloadStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) =>
+  render: (args) =>
     renderGroup({ ...args, download: true }, [
       { label: "Télécharger le document 1", detail: "PDF - 3 Mo" },
       { label: "Télécharger le document 2", detail: "DOCX - 1 Mo" },
@@ -99,8 +114,7 @@ export const DownloadStory: Story = {
 
 export const HorizontalStory: Story = {
   name: "HorizontalStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => html`
+  render: (_args) => html`
     <style>
       .horizontal-group li {
         display: inline-block;

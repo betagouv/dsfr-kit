@@ -2,7 +2,30 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import { html, nothing } from "lit";
 import "@dsfr-kit/web-components";
 
-const cardArgTypes = {
+import type { ArgTypes } from "@storybook/web-components-vite";
+
+interface CardArgs {
+  title: string;
+  hasDescription: boolean;
+  description: string;
+  hasDetailStart: boolean;
+  detailStart: string;
+  hasDetailEnd: boolean;
+  detailEnd: string;
+  markup: "h2" | "h3" | "h4" | "h5" | "h6";
+  enlarge: boolean;
+  href: string;
+  noLink: boolean;
+  size: "sm" | "md" | "lg";
+  horizontal: boolean;
+  horizontalProportion: "default" | "tier" | "half";
+  imgSrc: string;
+  imgAlt: string;
+  variations: string;
+  download: boolean;
+}
+
+const cardArgTypes: ArgTypes<CardArgs> = {
   title: {
     control: "text",
     description: "Intitulé de la carte",
@@ -85,7 +108,7 @@ const cardArgTypes = {
   },
 };
 
-const cardArgs = {
+const cardArgs: CardArgs = {
   title: "Intitulé de la carte",
   hasDescription: true,
   description:
@@ -107,27 +130,6 @@ const cardArgs = {
   download: false,
 };
 
-interface CardArgs {
-  title: string;
-  hasDescription: boolean;
-  description: string;
-  hasDetailStart: boolean;
-  detailStart: string;
-  hasDetailEnd: boolean;
-  detailEnd: string;
-  markup: "h2" | "h3" | "h4" | "h5" | "h6";
-  enlarge: boolean;
-  href: string;
-  noLink: boolean;
-  size: "sm" | "md" | "lg";
-  horizontal: boolean;
-  horizontalProportion: "default" | "tier" | "half";
-  imgSrc: string;
-  imgAlt: string;
-  variations: string;
-  download: boolean;
-}
-
 const render = (args: CardArgs) => {
   const horizontal = args.horizontal
     ? args.horizontalProportion === "default"
@@ -146,10 +148,10 @@ const render = (args: CardArgs) => {
         .img-src=${args.imgSrc}
         .img-alt=${args.imgAlt}
         .size=${args.size}
-        .horizontal=${horizontal as any}
+        .horizontal=${horizontal}
         ?download=${args.download}
         ?enlarge=${args.enlarge}
-        .variations=${variations as any}
+        .variations=${variations}
         .heading-level=${args.markup}
       >
         ${args.hasDetailStart ? html`<p slot="detail-start" class="fr-card__detail">${args.detailStart}</p>` : nothing}
@@ -163,12 +165,9 @@ const meta: Meta<CardArgs> = {
   title: "Web Components/Card",
   component: "dsfr-card",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: cardArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: cardArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: cardArgTypes,
+  args: cardArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

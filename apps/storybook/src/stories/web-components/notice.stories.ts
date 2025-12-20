@@ -2,7 +2,29 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
 import "@dsfr-kit/web-components";
 
-const noticeArgTypes = {
+import type { ArgTypes } from "@storybook/web-components-vite";
+
+interface NoticeArgs {
+  title: string;
+  desc: string;
+  type:
+    | "info"
+    | "warning"
+    | "alert"
+    | "weather-orange"
+    | "weather-red"
+    | "weather-purple"
+    | "attack"
+    | "witness"
+    | "cyberattack";
+  dismissible: boolean;
+  link: string;
+  linkLabel: string;
+  icon: string;
+  markup: string;
+}
+
+const noticeArgTypes: ArgTypes<NoticeArgs> = {
   title: {
     control: "text",
     description: "Titre du bandeau",
@@ -49,7 +71,7 @@ const noticeArgTypes = {
   },
 };
 
-const noticeArgs = {
+const noticeArgs: NoticeArgs = {
   title: "Titre du bandeau",
   desc: "Texte de description lorem ipsum sit consectetur adipiscing elit.",
   type: "info",
@@ -60,26 +82,14 @@ const noticeArgs = {
   markup: "p",
 };
 
-interface NoticeArgs {
-  title: string;
-  desc: string;
-  type: string;
-  dismissible: boolean;
-  link: string;
-  linkLabel: string;
-  icon: string;
-  markup: string;
-}
-
 const render = (args: NoticeArgs) => html`
   <dsfr-notice
     .title=${args.title}
     .desc=${args.desc}
-    // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-    .type=${args.type as any}
+    .type=${args.type}
     ?dismissible=${args.dismissible}
     .link=${args.link}
-    .link-label=${args.linkLabel}
+    .linkLabel=${args.linkLabel}
     .icon=${args.icon}
     .markup=${args.markup}
   ></dsfr-notice>
@@ -89,12 +99,9 @@ const meta: Meta<NoticeArgs> = {
   title: "Web Components/Notice",
   component: "dsfr-notice",
   tags: ["autodocs"],
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  argTypes: noticeArgTypes as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  args: noticeArgs as any,
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
-  render: render as any,
+  argTypes: noticeArgTypes,
+  args: noticeArgs,
+  render: (args) => render(args),
 };
 
 export default meta;

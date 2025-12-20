@@ -2,17 +2,34 @@ import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import { html, nothing } from "lit";
 import "@dsfr-kit/web-components";
 
-// Helper interface for rendering
-// Helper interface for rendering, mimicking what might pass to a future group component or just for story args
-// biome-ignore lint/suspicious/noExplicitAny: Storybook types are complex
+interface RadioItem {
+  label: string;
+  value: string;
+  checked?: boolean;
+  hint?: string;
+  disabled?: boolean;
+  pictogramName?: string;
+}
 
-const defaultItems = [
+interface RadiosGroupArgs {
+  legend: string;
+  hintGroup: string;
+  status: "default" | "error" | "valid";
+  message: string;
+  inline: boolean;
+  size: "md" | "sm";
+  rich: boolean;
+  hasPictogram: boolean;
+  disabled?: boolean;
+}
+
+const defaultItems: RadioItem[] = [
   { label: "Label radio 1", value: "1" },
   { label: "Label radio 2", value: "2", checked: true },
   { label: "Label radio 3", value: "3" },
 ];
 
-const richItems = [
+const richItems: RadioItem[] = [
   {
     label: "Label radio 1",
     value: "1",
@@ -34,7 +51,7 @@ const richItems = [
   },
 ];
 
-const renderGroup = (args: any, items: any[]) => {
+const renderGroup = (args: RadiosGroupArgs, items: RadioItem[]) => {
   const statusClass =
     args.status !== "default" ? `fr-fieldset--${args.status}` : "";
   const inlineClass = args.inline ? "fr-fieldset--inline" : "";
@@ -47,7 +64,7 @@ const renderGroup = (args: any, items: any[]) => {
       </legend>
       <div class="fr-fieldset__element">
         ${items.map(
-          (item, index) => html`
+          (item, _index) => html`
           <dsfr-radio
             .label=${item.label}
             .hint=${item.hint || ""}
@@ -86,7 +103,7 @@ const renderGroup = (args: any, items: any[]) => {
   `;
 };
 
-const meta: Meta = {
+const meta: Meta<RadiosGroupArgs> = {
   title: "Web Components/Radio/Radios Group",
   tags: ["autodocs"],
   argTypes: {
@@ -115,24 +132,21 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<RadiosGroupArgs>;
 
 export const RadiosGroupStory: Story = {
   name: "RadiosGroupStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const DefaultGroupStory: Story = {
   name: "DefaultGroupStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const HintStory: Story = {
   name: "HintStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) =>
+  render: (args) =>
     renderGroup(args, [
       {
         label: "Label radio 1",
@@ -158,14 +172,12 @@ export const HintGroupStory: Story = {
   args: {
     hintGroup: "Texte de description additionnel pour le groupe",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const DisabledStory: Story = {
   name: "DisabledStory",
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup({ ...args, disabled: true }, defaultItems),
+  render: (args) => renderGroup({ ...args, disabled: true }, defaultItems),
 };
 
 export const StatusValidStory: Story = {
@@ -174,8 +186,7 @@ export const StatusValidStory: Story = {
     status: "valid",
     message: "Texte de succès",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const StatusErrorStory: Story = {
@@ -184,8 +195,7 @@ export const StatusErrorStory: Story = {
     status: "error",
     message: "Texte d'erreur",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const SizeMDGroupStory: Story = {
@@ -193,8 +203,7 @@ export const SizeMDGroupStory: Story = {
   args: {
     size: "md",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const SizeSMGroupStory: Story = {
@@ -202,8 +211,7 @@ export const SizeSMGroupStory: Story = {
   args: {
     size: "sm",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const InlineGroupStory: Story = {
@@ -211,8 +219,7 @@ export const InlineGroupStory: Story = {
   args: {
     inline: true,
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, defaultItems),
+  render: (args) => renderGroup(args, defaultItems),
 };
 
 export const RadiosRichGroupStory: Story = {
@@ -220,8 +227,7 @@ export const RadiosRichGroupStory: Story = {
   args: {
     rich: true,
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, richItems),
+  render: (args) => renderGroup(args, richItems),
 };
 
 export const RadiosRichHintGroupStory: Story = {
@@ -230,8 +236,7 @@ export const RadiosRichHintGroupStory: Story = {
     rich: true,
     hintGroup: "Texte de description additionnel",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, richItems),
+  render: (args) => renderGroup(args, richItems),
 };
 
 export const RadiosRichInlineGroupStory: Story = {
@@ -240,8 +245,7 @@ export const RadiosRichInlineGroupStory: Story = {
     rich: true,
     inline: true,
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, richItems),
+  render: (args) => renderGroup(args, richItems),
 };
 
 export const RadiosRichInlineHintGroupStory: Story = {
@@ -251,8 +255,7 @@ export const RadiosRichInlineHintGroupStory: Story = {
     inline: true,
     hintGroup: "Texte de description additionnel",
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, richItems),
+  render: (args) => renderGroup(args, richItems),
 };
 
 export const RadiosRichNoImageGroupStory: Story = {
@@ -261,8 +264,7 @@ export const RadiosRichNoImageGroupStory: Story = {
     rich: true,
     hasPictogram: false,
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, richItems),
+  render: (args) => renderGroup(args, richItems),
 };
 
 export const RadiosRichNoImageInlineGroupStory: Story = {
@@ -272,6 +274,5 @@ export const RadiosRichNoImageInlineGroupStory: Story = {
     hasPictogram: false,
     inline: true,
   },
-  // biome-ignore lint/suspicious/noExplicitAny: Storybook args are loosely typed
-  render: (args: any) => renderGroup(args, richItems),
+  render: (args) => renderGroup(args, richItems),
 };
