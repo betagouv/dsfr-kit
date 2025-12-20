@@ -11,14 +11,42 @@ export const renderComparison = (nativeStoryId: string, wcStoryId: string) => {
   const wcUrl = `/iframe.html?id=${wcStoryId}&viewMode=story`;
 
   return html`
-    <div style="display: flex; gap: 2rem; padding: 1rem; align-items: flex-start; height: 100vh;">
-      <div style="flex: 1 1 0; min-width: 0; border: 1px solid #ddd; display: flex; flex-direction: column; border-radius: 4px; height: 100%;">
+    <div style="display: flex; flex-direction: column; gap: 2rem; padding: 1rem;">
+      <div style="border: 1px solid #ddd; display: flex; flex-direction: column; border-radius: 4px;">
         <h3 style="margin: 0; padding: 0.5rem 1rem; background: #f5f5f5; color: #666; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid #ddd;">Native DSFR</h3>
-        <iframe src="${nativeUrl}" style="flex: 1; border: none; width: 100%;"></iframe>
+        <iframe
+          src="${nativeUrl}"
+          style="border: none; width: 100%; height: 200px; min-height: 200px; resize: vertical; overflow: auto;"
+          @load=${(e: Event) => {
+            const iframe = e.target as HTMLIFrameElement;
+            const doc = iframe.contentWindow?.document;
+            if (doc) {
+              const observer = new ResizeObserver(() => {
+                iframe.style.height = "0px";
+                iframe.style.height = `${doc.documentElement.scrollHeight}px`;
+              });
+              observer.observe(doc.body);
+            }
+          }}
+        ></iframe>
       </div>
-      <div style="flex: 1 1 0; min-width: 0; border: 1px solid #ddd; display: flex; flex-direction: column; border-radius: 4px; height: 100%;">
+      <div style="border: 1px solid #ddd; display: flex; flex-direction: column; border-radius: 4px;">
         <h3 style="margin: 0; padding: 0.5rem 1rem; background: #f5f5f5; color: #666; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid #ddd;">Web Component</h3>
-        <iframe src="${wcUrl}" style="flex: 1; border: none; width: 100%;"></iframe>
+        <iframe
+          src="${wcUrl}"
+          style="border: none; width: 100%; height: 200px; min-height: 200px; resize: vertical; overflow: auto;"
+          @load=${(e: Event) => {
+            const iframe = e.target as HTMLIFrameElement;
+            const doc = iframe.contentWindow?.document;
+            if (doc) {
+              const observer = new ResizeObserver(() => {
+                iframe.style.height = "0px";
+                iframe.style.height = `${doc.documentElement.scrollHeight}px`;
+              });
+              observer.observe(doc.body);
+            }
+          }}
+        ></iframe>
       </div>
     </div>
   `;
