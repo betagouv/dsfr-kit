@@ -95,6 +95,9 @@ importers:
 
   packages/generator:
     dependencies:
+      '@babel/parser':
+        specifier: ^7.28.5
+        version: 7.28.5
       comment-parser:
         specifier: ^1.4.1
         version: 1.4.1

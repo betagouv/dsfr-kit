@@ -1,7 +1,6 @@
-// node-html-parser is an ESM module in recent versions or requires synthetic default?
-// It exports 'parse'.
 import { HTMLElement, parse } from "node-html-parser";
 import type { ComponentProperty, ParsedComponent } from "./ejs-parser.js";
+import { generateJsAst } from "./js-parser.js";
 import type { SourceLocation } from "./source-locator.js";
 import { findStyles } from "./style-resolver.js";
 
@@ -118,6 +117,13 @@ export function generateLitComponent(
 
   if (!parsed.properties.find((p) => p.name === "prefix")) {
     props += '\n  @property({ type: String }) prefix = "fr";';
+  }
+
+  try {
+    const _jsAst = generateJsAst(parsed.template);
+    // console.log('DEBUG: JS AST generated successfully', _jsAst.program.body.length);
+  } catch (e) {
+    console.warn("Warning: Failed to parse embedded EJS logic as JS AST:", e);
   }
 
   // Pre-process template logic to make it HTML-parser friendly
