@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import { html } from "lit";
-import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import "@dsfr-kit/web-components";
-
 import type { ArgTypes } from "@storybook/web-components-vite";
 
 interface AccordionArgs {
@@ -32,26 +30,26 @@ const accordionArgTypes: ArgTypes<AccordionArgs> = {
 };
 
 const accordionArgs: AccordionArgs = {
-  label: "Libellé accordéon",
+  label: "Libellé de l'accordéon (Généré)",
   content:
     "<h4>Contenu</h4> <p>Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>",
   isExpanded: false,
-  id: "accordion-1",
+  id: "accordion-gen-1",
 };
 
 const render = (args: AccordionArgs) => html`
-  <dsfr-accordion
+  <dsfr-accordion-gen
     .label=${args.label}
-    ?expanded=${args.isExpanded}
+    .isExpanded=${args.isExpanded}
     .id=${args.id}
+    .content=${args.content}
   >
-    ${unsafeHTML(args.content)}
-  </dsfr-accordion>
+  </dsfr-accordion-gen>
 `;
 
 const meta: Meta<AccordionArgs> = {
-  title: "Web Components/Accordion",
-  component: "dsfr-accordion",
+  title: "Generated/Accordion",
+  component: "dsfr-accordion-gen",
   tags: ["autodocs"],
   argTypes: accordionArgTypes,
   args: accordionArgs,
@@ -62,6 +60,6 @@ export default meta;
 type Story = StoryObj<AccordionArgs>;
 
 export const AccordionStory: Story = {
-  name: "AccordionStory",
+  name: "Generated Accordion",
   args: {},
 };

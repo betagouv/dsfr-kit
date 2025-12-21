@@ -29,3 +29,4 @@ export * from "./components/tag/tag";
 export { DsfrTile } from "./components/tile/tile";
 export { DsfrToggle } from "./components/toggle/toggle";
 export * from "./components/tooltip/tooltip";
+export * from "./generated-components/index";

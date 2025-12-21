@@ -8,17 +8,23 @@ const meta: Meta = {
 
 export default meta;
 
-function createComparisonStory(component: string): StoryObj {
+function createComparisonStory(
+  component: string,
+  genStoryId?: string,
+): StoryObj {
   return {
     render: () => {
       const nativeStoryId = `dsfr-${component}--${component}-story`;
       const wcStoryId = `web-components-${component}--${component}-story`;
-      return renderComparison(nativeStoryId, wcStoryId);
+      return renderComparison(nativeStoryId, wcStoryId, genStoryId);
     },
   };
 }
 
-export const Accordion = createComparisonStory("accordion");
+export const Accordion = createComparisonStory(
+  "accordion",
+  "generated-accordion--accordion-story",
+);
 export const Alert = createComparisonStory("alert");
 export const Badge = createComparisonStory("badge");
 export const Breadcrumb = createComparisonStory("breadcrumb");
