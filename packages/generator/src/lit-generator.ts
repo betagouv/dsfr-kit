@@ -37,13 +37,16 @@ function traverseAndReplace(node: any, variableName: string) {
   if (node.nodeType === 3) {
     // Text node
     let text = node.rawText; // Use rawText to preserve everything
-    // Replace <%- variableName.prop %> -> ${this.prop}
+    // Replace <%- variableName.prop %> -> ${unsafeHTML(this.prop)}
     text = text.replace(
       new RegExp(`<%[-=]\\s*${variableName}\\.([\\w]+)\\s*%>`, "g"),
-      "${this.$1}",
+      "${unsafeHTML(this.$1)}",
     );
-    // Replace <%= prop %> -> ${this.prop}
-    text = text.replace(/<%[-=]\s*([a-zA-Z0-9_]+)\s*%>/g, "${this.$1}");
+    // Replace <%= prop %> -> ${unsafeHTML(this.prop)}
+    text = text.replace(
+      /<%[-=]\s*([a-zA-Z0-9_]+)\s*%>/g,
+      "${unsafeHTML(this.$1)}",
+    );
 
     if (text !== node.rawText) {
       node.rawText = text;
@@ -174,17 +177,85 @@ export function generateLitComponent(
 
   // Post-processing
   // Replace markers with actual Lit bindings
+  // Handle class merging more gracefully
+  // If we have existing classes, we want to append.
+  // The regex replace is tricky because node-html-parser might have parsed it as a separate attribute if it was outside the class string.
+  // But if it was inside, we need to be careful.
+  // Assuming best effort: replace the marker. If the marker is the entire attribute, it replaces it.
+  // If we want to support class="existing <%- includeClasses %>", we need to see how node-html-parser handled it.
+  // If it was parsed as class="existing" data-ejs-include-classes="...", we need to merge.
+
+  // Strategy:
+  // 1. Find elements with data-ejs-include-classes
+  // 2. See if they have a class attribute
+  // 3. Merge and remove data-ejs-include-classes
+  // But we are working on the string representation from root.toString().
+
+  // Let's do it via regex on the string for simplicity but robustness is limited.
+  // Better: do it in traverser if possible. But processedTemplate had markers.
+
+  // Regex approach for now to fixing the current bug:
+  // If we see `class="...` and `data-ejs-include-classes="..."` on the same tag, it's hard to regex.
+  // Let's try to do it in the DOM before serialization if possible?
+  // traverseAndReplace runs before serialization.
+
+  // Actually, we can fix the replace logic:
+  // If we match `data-ejs-include-classes="..."`, we should check if there is a preceding `class="`.
+
+  // Current behavior: `data-ejs-include-classes` is a standalone attribute in the string output.
+  // We will replace it with `class="${this.dsfrClasses || ""}"`.
+  // If the element ALREADY had a class attribute, we now have two.
+  // Lit/Browsers will likely use the first or second.
+  // If the original was `class="fr-collapse" data-ejs-include-classes="..."`,
+  // We get `class="fr-collapse" class="${this.dsfrClasses}"`.
+
+  // FIX: We need to merge them.
+  // Ideally, we iterate the AST again before stringifying?
+  // Let's add a post-traversal step to merge attributes.
+
+  // For now, let's use a regex that tries to merge if adjacent? No.
+
+  // Let's just fix the specific bug: The generator is REPLACING valid classes effectively because
+  // the usage of includeClasses in EJS might have been the ONLY way classes were added, OR
+  // maybe the parser is separating them.
+
+  // Re-reading dsfr-accordion.ts: <div class="${this.dsfrClasses || ""}" ...>
+  // The original template probably had `class="fr-collapse"` AND the include.
+
+  // Let's modify the regex to NOT simply replace the attribute key/value but try to merge.
+  // Actually, a better fix in `lit-generator.ts` is to find elements with this attribute and merge in the AST.
+
+  // But I can't easily do AST manipulation here easily without re-parsing or changing the logic flow significantly.
+  // Let's try to be smart with regex:
+  // convert `class="A" ... data-ejs-include-classes="B"` to `class="A ${this.dsfrClasses}" ...`
+
+  litTemplate = litTemplate.replace(
+    /class="([^"]*)"([^>]*)data-ejs-include-classes="[^"]*"/g,
+    'class="$1 ${this.dsfrClasses || ""}"$2',
+  );
+
+  // Fallback for when there is NO class attribute preceding it
   litTemplate = litTemplate.replace(
     /data-ejs-include-classes="[^"]*"/g,
-    'class="${this.classes || ""}"',
+    'class="${this.dsfrClasses || ""}"',
   );
+
+  // Manual fix for accordion collapse state:
+  // We need to add `fr-collapse--expanded` when isExpanded is true.
+  // Heuristic: If we see `fr-collapse` in the class, we append the conditional class.
+  if (hasExpanded) {
+    litTemplate = litTemplate.replace(
+      /class="([^"]*fr-collapse[^"]*)"/g,
+      'class="$1 ${this.isExpanded ? "fr-collapse--expanded" : ""}"',
+    );
+  }
   // For attributes, we want to inject into the tag.
   // node-html-parser outputs attributes as key="value".
   // data-ejs-include-attrs="attributes" -> ${this.attributes || ""}
   // We can just regex replace the whole attribute output.
   litTemplate = litTemplate.replace(
     /data-ejs-include-attrs="[^"]*"/g,
-    '${this.attributes || ""}',
+    '${this.dsfrAttributes || ""}',
   );
 
   // Cleanup literal ${this...} if they were escaped? No, we fixed that.
@@ -203,6 +274,7 @@ export function generateLitComponent(
   return `
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 ${styleImports}
 
 @customElement('${tagName}')

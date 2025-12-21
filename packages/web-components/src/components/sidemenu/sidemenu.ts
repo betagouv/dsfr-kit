@@ -1,7 +1,7 @@
 import sidemenuStyles from "@gouvfr/dsfr/dist/component/sidemenu/sidemenu.min.css?inline";
 import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
 
-import { html, LitElement, nothing, unsafeCSS } from "lit";
+import { html, LitElement, nothing, type TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
@@ -52,7 +52,7 @@ export class DsfrSidemenu extends LitElement {
     this.requestUpdate();
   }
 
-  private _renderItem(item: SidemenuItem) {
+  private _renderItem(item: SidemenuItem): TemplateResult {
     const isActive = item.active;
     const isMenu =
       item.type === "menu" || (item.items && item.items.length > 0);

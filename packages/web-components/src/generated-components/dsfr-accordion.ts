@@ -3,6 +3,7 @@ import style0 from "@gouvfr/dsfr/dist/core/core.min.css?inline";
 import style2 from "@gouvfr/dsfr/dist/scheme/scheme.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
 @customElement("dsfr-accordion-gen")
 export class DsfrAccordionGen extends LitElement {
@@ -32,11 +33,11 @@ export class DsfrAccordionGen extends LitElement {
 
 <section class="${this.prefix}-accordion">
   <h3 class="${this.prefix}-accordion__title">
-    <button type="button" class="${this.prefix}-accordion__btn" aria-expanded="${this.isExpanded}" aria-controls="${this.id}" @click="${this.toggle}">${this.label}</button>
+    <button type="button" class="${this.prefix}-accordion__btn" aria-expanded="${this.isExpanded}" aria-controls="${this.id}" @click="${this.toggle}">${unsafeHTML(this.label)}</button>
   </h3>
-  <div class="${this.dsfrClasses || ""}" ${this.dsfrAttributes || ""}>
+  <div class="fr-collapse ${this.isExpanded ? "fr-collapse--expanded" : ""} ${this.dsfrClasses || ""}" id="${this.id}" ${this.dsfrAttributes || ""}>
 
-      ${this.content}
+      ${unsafeHTML(this.content)}
 
   </div>
 </section>

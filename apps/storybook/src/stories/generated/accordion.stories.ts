@@ -30,9 +30,9 @@ const accordionArgTypes: ArgTypes<AccordionArgs> = {
 };
 
 const accordionArgs: AccordionArgs = {
-  label: "Libellé accordéon (Généré)",
+  label: "Libellé de l'accordéon (Généré)",
   content:
-    "<p>Ce composant a été généré automatiquement à partir du template EJS du DSFR.</p>",
+    "<h4>Contenu</h4> <p>Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>",
   isExpanded: false,
   id: "accordion-gen-1",
 };
@@ -40,7 +40,7 @@ const accordionArgs: AccordionArgs = {
 const render = (args: AccordionArgs) => html`
   <dsfr-accordion-gen
     .label=${args.label}
-    ?isExpanded=${args.isExpanded}
+    .isExpanded=${args.isExpanded}
     .id=${args.id}
     .content=${args.content}
   >
