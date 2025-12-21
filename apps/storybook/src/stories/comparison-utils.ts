@@ -1,7 +1,6 @@
-// @ts-expect-error
-
 import * as htmlToImage from "html-to-image";
-import { html } from "lit";
+import { html, LitElement } from "lit";
+import { addons } from "storybook/internal/preview-api";
 
 /**
  * Renders a side-by-side comparison of a native DSFR component and a Web Component.
@@ -10,19 +9,79 @@ import { html } from "lit";
  * Renders a side-by-side comparison of a native DSFR component, a hand-written Web Component,
  * and optionally a generated Web Component using iframes.
  */
-export const renderComparison = (
-  nativeStoryId: string,
-  wcStoryId: string,
-  genStoryId?: string,
-) => {
-  const nativeUrl = `/iframe.html?id=${nativeStoryId}&viewMode=story`;
-  const wcUrl = `/iframe.html?id=${wcStoryId}&viewMode=story`;
-  const genUrl = genStoryId
-    ? `/iframe.html?id=${genStoryId}&viewMode=story`
-    : null;
+const EVENTS = {
+  SNAPSHOT_REQUESTED: "COMPARISON_SNAPSHOT_REQUESTED",
+  SNAPSHOT_TAKEN: "COMPARISON_SNAPSHOT_TAKEN",
+  SNAPSHOT_COPY_SUCCESS: "COMPARISON_SNAPSHOT_COPY_SUCCESS",
+  SNAPSHOT_COPY_ERROR: "COMPARISON_SNAPSHOT_COPY_ERROR",
+};
 
-  // Helper to inline external stylesheets and rewrite relative URLs to absolute or data URIs
-  const embedStyles = async (doc: Document) => {
+export class DsfrComparisonView extends LitElement {
+  static properties = {
+    nativeStoryId: { type: String },
+    wcStoryId: { type: String },
+    genStoryId: { type: String },
+    isCapturing: { state: true },
+    captureStatus: { state: true },
+  };
+
+  nativeStoryId = "";
+  wcStoryId = "";
+  genStoryId = "";
+  isCapturing = false;
+  captureStatus: "idle" | "success" | "error" = "idle";
+
+  // Use Light DOM to simplify screenshotting and styling
+  createRenderRoot() {
+    return this;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    try {
+      const channel = addons.getChannel();
+      channel.on(EVENTS.SNAPSHOT_REQUESTED, this.handleSnapshotRequest);
+      channel.on(EVENTS.SNAPSHOT_COPY_SUCCESS, this.handleCopySuccess);
+      channel.on(EVENTS.SNAPSHOT_COPY_ERROR, this.handleCopyError);
+    } catch (e) {
+      console.warn("Could not access Storybook channel", e);
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    try {
+      const channel = addons.getChannel();
+      channel.off(EVENTS.SNAPSHOT_REQUESTED, this.handleSnapshotRequest);
+      channel.off(EVENTS.SNAPSHOT_COPY_SUCCESS, this.handleCopySuccess);
+      channel.off(EVENTS.SNAPSHOT_COPY_ERROR, this.handleCopyError);
+    } catch (_e) {
+      // ignore
+    }
+  }
+
+  handleSnapshotRequest = () => {
+    this.takeScreenshot();
+  };
+
+  handleCopySuccess = () => {
+    this.captureStatus = "success";
+    setTimeout(() => {
+      this.captureStatus = "idle";
+    }, 2000);
+  };
+
+  handleCopyError = () => {
+    this.captureStatus = "error";
+    setTimeout(() => {
+      this.captureStatus = "idle";
+    }, 2000);
+  };
+
+  /**
+   * Helper to inline external stylesheets and rewrite relative URLs to absolute or data URIs
+   */
+  async embedStyles(doc: Document) {
     const links = Array.from(
       doc.querySelectorAll('link[rel="stylesheet"]'),
     ) as HTMLLinkElement[];
@@ -36,23 +95,17 @@ export const renderComparison = (
         const css = await response.text();
 
         // Process CSS to inline images as Data URIs
-        // This is necessary because html-to-image acts in a detached context where relative URLs fail
-        // and even absolute URLs can sometimes be blocked or mistimed.
         const urlRegex = /url\((['"]?)([^)'"]+)(['"]?)\)/g;
         let p = 0;
         let newCss = "";
 
-        // We use a matchAll loop to handle async processing of each URL
         const matches = [...css.matchAll(urlRegex)];
-
-        // Map to store URL -> Data URI to avoid fetching same icon multiple times
         const urlCache = new Map<string, string>();
 
         for (const match of matches) {
           const [fullMatch, quote1, url, quote2] = match;
           const index = match.index || 0;
 
-          // Append parts of CSS before the match
           newCss += css.substring(p, index);
           p = index + fullMatch.length;
 
@@ -61,7 +114,6 @@ export const renderComparison = (
             continue;
           }
 
-          // Resolve absolute URL to fetch
           const absoluteUrl = new URL(url, link.href).href;
 
           try {
@@ -75,13 +127,12 @@ export const renderComparison = (
                 reader.onloadend = () => resolve(reader.result as string);
                 reader.readAsDataURL(blob);
               });
-              urlCache.set(absoluteUrl, dataUri);
+              urlCache.set(absoluteUrl, dataUri as string);
             }
 
             newCss += `url(${quote1}${dataUri}${quote2})`;
           } catch (_e) {
             console.warn("Failed to fetch asset for inlining:", absoluteUrl);
-            // Fallback to absolute URL if fetch fails
             newCss += `url(${quote1}${absoluteUrl}${quote2})`;
           }
         }
@@ -92,29 +143,20 @@ export const renderComparison = (
         style.textContent = newCss;
         doc.head.appendChild(style);
 
-        // Mark link as processed
         link.dataset.embedded = "true";
       } catch (err) {
         console.warn("Failed to embed stylesheet:", link.href, err);
       }
     }
-  };
+  }
 
-  const takeScreenshot = async (e: Event) => {
-    const button = e.target as HTMLButtonElement;
-    if (button.disabled) return;
-
-    const originalText = button.innerHTML;
-    // Show loading state
-    button.innerHTML = "⏳";
-    button.disabled = true;
+  async takeScreenshot() {
+    if (this.isCapturing) return;
+    this.isCapturing = true;
+    this.requestUpdate();
 
     try {
-      // Find the container of the stories
-      const container = button.closest("div")?.parentElement;
-      if (!container) return;
-
-      const rows = container.querySelectorAll(".comparison-row");
+      const rows = this.querySelectorAll(".comparison-row");
       const canvases: HTMLCanvasElement[] = [];
       let totalHeight = 0;
       let maxWidth = 0;
@@ -130,30 +172,19 @@ export const renderComparison = (
           iframe.contentDocument.body
         ) {
           try {
-            // Fix styles in the iframe before capturing
-            await embedStyles(iframe.contentDocument);
+            await this.embedStyles(iframe.contentDocument);
 
-            // Capture title
             const titleCanvas = await htmlToImage.toCanvas(title);
             canvases.push(titleCanvas);
             totalHeight += titleCanvas.height;
             maxWidth = Math.max(maxWidth, titleCanvas.width);
 
-            // Capture iframe body
             const body = iframe.contentDocument.body;
-            // html-to-image needs to run in the context of the iframe to properly capture styles?
-            // Actually, we can pass the node. But if styles are in iframe, it might be tricky.
-            // Fortunately the iframe is same-origin.
-
-            // We clone the body node to ensure we get computed styles or use the library's ability.
-            // Note: toCanvas might struggle with iframes if not handled carefully, but let's try direct element capture.
-            // Often capturing from outside an iframe is hard.
-            // A better approach might be to capture the specific element inside the iframe.
             const bodyCanvas = await htmlToImage.toCanvas(body as HTMLElement, {
               width: iframe.contentDocument.documentElement.scrollWidth,
               height: iframe.contentDocument.documentElement.scrollHeight,
-              backgroundColor: "#ffffff", // Ensure background is white
-              cacheBust: true, // Force fresh resource loads
+              backgroundColor: "#ffffff",
+              cacheBust: true,
             });
 
             canvases.push(bodyCanvas);
@@ -165,7 +196,6 @@ export const renderComparison = (
         }
       }
 
-      // Combine canvases
       const combinedCanvas = document.createElement("canvas");
       combinedCanvas.width = maxWidth;
       combinedCanvas.height = totalHeight;
@@ -177,94 +207,122 @@ export const renderComparison = (
 
         let currentY = 0;
         for (const canvas of canvases) {
-          // Center the canvas if it's smaller than maxWidth (optional, keeping it simple: left align)
           ctx.drawImage(canvas, 0, currentY);
           currentY += canvas.height;
         }
 
         combinedCanvas.toBlob((blob) => {
           if (blob) {
-            // @ts-expect-error - ClipboardItem might need types
-            const item = new ClipboardItem({ "image/png": blob });
-            navigator.clipboard
-              .write([item])
-              .then(() => {
-                button.innerHTML = "✅"; // Checkmark
-                setTimeout(() => {
-                  button.innerHTML = originalText;
-                  button.disabled = false;
-                }, 2000);
-              })
-              .catch((err) => {
-                console.error("Failed to write to clipboard", err);
-                button.innerHTML = "❌";
-                setTimeout(() => {
-                  button.innerHTML = originalText;
-                  button.disabled = false;
-                }, 2000);
-              });
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const dataUri = reader.result as string;
+              // Send data back to manager to handle clipboard (since manager has focus)
+              const channel = addons.getChannel();
+              channel.emit(EVENTS.SNAPSHOT_TAKEN, dataUri);
+
+              this.captureStatus = "success";
+              setTimeout(() => {
+                this.captureStatus = "idle";
+              }, 2000);
+            };
+            reader.readAsDataURL(blob);
           }
         });
       }
     } catch (err) {
       console.error("Screenshot failed:", err);
-      button.innerHTML = "❌";
-      button.disabled = false;
+      this.captureStatus = "error";
+      setTimeout(() => {
+        this.captureStatus = "idle";
+      }, 2000);
+    } finally {
+      this.isCapturing = false;
     }
-  };
+  }
 
-  const renderRow = (title: string, url: string) => html`
-    <div class="comparison-row" style="border: 1px solid #ddd; display: flex; flex-direction: column; border-radius: 4px;">
-      <h3 style="margin: 0; padding: 0.5rem 1rem; background: #f5f5f5; color: #666; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid #ddd;">${title}</h3>
-      <iframe
-        src="${url}"
-        style="border: none; width: 100%; height: 200px; min-height: 200px; resize: vertical; overflow: auto;"
-        @load=${(e: Event) => {
-          const iframe = e.target as HTMLIFrameElement;
-          const doc = iframe.contentWindow?.document;
-          if (doc) {
-            const observer = new ResizeObserver(() => {
-              // Reset height to allow shrinking
-              iframe.style.height = "0px";
-              iframe.style.height = `${doc.documentElement.scrollHeight}px`;
-            });
-            observer.observe(doc.body);
-          }
-        }}
-      ></iframe>
-    </div>
-  `;
-
-  return html`
-    <div style="display: flex; flex-direction: column; gap: 2rem; padding: 1rem;">
-      <div style="display: flex; justify-content: flex-end;">
-         <button
-            @click=${takeScreenshot}
-            title="Copy Comparison Screenshot"
-            style="
-              padding: 0;
-              width: 32px;
-              height: 32px;
-              cursor: pointer;
-              background: transparent;
-              color: #666;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 1.2rem;
-              transition: all 0.2s;
-            "
-            onmouseover="this.style.background='#f5f5f5'; this.style.color='#333'"
-            onmouseout="this.style.background='transparent'; this.style.color='#666'"
-         >
-            📷
-         </button>
+  renderRow(title: string, url: string) {
+    return html`
+      <div class="comparison-row" style="border: 1px solid #ddd; display: flex; flex-direction: column; border-radius: 4px;">
+        <h3 style="margin: 0; padding: 0.5rem 1rem; background: #f5f5f5; color: #666; font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid #ddd;">${title}</h3>
+        <iframe
+          src="${url}"
+          style="border: none; width: 100%; height: 200px; min-height: 200px; resize: vertical; overflow: auto;"
+          @load=${(e: Event) => {
+            const iframe = e.target as HTMLIFrameElement;
+            const doc = iframe.contentWindow?.document;
+            if (doc) {
+              const observer = new ResizeObserver(() => {
+                iframe.style.height = "0px";
+                iframe.style.height = `${doc.documentElement.scrollHeight}px`;
+              });
+              observer.observe(doc.body);
+            }
+          }}
+        ></iframe>
       </div>
-      ${renderRow("Native DSFR", nativeUrl)}
-      ${renderRow("Web Component (Hand-written)", wcUrl)}
-      ${genUrl ? renderRow("Web Component (Generated)", genUrl) : ""}
-    </div>
+    `;
+  }
+
+  render() {
+    const nativeUrl = `/iframe.html?id=${this.nativeStoryId}&viewMode=story`;
+    const wcUrl = `/iframe.html?id=${this.wcStoryId}&viewMode=story`;
+    const genUrl = this.genStoryId
+      ? `/iframe.html?id=${this.genStoryId}&viewMode=story`
+      : null;
+
+    return html`
+      <div style="display: flex; flex-direction: column; gap: 2rem; padding: 1rem; position: relative;">
+        <!-- Status Overlay -->
+        ${
+          this.isCapturing || this.captureStatus !== "idle"
+            ? html`
+          <div style="
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            border-radius: 4px;
+            z-index: 10;
+            font-size: 0.8rem;
+          ">
+            ${
+              this.isCapturing
+                ? "⏳ Capturing..."
+                : this.captureStatus === "success"
+                  ? "✅ Snapshot Copied"
+                  : "❌ Failed"
+            }
+          </div>
+        `
+            : ""
+        }
+
+        ${this.renderRow("Native DSFR", nativeUrl)}
+        ${this.renderRow("Web Component (Hand-written)", wcUrl)}
+        ${genUrl ? this.renderRow("Web Component (Generated)", genUrl) : ""}
+      </div>
+    `;
+  }
+}
+
+export const renderComparison = (
+  nativeStoryId: string,
+  wcStoryId: string,
+  genStoryId?: string,
+) => {
+  return html`
+    <dsfr-comparison-view
+      .nativeStoryId=${nativeStoryId}
+      .wcStoryId=${wcStoryId}
+      .genStoryId=${genStoryId || ""}
+    ></dsfr-comparison-view>
   `;
 };
+
+try {
+  customElements.define("dsfr-comparison-view", DsfrComparisonView);
+} catch (_e) {
+  console.warn("DsfrComparisonView already defined");
+}
