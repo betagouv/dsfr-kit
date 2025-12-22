@@ -1,5 +1,10 @@
-import tileStyles from "@gouvfr/dsfr/dist/component/tile/tile.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import tileCss from "@gouvfr/dsfr/dist/component/tile/tile.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -58,7 +63,13 @@ export class DsfrTile extends LitElement {
   @property({ type: Array })
   variations: ("grey" | "no-border" | "no-background" | "shadow")[] = [];
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(tileStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(tileCss),
+  ];
 
   render() {
     const classes = {

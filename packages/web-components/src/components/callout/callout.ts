@@ -1,5 +1,10 @@
-import calloutStyles from "@gouvfr/dsfr/dist/component/callout/callout.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import calloutCss from "@gouvfr/dsfr/dist/component/callout/callout.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -27,7 +32,13 @@ export class DsfrCallout extends LitElement {
   @property({ type: String })
   accent: string | null = null;
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(calloutStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(calloutCss),
+  ];
 
   render() {
     const classes = {

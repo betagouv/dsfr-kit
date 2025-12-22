@@ -1,5 +1,10 @@
-import quoteStyles from "@gouvfr/dsfr/dist/component/quote/quote.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import quoteCss from "@gouvfr/dsfr/dist/component/quote/quote.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -34,7 +39,13 @@ export class DsfrQuote extends LitElement {
   @property({ type: String })
   accent: string | null = null;
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(quoteStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(quoteCss),
+  ];
 
   render() {
     const classes = {

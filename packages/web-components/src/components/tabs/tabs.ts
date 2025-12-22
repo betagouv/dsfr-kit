@@ -1,6 +1,10 @@
-import tabStyles from "@gouvfr/dsfr/dist/component/tab/tab.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
-import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline"; // For icons
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import tabCss from "@gouvfr/dsfr/dist/component/tab/tab.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import {
   customElement,
@@ -29,9 +33,11 @@ export class DsfrTab extends LitElement {
   panelId = `tabpanel-${Math.random().toString(36).substring(2, 9)}`;
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(tabStyles),
-    unsafeCSS(utilityStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(tabCss),
   ];
 
   render() {
@@ -72,9 +78,11 @@ export class DsfrTabs extends LitElement {
   private _slottedTabs!: DsfrTab[];
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(tabStyles),
-    unsafeCSS(utilityStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(tabCss),
   ];
 
   private _handleSlotChange() {

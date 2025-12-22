@@ -1,4 +1,10 @@
-import accordionStyles from "@gouvfr/dsfr/dist/component/accordion/accordion.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import accordionCss from "@gouvfr/dsfr/dist/component/accordion/accordion.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { DsfrAccordion } from "../accordion/accordion";
@@ -25,14 +31,21 @@ export class DsfrAccordionGroup extends LitElement {
     }
   }
 
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(accordionCss),
+    unsafeCSS(`
+      :host {
+        display: block;
+      }
+    `),
+  ];
+
   render() {
     return html`
-            <style>
-                ${unsafeCSS(accordionStyles)}
-                :host {
-                    display: block;
-                }
-            </style>
             <div class="fr-accordions-group" @dsfr-expanded-change=${this._handleChildChange}>
                 <slot></slot>
             </div>

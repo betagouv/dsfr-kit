@@ -1,6 +1,11 @@
-import formStyles from "@gouvfr/dsfr/dist/component/form/form.min.css?inline";
-import selectStyles from "@gouvfr/dsfr/dist/component/select/select.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  formStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import selectCss from "@gouvfr/dsfr/dist/component/select/select.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -45,9 +50,12 @@ export class DsfrSelect extends LitElement {
   selectId = `select-${Math.random().toString(36).substring(2, 9)}`;
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(formStyles),
-    unsafeCSS(selectStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    formStyles,
+    unsafeCSS(selectCss),
   ];
 
   private _handleChange(e: Event) {

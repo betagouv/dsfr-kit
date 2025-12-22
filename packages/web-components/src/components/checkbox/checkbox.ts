@@ -1,6 +1,11 @@
-import checkboxStyles from "@gouvfr/dsfr/dist/component/checkbox/checkbox.min.css?inline";
-import formStyles from "@gouvfr/dsfr/dist/component/form/form.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  formStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import checkboxCss from "@gouvfr/dsfr/dist/component/checkbox/checkbox.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -45,9 +50,12 @@ export class DsfrCheckbox extends LitElement {
   inline = false;
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(formStyles),
-    unsafeCSS(checkboxStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    formStyles,
+    unsafeCSS(checkboxCss),
   ];
 
   private _handleChange(e: Event) {

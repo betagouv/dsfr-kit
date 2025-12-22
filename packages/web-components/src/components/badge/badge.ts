@@ -1,11 +1,23 @@
-import badgeStyles from "@gouvfr/dsfr/dist/component/badge/badge.min.css?inline";
-import iconStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
-import { html, LitElement } from "lit";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import badgeCss from "@gouvfr/dsfr/dist/component/badge/badge.min.css?inline";
+import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
 @customElement("dsfr-badge")
 export class DsfrBadge extends LitElement {
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(badgeCss),
+  ];
   @property({ type: String })
   label = "";
 
@@ -43,10 +55,6 @@ export class DsfrBadge extends LitElement {
       : html`<slot>${this.label}</slot>`;
 
     return html`
-      <style>
-        ${badgeStyles}
-        ${iconStyles}
-      </style>
       <p class="${classMap(classes)}">${labelContent}</p>
     `;
   }

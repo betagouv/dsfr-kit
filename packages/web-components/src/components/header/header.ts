@@ -1,11 +1,15 @@
-import buttonStyles from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
-import headerStyles from "@gouvfr/dsfr/dist/component/header/header.min.css?inline";
-import linkStyles from "@gouvfr/dsfr/dist/component/link/link.min.css?inline";
-import logoStyles from "@gouvfr/dsfr/dist/component/logo/logo.min.css?inline";
-import modalStyles from "@gouvfr/dsfr/dist/component/modal/modal.min.css?inline";
-import navStyles from "@gouvfr/dsfr/dist/component/navigation/navigation.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
-import iconsStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  linkStyles,
+  logoStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import buttonCss from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
+import headerCss from "@gouvfr/dsfr/dist/component/header/header.min.css?inline";
+import modalCss from "@gouvfr/dsfr/dist/component/modal/modal.min.css?inline";
+import navCss from "@gouvfr/dsfr/dist/component/navigation/navigation.min.css?inline";
 
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
@@ -71,14 +75,16 @@ export class DsfrHeader extends LitElement {
   private _isSearchOpen = false;
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(logoStyles),
-    unsafeCSS(linkStyles),
-    unsafeCSS(iconsStyles),
-    unsafeCSS(buttonStyles),
-    unsafeCSS(headerStyles),
-    unsafeCSS(modalStyles),
-    unsafeCSS(navStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    logoStyles,
+    linkStyles,
+    unsafeCSS(buttonCss),
+    unsafeCSS(headerCss),
+    unsafeCSS(modalCss),
+    unsafeCSS(navCss),
   ];
 
   private _toggleMenu() {

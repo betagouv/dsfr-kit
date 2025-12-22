@@ -1,5 +1,10 @@
-import stepperStyles from "@gouvfr/dsfr/dist/component/stepper/stepper.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import stepperCss from "@gouvfr/dsfr/dist/component/stepper/stepper.min.css?inline";
 
 import { LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -25,7 +30,13 @@ export class DsfrStepper extends LitElement {
   @property({ type: String })
   markup = "h2";
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(stepperStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(stepperCss),
+  ];
 
   render() {
     const tag = unsafeStatic(this.markup || "h2");

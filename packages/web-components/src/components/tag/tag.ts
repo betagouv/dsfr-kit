@@ -1,8 +1,10 @@
-import tagStyles from "@gouvfr/dsfr/dist/component/tag/tag.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
-import schemeStyles from "@gouvfr/dsfr/dist/scheme/scheme.min.css?inline";
-import iconsStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
-import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import tagCss from "@gouvfr/dsfr/dist/component/tag/tag.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -41,11 +43,11 @@ export class DsfrTag extends LitElement {
   accent: string | null = null;
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(schemeStyles),
-    unsafeCSS(utilityStyles),
-    unsafeCSS(iconsStyles),
-    unsafeCSS(tagStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(tagCss),
   ];
 
   render() {

@@ -1,5 +1,10 @@
-import highlightStyles from "@gouvfr/dsfr/dist/component/highlight/highlight.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import highlightCss from "@gouvfr/dsfr/dist/component/highlight/highlight.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -18,7 +23,13 @@ export class DsfrHighlight extends LitElement {
   @property({ type: String })
   accent: string | null = null;
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(highlightStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(highlightCss),
+  ];
 
   render() {
     const classes = {

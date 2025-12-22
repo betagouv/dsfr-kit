@@ -1,6 +1,11 @@
-import buttonStyles from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
-import modalStyles from "@gouvfr/dsfr/dist/component/modal/modal.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import buttonCss from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
+import modalCss from "@gouvfr/dsfr/dist/component/modal/modal.min.css?inline";
 import { css, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property, query } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -39,9 +44,12 @@ export class DsfrModal extends LitElement {
   modalId = `modal-${Math.random().toString(36).substring(2, 9)}`;
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(modalStyles),
-    unsafeCSS(buttonStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(modalCss),
+    unsafeCSS(buttonCss),
     css`
       dialog[open] {
         display: flex !important;

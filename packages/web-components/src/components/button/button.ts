@@ -1,7 +1,10 @@
-import buttonStyles from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
-import iconsStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
-import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import buttonCss from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -52,10 +55,11 @@ export class DsfrButton extends LitElement {
   title = "";
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(utilityStyles),
-    unsafeCSS(iconsStyles),
-    unsafeCSS(buttonStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(buttonCss),
   ];
 
   render() {

@@ -1,8 +1,11 @@
-import linkStyles from "@gouvfr/dsfr/dist/component/link/link.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
-import iconsStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
-import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline";
-import { html, LitElement, nothing, unsafeCSS } from "lit";
+import {
+  coreStyles,
+  iconsStyles,
+  linkStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import { html, LitElement, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { ifDefined } from "lit/directives/if-defined.js";
@@ -46,10 +49,11 @@ export class DsfrLink extends LitElement {
   assess: string | boolean | undefined = undefined;
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(utilityStyles),
-    unsafeCSS(iconsStyles),
-    unsafeCSS(linkStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    linkStyles,
   ];
 
   render() {

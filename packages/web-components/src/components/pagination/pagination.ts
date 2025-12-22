@@ -1,5 +1,10 @@
-import paginationStyles from "@gouvfr/dsfr/dist/component/pagination/pagination.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import paginationCss from "@gouvfr/dsfr/dist/component/pagination/pagination.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -18,7 +23,13 @@ export class DsfrPagination extends LitElement {
   @property({ type: String })
   ariaLabel = "Pagination";
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(paginationStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(paginationCss),
+  ];
 
   private _handlePageChange(page: number, event: Event) {
     event.preventDefault();

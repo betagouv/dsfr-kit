@@ -1,5 +1,10 @@
-import noticeStyles from "@gouvfr/dsfr/dist/component/notice/notice.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import noticeCss from "@gouvfr/dsfr/dist/component/notice/notice.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -49,7 +54,13 @@ export class DsfrNotice extends LitElement {
   @state()
   private _closed = false;
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(noticeStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(noticeCss),
+  ];
 
   private _handleClose() {
     this._closed = true;
