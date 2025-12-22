@@ -1,5 +1,10 @@
-import breadcrumbStyles from "@gouvfr/dsfr/dist/component/breadcrumb/breadcrumb.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import breadcrumbCss from "@gouvfr/dsfr/dist/component/breadcrumb/breadcrumb.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -27,7 +32,13 @@ export class DsfrBreadcrumb extends LitElement {
   @state()
   private _expanded = false;
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(breadcrumbStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(breadcrumbCss),
+  ];
 
   private _toggle() {
     this._expanded = !this._expanded;

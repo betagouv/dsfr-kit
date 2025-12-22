@@ -1,8 +1,15 @@
-import alertStyles from "@gouvfr/dsfr/dist/component/alert/alert.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import alertCss from "@gouvfr/dsfr/dist/component/alert/alert.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
+
+const alertStyles = unsafeCSS(alertCss);
 
 export type AlertType = "info" | "success" | "warning" | "error";
 export type AlertSize = "sm" | "md";
@@ -38,7 +45,13 @@ export class DsfrAlert extends LitElement {
   @state()
   private _closed = false;
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(alertStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    alertStyles,
+  ];
 
   private _handleClose() {
     this._closed = true;
