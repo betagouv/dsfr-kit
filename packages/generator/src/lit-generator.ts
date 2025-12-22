@@ -121,6 +121,8 @@ export function generateLitComponent(
   if (!parsed.properties.find((p) => p.name === "prefix")) {
     props += '\n  @property({ type: String }) prefix = "fr";';
   }
+  props += '\n  @property({ type: String }) dsfrClasses = "";';
+  props += '\n  @property({ type: String }) dsfrAttributes = "";';
 
   try {
     const _jsAst = generateJsAst(parsed.template);
@@ -150,6 +152,8 @@ export function generateLitComponent(
 
   // Heuristic: Toggle Logic
   const hasExpanded = parsed.properties.find((p) => p.name === "isExpanded");
+  const hasId = parsed.properties.find((p) => p.name === "id");
+
   if (hasExpanded) {
     // Queries in AST are safer!
     const trigger = root.querySelector("[aria-expanded]");
@@ -166,6 +170,11 @@ export function generateLitComponent(
         extraLogic += `
   toggle() {
     this.isExpanded = !this.isExpanded;
+    this.dispatchEvent(new CustomEvent('dsfr-toggle', {
+      detail: { isExpanded: this.isExpanded },
+      bubbles: true,
+      composed: true
+    }));
   }
 `;
       }
@@ -189,15 +198,9 @@ export function generateLitComponent(
   // 1. Find elements with data-ejs-include-classes
   // 2. See if they have a class attribute
   // 3. Merge and remove data-ejs-include-classes
-  // But we are working on the string representation from root.toString().
 
   // Let's do it via regex on the string for simplicity but robustness is limited.
   // Better: do it in traverser if possible. But processedTemplate had markers.
-
-  // Regex approach for now to fixing the current bug:
-  // If we see `class="...` and `data-ejs-include-classes="..."` on the same tag, it's hard to regex.
-  // Let's try to do it in the DOM before serialization if possible?
-  // traverseAndReplace runs before serialization.
 
   // Actually, we can fix the replace logic:
   // If we match `data-ejs-include-classes="..."`, we should check if there is a preceding `class="`.
@@ -240,15 +243,23 @@ export function generateLitComponent(
     'class="${this.dsfrClasses || ""}"',
   );
 
-  // Manual fix for accordion collapse state:
-  // We need to add `fr-collapse--expanded` when isExpanded is true.
-  // Heuristic: If we see `fr-collapse` in the class, we append the conditional class.
+  // Heuristic: If we have an accordion/collapse, we need to inject the specific state classes
+  // that DSFR's EJS usually does inside local variables.
   if (hasExpanded) {
+    // 1. Handle explicit fr-collapse in literal class
     litTemplate = litTemplate.replace(
       /class="([^"]*fr-collapse[^"]*)"/g,
       'class="$1 ${this.isExpanded ? "fr-collapse--expanded" : ""}"',
     );
+    // 2. Handle cases where it's injected via dsfrClasses (like accordion)
+    if (source.componentName === "accordion") {
+      litTemplate = litTemplate.replace(
+        /class="\${this\.dsfrClasses \|\| ""}"/g,
+        'class="${this.prefix}-collapse ${this.isExpanded ? this.prefix + "-collapse--expanded" : ""} ${this.dsfrClasses || ""}"',
+      );
+    }
   }
+
   // For attributes, we want to inject into the tag.
   // node-html-parser outputs attributes as key="value".
   // data-ejs-include-attrs="attributes" -> ${this.attributes || ""}
@@ -257,6 +268,16 @@ export function generateLitComponent(
     /data-ejs-include-attrs="[^"]*"/g,
     '${this.dsfrAttributes || ""}',
   );
+
+  // Heuristic: If we have an ID for a target controlled by aria-controls
+  if (hasId && source.componentName === "accordion") {
+    // Escape the $ for the regex
+    const pattern = /\$\{this\.dsfrAttributes \|\| ""\}/g;
+    litTemplate = litTemplate.replace(
+      pattern,
+      'id="${this.id}" ${this.dsfrAttributes || ""}',
+    );
+  }
 
   // Cleanup literal ${this...} if they were escaped? No, we fixed that.
 

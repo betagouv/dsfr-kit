@@ -31,9 +31,16 @@ export class DsfrAccordionGen extends LitElement {
   @property({ type: String }) content = "";
   @property({ type: Boolean }) isExpanded = false;
   @property({ type: String }) prefix = "fr";
+  @property({ type: String }) dsfrClasses = "";
+  @property({ type: String }) dsfrAttributes = "";
 
   toggle() {
     this.isExpanded = !this.isExpanded;
+    this.dispatchEvent(new CustomEvent('dsfr-toggle', {
+      detail: { isExpanded: this.isExpanded },
+      bubbles: true,
+      composed: true
+    }));
   }
 
   render() {
@@ -46,7 +53,7 @@ export class DsfrAccordionGen extends LitElement {
   <h3 class="${this.prefix}-accordion__title">
     <button type="button" class="${this.prefix}-accordion__btn" aria-expanded="${this.isExpanded}" aria-controls="${this.id}" @click="${this.toggle}">${unsafeHTML(this.label)}</button>
   </h3>
-  <div class="${this.dsfrClasses || ""}" ${this.dsfrAttributes || ""}>
+  <div class="${this.prefix}-collapse ${this.isExpanded ? this.prefix + "-collapse--expanded" : ""} ${this.dsfrClasses || ""}" id="${this.id}" ${this.dsfrAttributes || ""}>
     
       ${unsafeHTML(this.content)}
     
