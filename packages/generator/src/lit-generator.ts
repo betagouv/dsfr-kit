@@ -267,25 +267,31 @@ export function generateLitComponent(
   const styleImports = styles
     .map((s, i) => `import style${i} from '${s}';`)
     .join("\n");
-  const styleInjections = styles
-    .map((s, i) => `\${unsafeCSS(style${i})}`)
-    .join("\n        ");
+  const componentStyles = styles
+    .map((s, i) => `unsafeCSS(style${i})`)
+    .join(",\n    ");
 
   return `
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { coreStyles, schemeStyles, utilityStyles, iconsStyles } from '@dsfr-kit/styles';
 ${styleImports}
 
 @customElement('${tagName}')
 export class ${className} extends LitElement {
+  static override styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    ${componentStyles}
+  ];
+
   ${props}
 ${extraLogic}
   render() {
     return html\`
-      <style>
-        ${styleInjections}
-      </style>
       ${litTemplate}
     \`;
   }

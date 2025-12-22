@@ -1,13 +1,43 @@
-import accordionStyles from "@gouvfr/dsfr/dist/component/accordion/accordion.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
-import schemeStyles from "@gouvfr/dsfr/dist/scheme/scheme.min.css?inline";
-import iconsStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
-import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import accordionCss from "@gouvfr/dsfr/dist/component/accordion/accordion.min.css?inline";
 import { html, LitElement, type TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
+const accordionStyles = unsafeCSS(accordionCss);
+
 @customElement("dsfr-accordion")
 export class DsfrAccordion extends LitElement {
+  static override styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    accordionStyles,
+    unsafeCSS(`
+      :host {
+        display: block;
+      }
+      .fr-collapse {
+        transition: max-height 0.3s ease-out, opacity 0.3s, visibility 0.3s;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        visibility: hidden;
+      }
+      .fr-collapse--expanded {
+        max-height: 500px;
+        opacity: 1;
+        visibility: visible;
+        overflow: auto;
+      }
+    `),
+  ];
+
   @property({ type: String })
   label = "";
 
@@ -70,40 +100,6 @@ export class DsfrAccordion extends LitElement {
     }
 
     return html`
-            <style>
-                ${unsafeCSS(coreStyles)}
-                ${unsafeCSS(schemeStyles)}
-                ${unsafeCSS(utilityStyles)}
-                ${unsafeCSS(accordionStyles)}
-                ${unsafeCSS(iconsStyles)}
-
-                :host {
-                    display: block;
-                }
-
-                /*
-                 * DSFR colors are usually defined in root.
-                 * In Shadow DOM, we might miss them if not inherited.
-                 * However, we assume the main app loads dsfr.min.css or core.
-                 * If not, we might need to inline them, but that's heavy.
-                 * For now, let's hope fixing the icons helps.
-                 */
-
-                .fr-collapse {
-                    transition: max-height 0.3s ease-out, opacity 0.3s, visibility 0.3s;
-                    max-height: 0;
-                    opacity: 0;
-                    overflow: hidden;
-                    visibility: hidden;
-                }
-
-                .fr-collapse--expanded {
-                    max-height: 500px;
-                    opacity: 1;
-                    visibility: visible;
-                    overflow: auto;
-                }
-            </style>
 			<section class="fr-accordion">
                 ${heading}
 				<div class="fr-collapse ${this.expanded ? "fr-collapse--expanded" : ""}" id="${contentId}">
