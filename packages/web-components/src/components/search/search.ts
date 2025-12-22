@@ -1,8 +1,13 @@
-import buttonStyles from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
-import formStyles from "@gouvfr/dsfr/dist/component/form/form.min.css?inline";
-import inputStyles from "@gouvfr/dsfr/dist/component/input/input.min.css?inline";
-import searchStyles from "@gouvfr/dsfr/dist/component/search/search.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  formStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import buttonCss from "@gouvfr/dsfr/dist/component/button/button.min.css?inline";
+import inputCss from "@gouvfr/dsfr/dist/component/input/input.min.css?inline";
+import searchCss from "@gouvfr/dsfr/dist/component/search/search.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -35,11 +40,14 @@ export class DsfrSearch extends LitElement {
   inputId = `search-input-${Math.random().toString(36).substring(2, 9)}`;
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(formStyles),
-    unsafeCSS(buttonStyles),
-    unsafeCSS(inputStyles),
-    unsafeCSS(searchStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    formStyles,
+    unsafeCSS(buttonCss),
+    unsafeCSS(inputCss),
+    unsafeCSS(searchCss),
   ];
 
   private _handleChange(e: Event) {

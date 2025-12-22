@@ -1,5 +1,10 @@
-import sidemenuStyles from "@gouvfr/dsfr/dist/component/sidemenu/sidemenu.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import sidemenuCss from "@gouvfr/dsfr/dist/component/sidemenu/sidemenu.min.css?inline";
 
 import { html, LitElement, nothing, type TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
@@ -37,7 +42,13 @@ export class DsfrSidemenu extends LitElement {
   @state()
   private _expandedMenus: Set<string> = new Set();
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(sidemenuStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(sidemenuCss),
+  ];
 
   private _toggleCollapse() {
     this._collapsed = !this._collapsed;
@@ -134,7 +145,13 @@ export class DsfrSidemenuLink extends LitElement {
   @property({ type: String })
   text = "";
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(sidemenuStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(sidemenuCss),
+  ];
 
   render() {
     return html`
@@ -161,7 +178,13 @@ export class DsfrSidemenuGroup extends LitElement {
   @property({ type: Boolean })
   active = false;
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(sidemenuStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(sidemenuCss),
+  ];
 
   private _toggle() {
     this.expanded = !this.expanded;

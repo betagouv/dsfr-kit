@@ -1,7 +1,12 @@
-import footerStyles from "@gouvfr/dsfr/dist/component/footer/footer.min.css?inline";
-import linkStyles from "@gouvfr/dsfr/dist/component/link/link.min.css?inline";
-import logoStyles from "@gouvfr/dsfr/dist/component/logo/logo.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  linkStyles,
+  logoStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import footerCss from "@gouvfr/dsfr/dist/component/footer/footer.min.css?inline";
 
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -64,10 +69,13 @@ export class DsfrFooter extends LitElement {
     'Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous <a href="https://github.com/etalab/licence-ouverte/blob/master/LO.md" target="_blank" rel="noopener external" title="Licence etalab - nouvelle fenêtre">licence etalab-2.0</a>';
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(logoStyles),
-    unsafeCSS(linkStyles),
-    unsafeCSS(footerStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    logoStyles,
+    linkStyles,
+    unsafeCSS(footerCss),
   ];
 
   render() {

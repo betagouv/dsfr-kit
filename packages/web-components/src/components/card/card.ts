@@ -1,8 +1,10 @@
-import cardStyles from "@gouvfr/dsfr/dist/component/card/card.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
-import schemeStyles from "@gouvfr/dsfr/dist/scheme/scheme.min.css?inline";
-import iconsStyles from "@gouvfr/dsfr/dist/utility/icons/icons.min.css?inline";
-import utilityStyles from "@gouvfr/dsfr/dist/utility/utility.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import cardCss from "@gouvfr/dsfr/dist/component/card/card.min.css?inline";
 import { html, LitElement, nothing, type TemplateResult, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -63,11 +65,11 @@ export class DsfrCard extends LitElement {
   headingLevel: "h2" | "h3" | "h4" | "h5" | "h6" = "h3";
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(schemeStyles),
-    unsafeCSS(utilityStyles),
-    unsafeCSS(iconsStyles),
-    unsafeCSS(cardStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(cardCss),
   ];
 
   private renderHeading(): TemplateResult {

@@ -1,5 +1,10 @@
-import tooltipStyles from "@gouvfr/dsfr/dist/component/tooltip/tooltip.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import tooltipCss from "@gouvfr/dsfr/dist/component/tooltip/tooltip.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
@@ -23,7 +28,13 @@ export class DsfrTooltip extends LitElement {
   @property({ type: String })
   id = `tooltip-${Math.random().toString(36).substring(2, 9)}`;
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(tooltipStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(tooltipCss),
+  ];
 
   render() {
     const buttonId = `button-${this.id}`;

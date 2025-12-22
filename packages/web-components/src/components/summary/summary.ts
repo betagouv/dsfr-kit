@@ -1,5 +1,10 @@
-import summaryStyles from "@gouvfr/dsfr/dist/component/summary/summary.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import summaryCss from "@gouvfr/dsfr/dist/component/summary/summary.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
@@ -26,7 +31,13 @@ export class DsfrSummary extends LitElement {
   @property({ type: String })
   summaryId = `summary-${Math.random().toString(36).substring(2, 9)}`;
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(summaryStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(summaryCss),
+  ];
 
   private _renderList(items: SummaryLink[]): unknown {
     if (!items || items.length === 0) return nothing;

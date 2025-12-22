@@ -1,5 +1,10 @@
-import toggleStyles from "@gouvfr/dsfr/dist/component/toggle/toggle.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import toggleCss from "@gouvfr/dsfr/dist/component/toggle/toggle.min.css?inline";
 import { html, LitElement, nothing, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -40,7 +45,13 @@ export class DsfrToggle extends LitElement {
   @property({ type: String })
   toggleId = `toggle-${Math.random().toString(36).substring(2, 9)}`;
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(toggleStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(toggleCss),
+  ];
 
   private _handleChange(e: Event) {
     const target = e.target as HTMLInputElement;

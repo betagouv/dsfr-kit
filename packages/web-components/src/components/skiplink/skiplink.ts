@@ -1,6 +1,11 @@
-import linkStyles from "@gouvfr/dsfr/dist/component/link/link.min.css?inline";
-import skiplinkStyles from "@gouvfr/dsfr/dist/component/skiplink/skiplink.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  linkStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import skiplinkCss from "@gouvfr/dsfr/dist/component/skiplink/skiplink.min.css?inline";
 
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
@@ -19,9 +24,12 @@ export class DsfrSkiplink extends LitElement {
   links: SkiplinkLink[] = [];
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(linkStyles),
-    unsafeCSS(skiplinkStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    linkStyles,
+    unsafeCSS(skiplinkCss),
   ];
 
   render() {
@@ -56,9 +64,12 @@ export class DsfrSkiplinkItem extends LitElement {
   label = "";
 
   static styles = [
-    unsafeCSS(coreStyles),
-    unsafeCSS(linkStyles),
-    unsafeCSS(skiplinkStyles),
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    linkStyles,
+    unsafeCSS(skiplinkCss),
   ];
 
   render() {

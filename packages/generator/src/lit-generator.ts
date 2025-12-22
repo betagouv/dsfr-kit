@@ -275,16 +275,27 @@ export function generateLitComponent(
 import { html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { coreStyles, schemeStyles, utilityStyles, iconsStyles } from '@dsfr-kit/styles';
+import {
+  coreStyles,
+  schemeStyles,
+  utilityStyles,
+  iconsStyles,
+  formStyles,
+  linkStyles,
+  logoStyles
+} from '@dsfr-kit/styles';
 ${styleImports}
 
-@customElement('${tagName}')
-export class ${className} extends LitElement {
+@customElement('${tagName}-gen')
+export class ${className}Gen extends LitElement {
   static override styles = [
     coreStyles,
     schemeStyles,
     utilityStyles,
     iconsStyles,
+    formStyles,
+    linkStyles,
+    logoStyles,
     ${componentStyles}
   ];
 

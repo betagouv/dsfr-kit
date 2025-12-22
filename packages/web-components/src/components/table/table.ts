@@ -1,5 +1,10 @@
-import tableStyles from "@gouvfr/dsfr/dist/component/table/table.min.css?inline";
-import coreStyles from "@gouvfr/dsfr/dist/core/core.min.css?inline";
+import {
+  coreStyles,
+  iconsStyles,
+  schemeStyles,
+  utilityStyles,
+} from "@dsfr-kit/styles";
+import tableCss from "@gouvfr/dsfr/dist/component/table/table.min.css?inline";
 import { html, LitElement, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -30,7 +35,13 @@ export class DsfrTable extends LitElement {
   @property({ type: String })
   size: "sm" | "md" | "lg" = "md";
 
-  static styles = [unsafeCSS(coreStyles), unsafeCSS(tableStyles)];
+  static styles = [
+    coreStyles,
+    schemeStyles,
+    utilityStyles,
+    iconsStyles,
+    unsafeCSS(tableCss),
+  ];
 
   render() {
     const tableClasses = {
