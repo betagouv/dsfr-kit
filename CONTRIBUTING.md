@@ -9,9 +9,10 @@ Thank you for your interest in contributing to DSFR Kit! This document provides 
 - [Project Structure](#project-structure)
 - [Adding New Packages](#adding-new-packages)
 - [Code Quality](#code-quality)
-- [Testing](#testing)
-- [Pull Request Process](#pull-request-process)
-- [Constitution](#constitution)
+- [testing](#testing)
+- [pull request process](#pull-request-process)
+- [open code philosophy](#open-code-philosophy)
+- [constitution](#constitution)
 
 ## Getting Started
 
@@ -48,9 +49,9 @@ The monorepo is organized into three top-level directories:
 
 ```
 dsfr-kit/
-├── apps/       # Deployable applications (any language)
-├── packages/   # TypeScript/JavaScript libraries
-└── libs/       # Python libraries
+├── apps/       # Deployable applications (CLI, etc.)
+├── packages/   # TypeScript/JavaScript libraries (Web Components, Generator, Core)
+└── libs/       # Python libraries (Roadmap)
 ```
 
 ### Directory Guidelines
@@ -244,8 +245,16 @@ just test
 # Run tests with coverage
 just test-coverage
 
-# Run tests for specific package
-just run-in @dsfr-kit/my-package test
+### Web Component Testing
+
+When contributing to Web Components:
+1.  **Storybook**: Every component MUST have a `.stories.ts` file in `apps/storybook`.
+2.  **Visual Regression**: Ensure your component looks identical to the native DSFR reference in Storybook.
+3.  **Accessibility**: Run `pnpm test:a11y` (if configured) or use the Storybook a11y addon.
+
+```bash
+# Start Storybook to verify components
+just storybook
 ```
 
 ## Pull Request Process
@@ -277,7 +286,7 @@ just run-in @dsfr-kit/my-package test
 6. **Create a Pull Request** with:
    - Clear description of changes
    - Link to related issues
-   - Screenshots (if UI changes)
+   - Screenshots or Screen Recordings of the Storybook comparison
    - Test results
 
 ### Commit Message Convention
@@ -290,6 +299,14 @@ Follow conventional commits:
 - `refactor:` - Code refactoring
 - `test:` - Test additions or changes
 - `chore:` - Build process or tooling changes
+
+## Open Code Philosophy
+
+Contributing to `dsfr-kit` means building components that are meant to be **owned by the user**.
+
+- **Keep it Readable**: Code clarity is more important than clever abstractions.
+- **Minimal Dependencies**: Components should rely on standard Web APIs and Lit as much as possible.
+- **Copy-Paste Friendly**: Aim for components that could theoretically be copied into another project with minimal friction.
 
 ## Constitution
 

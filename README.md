@@ -23,13 +23,14 @@ Traditional component libraries lock you into their APIs. When you need customiz
 - ✅ **No Black Boxes** - All logic is visible and modifiable
 - ✅ **AI-Friendly** - LLMs can read, understand, and improve your components
 
-## Supported Frameworks
+## Project Status: Work-In-Progress 🚧
 
-- **Web Components** - Vanilla JavaScript, framework-agnostic
-- **Next.js** - React framework with server components
-- **Solid.js** - Fine-grained reactive framework
-- **Streamlit** - Python data app framework
-- **Reflex** - Python web framework
+This project is currently in active development. The initial focus is on delivering a robust, high-fidelity library of **Web Components** that can be used everywhere.
+
+### Target Platforms
+
+- **Active**: [Web Components](file:///Users/luis/Code/betagouv/dsfr-kit/packages/web-components) (Vanilla JS/Lit)
+- **Roadmap**: Next.js, Solid.js, Streamlit (Python), Reflex (Python)
 
 ## Key Features
 
@@ -66,16 +67,16 @@ Components replicate official DSFR JavaScript behaviors across all frameworks:
 
 ### 🏗️ Monorepo Architecture
 
-Built with Turborepo for efficient multi-framework development:
+Built with Turborepo and [Moonrepo](https://moonrepo.dev/) for efficient multi-framework development:
 
 ```
 packages/
 ├── core/              # Shared utilities, DSFR token processing
-├── web-components/    # Web Components implementation
-├── nextjs/           # Next.js/React components
-├── solid/            # Solid.js components
-├── streamlit/        # Streamlit components (Python)
-└── reflex/           # Reflex components (Python)
+├── styles/           # Shared DSFR styles for Web Components
+├── generator/        # Component generation logic
+└── web-components/    # Web Components implementation (Active)
+apps/
+└── cli/              # Internal component generator CLI
 ```
 
 ### 📚 Interactive Component Documentation
@@ -139,17 +140,17 @@ just verify          # Verify workspace configuration
 
 ## Usage
 
-### Adding Components
+### Component Generation (Internal Tooling)
 
-Components are copied into your project as source code:
+Currently, components are generated from official DSFR source using our internal generator.
 
 ```bash
-# Add a button component
-npx dsfr-kit add button --framework nextjs
-
-# Add multiple components
-npx dsfr-kit add button card alert --framework solid
+# Generate a component (Developers/Contributors)
+pnpm run generate accordion
 ```
+
+> [!NOTE]
+> The `npx dsfr-kit add` command for end-users is currently on the roadmap.
 
 ### Customizing Components
 
@@ -206,21 +207,18 @@ module.exports = {
 ```
 dsfr-kit/
 ├── apps/                  # Deployable applications
-│   ├── docs/             # Documentation site (future)
-│   └── playground/       # Component playground (future)
+│   └── cli/              # Internal generation tooling
 ├── packages/              # TypeScript/JavaScript libraries
 │   ├── core/             # Shared TypeScript utilities
-│   ├── test-lib/         # Test package (example)
-│   ├── web-components/   # Web Components (future)
-│   ├── nextjs/           # Next.js components (future)
-│   └── solid/            # Solid.js components (future)
-├── libs/                  # Python libraries
+│   ├── generator/        # Hybrid AST component generator
+│   ├── styles/           # DSFR style wrappers for Lit
+│   └── web-components/   # Web Components (Active)
+├── libs/                  # Python libraries (Roadmap)
 │   ├── core/             # Core Python utilities
-│   ├── test/             # Test package (example)
-│   ├── streamlit/        # Streamlit components (future)
-│   └── reflex/           # Reflex components (future)
+│   └── ...
 ├── turbo.json            # Turborepo configuration
-├── pnpm-workspace.yaml   # pnpm workspaces (TypeScript/JavaScript)
+├── .moon/                # Moonrepo configuration (Task runner)
+├── pnpm-workspace.yaml   # pnpm workspaces
 ├── pyproject.toml        # uv workspace (Python)
 ├── justfile              # Command runner recipes
 └── tsconfig.json         # TypeScript project references

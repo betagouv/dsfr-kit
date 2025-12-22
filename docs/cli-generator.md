@@ -1,77 +1,82 @@
-# DSFR CLI Generator
+# Contributor Guide: Component Generation
 
-This tool automates the creation of Lit-based Web Components from the upstream DSFR (Direction Interministérielle du Numérique) source files.
+This guide explains how `dsfr-kit` automates the creation of Lit-based Web Components from upstream DSFR source files.
 
-## Overview
+## Overview: The Hybrid AST Strategy
 
-The generator works by "heuristic scaffolding":
-1.  **Locates** the original DSFR component source (EJS templates, SCSS/CSS, JS) from `node_modules`.
-2.  **Parses** the EJS template to extract properties (inputs) and HTML structure.
-3.  **Generates** a TypeScript file containing a `LitElement` class with:
-    *   Reactive `@property` definitions.
-    *   A `render()` method matching the official HTML structure.
-    *   Scoped CSS imports (using Vite `?inline` imports).
-    *   Basic interactive logic (e.g., toggle state for accordions) inferred from ARIA attributes.
+To avoid the fragility of regex-based parsing, the generator uses a multi-stage pipeline that combines JSDoc metadata, HTML AST, and masked JS AST.
 
-## Usage
+```mermaid
+graph TD
+    DSFR["DSFR Source (EJS, SCSS, JS)"] --> SL["SourceLocator"]
+    SL --> EP["EjsParser (JSDoc Metadata)"]
+    SL --> JP["JsParser (Logic Analysis)"]
+    SL --> LG["LitGenerator (HTML AST)"]
 
-The CLI is located in `apps/cli`.
+    EP --> Props["@property definitions"]
+    JP --> Logic["Computed states & logic"]
+    LG --> Template["render() method"]
 
-### Build
-
-```bash
-pnpm install
-pnpm build
+    Props & Logic & Template --> Output["Lit Web Component (.ts)"]
 ```
 
-### Generate a Component
+## Generation Pipeline
 
-Run the CLI usage the `generate` command:
+### 1. Metadata Strategy (JSDoc)
+The component API contract (properties and types) is derived from structured JSDoc comments at the top of DSFR EJS files using `comment-parser`.
+
+### 2. Logic Analysis (Masked JS AST)
+EJS scriptlets are tokenized and transformed into a "masked" JavaScript string.
+- HTML is replaced by whitespace to preserve line numbers.
+- EJS tags are wrapped in helper functions to create valid JS syntax.
+- `@babel/parser` then analyzes the resulting AST for semantic meaning (e.g., variable usage, control flow).
+
+### 3. Template Transformation (HTML AST)
+The visual structure is manipulated as a DOM tree using `node-html-parser`. This allows:
+- Precise attribute modification.
+- Safe injection of Lit bindings (`${this.foo}`).
+- Event listener mapping (e.g., mapping `aria-expanded` to `@click="${this.toggle}"`).
+
+## Development Usage
+
+The CLI generator is intended for **internal development only**.
+
+### Pre-requisites
+Ensure you have built the generator and CLI packages:
+
+```bash
+just build
+```
+
+### Generating a Component
+
+Run the generator from the root using `pnpm`:
 
 ```bash
 # General syntax
-node apps/cli/dist/index.js generate <component-name> --output <output-dir>
+pnpm --filter @dsfr-kit/cli run generate <component> --output <dir>
 
-# Example: Generate the Accordion component
-node apps/cli/dist/index.js generate accordion --output src/components
+# Example: Regenerate the Accordion
+pnpm --filter @dsfr-kit/cli run generate accordion --output packages/web-components/src/components/accordion
 ```
 
-## Architecture
+## Troubleshooting
 
-The project is split into two workspaces:
+### "Could not find source for X"
+- Ensure the `@gouvfr/dsfr` package is installed in `node_modules`.
+- Check `packages/generator/src/source-locator.ts` for directory mapping logic.
 
-### `apps/cli`
-A thin command-line wrapper using [Commander.js](https://github.com/tj/commander.js). It handles argument parsing and file writing.
+### Broken Template Output
+- If the generated `render()` method has syntax errors, check if the EJS contains complex logic not yet supported by the `LitGenerator`.
+- You may need to manually "tweak" the generated component to fix complex EJS helpers.
 
-### `packages/generator`
-Contains the core logic, designed purely functionally. It uses a **Hybrid AST Strategy** to avoid the fragility of regex-based parsing:
+### Missing Styles
+- Verify that the `StyleResolver` correctly identifies all required CSS modules for the component.
+- Check `packages/styles/src/index.ts` to see if the required base styles are exported.
 
-1.  **`SourceLocator`**: Finds DSFR source files in `node_modules` (EJS templates, etc.).
-2.  **`EjsParser`**: Extracts component metadata (props, default values) from JSDoc headers using **`comment-parser`**.
-3.  **`JsParser` (Advanced Logic)**: Tokenizes EJS templates and creates a **Masked JS AST** using **`@babel/parser`**.
-    *   *Mechanism*: Replaces HTML content with whitespace (preserving line numbers) and wraps EJS output tags to create valid JavaScript.
-    *   *Purpose*: Validates syntax and enables semantic analysis of variable usage and control flow.
-4.  **`LitGenerator`**: Transforms the template using **`node-html-parser`** (HTML AST).
-    *   Traverses the DOM to safely inject Lit bindings and event listeners (e.g., `@click`).
-    *   Handles EJS helpers by pre-processing them into `data-ejs-*` attributes before parsing.
-5.  **`StyleResolver`**: Identifies component-specific CSS bundles.
+## Extending the Generator
 
-## Parsing Strategy
-The generator employs a robust three-stage parsing pipeline:
-*   **Stage 1: Metadata (JSDoc)** - The "API contract" (inputs) is derived from the structured comments at the top of EJS files.
-*   **Stage 2: Structure (HTML AST)** - The visual structure is manipulated as a DOM tree, allowing precise attribute modification without regex side-effects.
-*   **Stage 3: Logic (JS AST)** - The dynamic behavior (EJS scriptlets) is parsed as JavaScript, ensuring only syntactically valid logic is processed.
-
-## Supported Features (Prototype)
-*   **Property Extraction**: Types (`string`, `boolean`, `number`) are mapped to Lit props.
-*   **Template Transformation**: EJS variables (`<%= foo %>`) are converted to Lit bindings (`${this.foo}`) via **HTML AST**, ensuring valid attribute placement.
-*   **Logic Analysis**: Embedded JS is validated via **Babel**, creating a foundation for complex control flow generation.
-*   **Logic Heuristics**:
-    *   Detects `aria-expanded` to scaffold `toggle()` methods.
-    *   Injects default `prefix` property.
-*   **Style Injection**: Automatically imports `core.min.css`, `scheme.min.css`, and component-specific styles (e.g., `accordion.min.css`).
-
-## Extending
-To support more complex components:
-1.  Update `packages/generator/src/lit-generator.ts` to handle more EJS helpers (e.g., `includeAttrs` logic).
-2.  Refine `StyleResolver` to handle complex dependency graphs (e.g., components requiring multiple CSS modules).
+To support new EJS patterns:
+1.  Add a test case in `packages/generator/test`.
+2.  Update `LitGenerator.ts` to handle the new `data-ejs-*` attribute mapping.
+3.  Verification: Ensure the output Lit template is valid and reactive.
