@@ -1,5 +1,0 @@
-packages/web-components/src/components/alert/alert.ts
-packages/web-components/src/components/badge/badge.ts
-packages/web-components/src/components/button/button.ts
-packages/web-components/src/components/breadcrumb/breadcrumb.ts
-packages/web-components/src/components/accordion/accordion-group.ts
