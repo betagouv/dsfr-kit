@@ -6,7 +6,6 @@ requires-python = ">=3.12"
 members = [
     "dsfr-kit",
     "dsfr-kit-core",
-    "dsfr-kit-test",
 ]
 
 [[package]]
@@ -50,17 +49,6 @@ dev = [
 name = "dsfr-kit-core"
 version = "0.1.0"
 source = { editable = "libs/core" }
-
-[[package]]
-name = "dsfr-kit-test"
-version = "0.1.0"
-source = { editable = "libs/test" }
-dependencies = [
-    { name = "dsfr-kit-core" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "dsfr-kit-core", editable = "libs/core" }]
 
 [[package]]
 name = "filelock"
