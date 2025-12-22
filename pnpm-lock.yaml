@@ -143,16 +143,6 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
-  packages/test-lib:
-    dependencies:
-      '@dsfr-kit/core':
-        specifier: workspace:*
-        version: link:../core
-    devDependencies:
-      typescript:
-        specifier: ^5.0.0
-        version: 5.9.3
-
   packages/web-components:
     dependencies:
       '@dsfr-kit/styles':

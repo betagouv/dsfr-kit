@@ -1,7 +1,7 @@
 [project]
 name = "dsfr-kit-core"
 version = "0.1.0"
-description = "Core Python utilities for DSFR component library"
+description = "Future Python implementation for DSFR component library (Streamlit, Reflex)"
 requires-python = ">=3.12"
 dependencies = []
 

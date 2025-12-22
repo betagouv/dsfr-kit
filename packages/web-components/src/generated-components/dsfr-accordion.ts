@@ -1,19 +1,18 @@
-
-import { html, LitElement, unsafeCSS } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import {
   coreStyles,
+  formStyles,
+  iconsStyles,
+  linkStyles,
+  logoStyles,
   schemeStyles,
   utilityStyles,
-  iconsStyles,
-  formStyles,
-  linkStyles,
-  logoStyles
-} from '@dsfr-kit/styles';
-import style0 from '@gouvfr/dsfr/dist/component/accordion/accordion.min.css?inline';
+} from "@dsfr-kit/styles";
+import style0 from "@gouvfr/dsfr/dist/component/accordion/accordion.min.css?inline";
+import { html, LitElement, unsafeCSS } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { unsafeHTML } from "lit/directives/unsafe-html.js";
 
-@customElement('dsfr-accordion-gen')
+@customElement("dsfr-accordion-gen")
 export class DsfrAccordionGen extends LitElement {
   static override styles = [
     coreStyles,
@@ -23,7 +22,7 @@ export class DsfrAccordionGen extends LitElement {
     formStyles,
     linkStyles,
     logoStyles,
-    unsafeCSS(style0)
+    unsafeCSS(style0),
   ];
 
   @property({ type: String }) id = "";
@@ -36,11 +35,13 @@ export class DsfrAccordionGen extends LitElement {
 
   toggle() {
     this.isExpanded = !this.isExpanded;
-    this.dispatchEvent(new CustomEvent('dsfr-toggle', {
-      detail: { isExpanded: this.isExpanded },
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent("dsfr-toggle", {
+        detail: { isExpanded: this.isExpanded },
+        bubbles: true,
+        composed: true,
+      }),
+    );
   }
 
   render() {
