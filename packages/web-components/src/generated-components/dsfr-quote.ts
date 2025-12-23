@@ -2,30 +2,12 @@
 import { html, LitElement, unsafeCSS, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import {
-  coreStyles,
-  schemeStyles,
-  utilityStyles,
-  iconsStyles,
-  formStyles,
-  linkStyles,
-  logoStyles
-} from '@dsfr-kit/styles';
+import { coreStyles, schemeStyles, utilityStyles, iconsStyles, formStyles, linkStyles, logoStyles } from '@dsfr-kit/styles';
 import style0 from '@gouvfr/dsfr/dist/component/quote/quote.min.css?inline';
 
 @customElement('dsfr-quote-gen')
 export class DsfrQuoteGen extends LitElement {
-  static override styles = [
-    coreStyles,
-    schemeStyles,
-    utilityStyles,
-    iconsStyles,
-    formStyles,
-    linkStyles,
-    logoStyles,
-    unsafeCSS(style0)
-  ];
-
+  static override styles = [coreStyles, schemeStyles, utilityStyles, iconsStyles, formStyles, linkStyles, logoStyles, unsafeCSS(style0)];
   @property({ type: String }) size = "";
   @property({ type: String }) text = "";
   @property({ type: Object }) image = {};
@@ -38,40 +20,38 @@ export class DsfrQuoteGen extends LitElement {
   @property({ type: String }) dsfrAttributes = "";
 
   render() {
-    return html`
-      %>
+    return html`%>
 
 
 
 
-<figure ${this.dsfrAttributes || ""} class="${this.dsfrClasses || ""}">
-  <blockquote ${this.dsfrAttributes || ""}>
-    <p class="${this.dsfrClasses || ""}">« ${unsafeHTML(this.text)} »</p>
+<figure <dsfr-ejs-include data-include="includeAttrs(quoteAttrs)"> <!-- TODO: Include includeClasses(quoteClasses) -->>
+  <blockquote <dsfr-ejs-include data-include="includeAttrs(blockAttrs)">>
+    <p <dsfr-ejs-include data-include="includeClasses(sizeClasses)">>« ${unsafeHTML(this.text)} »</p>
   </blockquote>
   <figcaption>
     ${this.author ? html`
       <p class="${this.prefix}-quote__author">${unsafeHTML(this.author)}</p>
-    ` : nothing }
+    `) : nothing }
 
     ${this.sources && this.sources.length > 1 ? html`
       <ul class="${this.prefix}-quote__source">
-      ${/* Unsupported Loop: source in this.sources */ html`
-        <li><%- sources[source] %></li>
+      ${true /* Unsupported: source in this.sources */ ? html`
+        <li>${unsafeHTML(this.sources[source])}</li>
       `) : nothing }
       </ul>
     
       <div class="${this.prefix}-quote__source">
-        <%- sources[0] %>
+        ${unsafeHTML(this.sources[0])}
       </div>
-    ` : nothing }
+    `) : nothing }
 
     ${this.image ? html`
       <div class="${this.prefix}-quote__image">
           <!-- TODO: Include include('../../../../core/template/ejs/media/responsive-img.ejs', {media: image}); -->
       </div>
-    ` : nothing }
+    `) : nothing }
   </figcaption>
-</figure>
-    `;
+</figure>`;
   }
 }

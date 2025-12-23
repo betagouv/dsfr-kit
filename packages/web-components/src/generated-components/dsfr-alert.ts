@@ -2,30 +2,12 @@
 import { html, LitElement, unsafeCSS, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import {
-  coreStyles,
-  schemeStyles,
-  utilityStyles,
-  iconsStyles,
-  formStyles,
-  linkStyles,
-  logoStyles
-} from '@dsfr-kit/styles';
+import { coreStyles, schemeStyles, utilityStyles, iconsStyles, formStyles, linkStyles, logoStyles } from '@dsfr-kit/styles';
 import style0 from '@gouvfr/dsfr/dist/component/alert/alert.min.css?inline';
 
 @customElement('dsfr-alert-gen')
 export class DsfrAlertGen extends LitElement {
-  static override styles = [
-    coreStyles,
-    schemeStyles,
-    utilityStyles,
-    iconsStyles,
-    formStyles,
-    linkStyles,
-    logoStyles,
-    unsafeCSS(style0)
-  ];
-
+  static override styles = [coreStyles, schemeStyles, utilityStyles, iconsStyles, formStyles, linkStyles, logoStyles, unsafeCSS(style0)];
   @property({ type: String }) id = "";
   @property({ type: String }) title = "";
   @property({ type: String }) text = "";
@@ -43,26 +25,24 @@ export class DsfrAlertGen extends LitElement {
   @property({ type: String }) dsfrAttributes = "";
 
   render() {
-    return html`
-      %>
+    return html`%>
 
 
 
 
-<div ${this.dsfrAttributes || ""} class="${this.dsfrClasses || ""}">
+<div <dsfr-ejs-include data-include="includeAttrs(attributes);"> <!-- TODO: Include includeClasses(classes); -->>
 
   ${this.title ? html`
     <${unsafeHTML(this.markup)} class="${unsafeHTML(this.prefix)}-alert__title">${unsafeHTML(this.title)}</${unsafeHTML(this.markup)}>
-  ` : nothing }
+  `) : nothing }
 
   ${this.text ? html`
     <p>${unsafeHTML(this.text)}</p>
-  ` : nothing }
+  `) : nothing }
 
-  ${this.dismissible ? html`
-    <!-- TODO: Include include('../../../button/template/ejs/button', {button: {size: 'md', classes: [`${prefix}-btn--close`], ...alert.button}}) -->
-  ` : nothing }
-</div>
-    `;
+  ${this.this.dismissible ? html`
+    
+  `) : nothing }
+</div>`;
   }
 }

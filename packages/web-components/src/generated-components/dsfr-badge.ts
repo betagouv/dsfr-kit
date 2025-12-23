@@ -2,30 +2,12 @@
 import { html, LitElement, unsafeCSS, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import {
-  coreStyles,
-  schemeStyles,
-  utilityStyles,
-  iconsStyles,
-  formStyles,
-  linkStyles,
-  logoStyles
-} from '@dsfr-kit/styles';
+import { coreStyles, schemeStyles, utilityStyles, iconsStyles, formStyles, linkStyles, logoStyles } from '@dsfr-kit/styles';
 import style0 from '@gouvfr/dsfr/dist/component/badge/badge.min.css?inline';
 
 @customElement('dsfr-badge-gen')
 export class DsfrBadgeGen extends LitElement {
-  static override styles = [
-    coreStyles,
-    schemeStyles,
-    utilityStyles,
-    iconsStyles,
-    formStyles,
-    linkStyles,
-    logoStyles,
-    unsafeCSS(style0)
-  ];
-
+  static override styles = [coreStyles, schemeStyles, utilityStyles, iconsStyles, formStyles, linkStyles, logoStyles, unsafeCSS(style0)];
   @property({ type: Object }) badge = {};
   @property({ type: String }) label = "";
   @property({ type: String }) type = "";
@@ -45,26 +27,18 @@ export class DsfrBadgeGen extends LitElement {
     if (this.size === 'sm') classes.push(this.prefix + '-badge--sm');
     if (this.type) classes.push(this.prefix + '-badge--' + this.type);
     else if (this.accent) classes.push(this.prefix + '-badge--' + this.accent);
-
-    if (this.icon === "false") {
-        classes.push(this.prefix + '-badge--no-icon');
-    } else if (this.icon) {
-        classes.push(this.prefix + '-icon-' + this.icon);
-        classes.push(this.prefix + '-badge--icon-left');
-    }
-
-    if (this.classes) classes.push(this.classes);
+    if (this.icon === "false") { classes.push(this.prefix + '-badge--no-icon'); }
+    else if (this.icon) { classes.push(this.prefix + '-icon-' + this.icon); classes.push(this.prefix + '-badge--icon-left'); }
+    if (this.classes) { if (Array.isArray(this.classes)) classes.push(...this.classes); else classes.push(this.classes); }
     if (this.dsfrClasses) classes.push(this.dsfrClasses);
     return classes.join(' ');
   }
 
   render() {
     return html`
-      
 
 
 
-<${unsafeHTML(this.markup)} ${this.dsfrAttributes || ""} class="${this._classes}">${unsafeHTML(this.label)}</${unsafeHTML(this.markup)}>
-    `;
+<${unsafeHTML(this.markup)} <!-- TODO: Include includeAttrs(attrs) --> <!-- TODO: Include includeClasses(classes) -->>${unsafeHTML(this.this.label)}</${unsafeHTML(this.markup)}>`;
   }
 }

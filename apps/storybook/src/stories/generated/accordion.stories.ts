@@ -13,7 +13,7 @@ interface AccordionArgs {
 const accordionArgTypes: ArgTypes<AccordionArgs> = {
   label: {
     control: "text",
-    description: "Libellé de l'accordéon",
+    description: "Libellé accordéon",
   },
   content: {
     control: "text",
@@ -30,7 +30,7 @@ const accordionArgTypes: ArgTypes<AccordionArgs> = {
 };
 
 const accordionArgs: AccordionArgs = {
-  label: "Libellé de l'accordéon (Généré)",
+  label: "Libellé accordéon",
   content:
     "<h4>Contenu</h4> <p>Lorem ipsum dolor sit amet, consectetur adipiscing, incididunt, ut labore et dolore magna aliqua. Vitae sapien pellentesque habitant morbi tristique senectus et. Diam maecenas sed enim ut. Accumsan lacus vel facilisis volutpat est. Ut aliquam purus sit amet luctus. Lorem ipsum dolor sit amet consectetur adipiscing elit ut.</p>",
   isExpanded: false,
