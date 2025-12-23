@@ -14,6 +14,10 @@ function toLitType(type: string): string {
       return "Boolean";
     case "number":
       return "Number";
+    case "array":
+      return "Array";
+    case "object":
+      return "Object";
     default:
       return "String";
   }
@@ -26,6 +30,10 @@ function defaultValue(prop: ComponentProperty): string {
       return "false";
     case "number":
       return "0";
+    case "array":
+      return "[]";
+    case "object":
+      return "{}";
     default:
       return '""';
   }
@@ -135,13 +143,103 @@ export function generateLitComponent(
   // specific helpers: includeClasses, includeAttrs
   let processedTemplate = parsed.template;
   processedTemplate = processedTemplate.replace(
-    /<%-\s*includeClasses\(([^)]+)\)\s*%>/g,
+    /<%-\s*includeClasses\(([^)]+)\);?\s*%>/g,
     'data-ejs-include-classes="$1"',
   );
   processedTemplate = processedTemplate.replace(
-    /<%-\s*includeAttrs\(([^)]+)\)[^%]*%>/g,
+    /<%-\s*includeAttrs\(([^)]+)\);?\s*%>/g,
     'data-ejs-include-attrs="$1"',
   );
+
+  // Transform Control Flow (if/for/include) to Custom Tags
+  // We use a stack to handle nesting, but simple regex replacement might be tricky for closing brace.
+  // We iterate through all <% ... %> tags.
+
+  const fragments: string[] = [];
+  let lastIndex = 0;
+  let stack: string[] = [];
+  const tagRegex = /<%([-=])?([\s\S]*?)%>/g;
+  let match;
+
+  // Helper to resolve variables in expressions
+  const propNames = parsed.properties.map((p) => p.name);
+  const resolveVars = (expr: string) => {
+    // 1. Replace variableName.prop -> this.prop
+    // e.g. alert.dismissible -> this.dismissible
+    const varNameRegex = new RegExp(
+      `\\b${source.variableName}\\.([a-zA-Z0-9_]+)\\b`,
+      "g",
+    );
+    let resolved = expr.replace(varNameRegex, (m, prop) => {
+      // We assume it maps to a property.
+      return `this.${prop}`;
+    });
+
+    // 2. Replace identifiers that match property names with this.prop
+    // Ignore if preceded by . (dot) ' or " or `
+    resolved = resolved.replace(/(?<![\.\'\"`])\b([a-zA-Z0-9_]+)\b/g, (m) => {
+      if (propNames.includes(m)) return `this.${m}`;
+      return m;
+    });
+    return resolved;
+  };
+
+  while ((match = tagRegex.exec(processedTemplate)) !== null) {
+    // Add text before the tag
+    fragments.push(processedTemplate.substring(lastIndex, match.index));
+    lastIndex = tagRegex.lastIndex;
+
+    const isOutput = match[1] === "-" || match[1] === "=";
+    const content = match[2].trim();
+
+    if (isOutput) {
+      // Check for include
+      if (content.startsWith("include")) {
+        // <%- include(path, params) %>
+        fragments.push(
+          `<dsfr-ejs-include data-include="${content.replace(/"/g, "'")}"></dsfr-ejs-include>`,
+        );
+      } else {
+        // Standard output variable, keep as is for traverseAndReplace to handle?
+        fragments.push(match[0]);
+      }
+    } else {
+      // Scriptlet
+      if (content.match(/^if\s*\(.*\)\s*\{$/)) {
+        // if (cond) {
+        const cond = content.match(/^if\s*\((.*)\)\s*\{$/)![1];
+        const resolvedCond = resolveVars(cond);
+        fragments.push(
+          `<dsfr-logic-if condition="${resolvedCond.replace(/"/g, "&quot;")}">`,
+        );
+        stack.push("if");
+      } else if (content.match(/^for\s*\(.*\)\s*\{$/)) {
+        // for (let x of y) {
+        const loop = content.match(/^for\s*\((.*)\)\s*\{$/)![1];
+        // Only resolve variables in the loop expression that need it?
+        // for (let x of y) -> x is def, y is prop?
+        // resolveVars will replace y with this.y if it matches prop.
+        const resolvedLoop = resolveVars(loop);
+        fragments.push(
+          `<dsfr-logic-for loop="${resolvedLoop.replace(/"/g, "&quot;")}">`,
+        );
+        stack.push("for");
+      } else if (content === "}") {
+        const type = stack.pop();
+        if (type === "if") fragments.push(`</dsfr-logic-if>`);
+        else if (type === "for") fragments.push(`</dsfr-logic-for>`);
+        else {
+          // Closing something else? switch?
+        }
+      } else if (content.startsWith("switch")) {
+        // Switch support is harder.
+      } else {
+        // Arbitrary JS.
+      }
+    }
+  }
+  fragments.push(processedTemplate.substring(lastIndex));
+  processedTemplate = fragments.join("");
 
   const root = parse(processedTemplate);
 
@@ -149,6 +247,7 @@ export function generateLitComponent(
   traverseAndReplace(root, source.variableName);
 
   let extraLogic = "";
+  // ... (existing heuristics)
 
   // Heuristic: Toggle Logic
   const hasExpanded = parsed.properties.find((p) => p.name === "isExpanded");
@@ -183,6 +282,45 @@ export function generateLitComponent(
 
   // Serialize back to string
   let litTemplate = root.toString();
+
+  // Post-processing Logic Tags
+  // 1. IF
+  litTemplate = litTemplate.replace(
+    /<dsfr-logic-if condition="([^"]*)">/g,
+    (match, cond) => {
+      const unescaped = cond.replace(/&quot;/g, '"');
+      return `\${${unescaped} ? html\``;
+    },
+  );
+  litTemplate = litTemplate.replace(/<\/dsfr-logic-if>/g, "` : nothing }");
+
+  // 2. FOR
+  // We assume `let item of items` syntax
+  litTemplate = litTemplate.replace(
+    /<dsfr-logic-for loop="([^"]*)">/g,
+    (match, loop) => {
+      const unescaped = loop.replace(/&quot;/g, '"');
+      // Try to parse "let x of y" or "const x of y"
+      const loopMatch = unescaped.match(/(?:let|const|var)\s+(.+)\s+of\s+(.+)/);
+      if (loopMatch) {
+        const item = loopMatch[1];
+        const iterable = loopMatch[2];
+        return `\${${iterable} ? ${iterable}.map(${item} => html\``;
+      }
+      // Fallback or other loop types?
+      // If C-style, map is hard.
+      return `\${/* Unsupported Loop: ${unescaped} */ html\``;
+    },
+  );
+  litTemplate = litTemplate.replace(/<\/dsfr-logic-for>/g, "`) : nothing }");
+
+  // 3. Include
+  litTemplate = litTemplate.replace(
+    /<dsfr-ejs-include data-include="([^"]*)"><\/dsfr-ejs-include>/g,
+    (match, includeStr) => {
+      return `<!-- TODO: Include ${includeStr} -->`;
+    },
+  );
 
   // Post-processing
   // Replace markers with actual Lit bindings
@@ -260,6 +398,47 @@ export function generateLitComponent(
     }
   }
 
+  if (source.componentName === "badge") {
+    // Add size property if missing (it is missing in JSDoc)
+    if (!parsed.properties.find((p) => p.name === "size")) {
+      props += '\n  @property({ type: String }) size = "";';
+    }
+
+    // Add computed classes logic
+    extraLogic += `
+  get _classes() {
+    const classes = [this.prefix + '-badge'];
+    if (this.size === 'sm') classes.push(this.prefix + '-badge--sm');
+    if (this.type) classes.push(this.prefix + '-badge--' + this.type);
+    else if (this.accent) classes.push(this.prefix + '-badge--' + this.accent);
+
+    if (this.icon === "false") {
+        classes.push(this.prefix + '-badge--no-icon');
+    } else if (this.icon) {
+        classes.push(this.prefix + '-icon-' + this.icon);
+        classes.push(this.prefix + '-badge--icon-left');
+    }
+
+    if (this.classes) classes.push(this.classes);
+    if (this.dsfrClasses) classes.push(this.dsfrClasses);
+    return classes.join(' ');
+  }
+`;
+    // Replace class binding
+    // The previous regex replacement for data-ejs-include-classes used "${this.dsfrClasses || ""}"
+    // We need to target that specific output if it happened, OR target the data-ejs attribute if it hasn't been replaced yet?
+    // Wait, the previous replacements happen BEFORE this block in my code above?
+    // No, I am inserting this code at line 248 approx.
+    // The previous replacement (lines 235-244) ALREADY ran.
+    // So existing output is `class="... ${this.dsfrClasses || ""}"` or `class="${this.dsfrClasses || ""}"`.
+
+    // We replace `${this.dsfrClasses || ""}` with `${this._classes}`.
+    litTemplate = litTemplate.replace(
+      /\$\{this\.dsfrClasses \|\| ""\}/g,
+      "${this._classes}",
+    );
+  }
+
   // For attributes, we want to inject into the tag.
   // node-html-parser outputs attributes as key="value".
   // data-ejs-include-attrs="attributes" -> ${this.attributes || ""}
@@ -293,7 +472,7 @@ export function generateLitComponent(
     .join(",\n    ");
 
   return `
-import { html, LitElement, unsafeCSS } from 'lit';
+import { html, LitElement, unsafeCSS, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import {

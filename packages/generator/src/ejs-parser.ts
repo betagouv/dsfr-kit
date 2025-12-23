@@ -78,7 +78,7 @@ export function parseEjs(ejsPath: string): ParsedComponent {
         // Capture description: (.*)
 
         const lineRegex =
-          /^\s*\*?\s*(?:-\s*)?([\w.]+)\s*\(([^)]+)\).*?:\s*(.*)$/;
+          /^\s*(?:\*+|\*\*?)\s*(?:-\s*)?([\w.]+)\s*\(([^)]+)\).*?:\s*(.*)$/;
         const lineMatch = lineRegex.exec(line);
 
         if (lineMatch) {
@@ -91,6 +91,8 @@ export function parseEjs(ejsPath: string): ParsedComponent {
           let type = "string";
           if (details.includes("boolean")) type = "boolean";
           else if (details.includes("number")) type = "number";
+          else if (details.includes("array")) type = "array";
+          else if (details.includes("object")) type = "object";
 
           // "required" might be in details
           const required = !details.includes("optional");
@@ -98,11 +100,30 @@ export function parseEjs(ejsPath: string): ParsedComponent {
           // description
           const desc = lineMatch[3];
 
+          // Extract default from description
+          // Matches [default: value] or (default: value)
+          const defaultRegex = /(?:\[|\()default:\s*([^\])]+)(?:\]|\))/i;
+          const defaultMatch = defaultRegex.exec(desc);
+          let defaultValue: string | undefined = undefined;
+
+          if (defaultMatch) {
+            defaultValue = defaultMatch[1].trim();
+            // Quote string defaults if needed, but here we just store the raw string usually
+            if (
+              type === "string" &&
+              !defaultValue.startsWith('"') &&
+              !defaultValue.startsWith("'")
+            ) {
+              defaultValue = `"${defaultValue}"`;
+            }
+          }
+
           properties.push({
             name: propName,
             type,
             required,
             description: desc || "",
+            default: defaultValue,
           });
         }
       }
