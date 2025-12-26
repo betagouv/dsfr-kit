@@ -21,9 +21,6 @@ importers:
 
   apps/cli:
     dependencies:
-      '@dsfr-kit/generator':
-        specifier: workspace:*
-        version: link:../../packages/generator
       '@dsfr-kit/generator-core':
         specifier: workspace:^
         version: link:../../packages/generator-core
