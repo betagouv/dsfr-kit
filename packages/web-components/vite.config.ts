@@ -9,13 +9,15 @@ export default defineConfig({
       fileName: (format) => `dsfr-web-components.${format}.js`,
     },
     rollupOptions: {
-      // Make sure to externalize deps that shouldn't be bundled/
+      // Make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: [],
+      external: ["lit", /^lit\/.*/, "@lit/reactive-element", /^@lit\/.*/],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
-        globals: {},
+        globals: {
+          lit: "Lit",
+        },
       },
     },
   },

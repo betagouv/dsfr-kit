@@ -19,8 +19,10 @@
   },
   "dependencies": {
     "@dsfr-kit/styles": "workspace:*",
-    "@gouvfr/dsfr": "^1.14.2",
-    "lit": "^3.1.2"
+    "@gouvfr/dsfr": "^1.14.2"
+  },
+  "peerDependencies": {
+    "lit": "^3.0.0"
   },
   "devDependencies": {
     "typescript": "^5.3.3",
