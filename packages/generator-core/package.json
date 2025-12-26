@@ -1,7 +1,7 @@
 {
-  "name": "@dsfr-kit/generator",
+  "name": "@dsfr-kit/generator-core",
   "version": "0.0.1",
-  "description": "Core logic for generating DSFR web components",
+  "description": "Core logic and AST definitions for DSFR generator",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -19,14 +19,13 @@
   },
   "dependencies": {
     "@babel/parser": "^7.28.5",
+    "@gouvfr/dsfr": "^1.14.2",
     "comment-parser": "^1.4.1",
-    "ejs": "^3.1.9",
-    "node-html-parser": "^7.0.1"
+    "node-html-parser": "^7.0.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
-    "@gouvfr/dsfr": "^1.14.2",
-    "@types/ejs": "^3.1.5",
     "@types/node": "^20.11.24",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3"

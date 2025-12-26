@@ -1,7 +1,7 @@
 import { parse } from "@babel/parser";
 
 // Types mimicking EJS internal structure
-interface EjsToken {
+export interface EjsToken {
   type: "string" | "tag" | "comment";
   content: string;
   lineNo: number;
