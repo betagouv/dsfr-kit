@@ -25,11 +25,11 @@ Traditional component libraries lock you into their APIs. When you need customiz
 
 ## Project Status: Work-In-Progress 🚧
 
-This project is currently in active development. The initial focus is on delivering a robust, high-fidelity library of **Web Components** that can be used everywhere.
+This project is currently in active development. The initial focus is on delivering a robust, high-fidelity library of **Lit components** that can be used everywhere.
 
 ### Target Platforms
 
-- **Active**: [Web Components](file:///Users/luis/Code/betagouv/dsfr-kit/packages/web-components) (Vanilla JS/Lit)
+- **Active**: [Lit](file:///Users/luis/Code/betagouv/dsfr-kit/packages/lit) (Vanilla JS/Lit)
 - **Roadmap**: Next.js, Solid.js, Streamlit (Python), Reflex (Python)
 
 ## Key Features
@@ -72,9 +72,9 @@ Built with Turborepo and [Moonrepo](https://moonrepo.dev/) for efficient multi-f
 ```
 packages/
 ├── core/              # Shared utilities, DSFR token processing
-├── styles/           # Shared DSFR styles for Web Components
+├── styles/           # Shared DSFR styles for Lit
 ├── generator/        # Component generation logic
-└── web-components/    # Web Components implementation (Active)
+└── lit/              # Lit implementation (Active)
 apps/
 └── cli/              # Internal component generator CLI
 ```
@@ -212,7 +212,7 @@ dsfr-kit/
 │   ├── core/             # Shared TypeScript utilities
 │   ├── generator/        # Hybrid AST component generator
 │   ├── styles/           # DSFR style wrappers for Lit
-│   └── web-components/   # Web Components (Active)
+│   └── lit/              # Lit components (Active)
 ├── libs/                  # Python libraries (Roadmap)
 │   ├── core/             # Core Python utilities
 │   └── ...

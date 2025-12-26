@@ -57,7 +57,7 @@ Run the generator from the root using `pnpm`:
 pnpm --filter @dsfr-kit/cli run generate <component> --output <dir>
 
 # Example: Regenerate the Accordion
-pnpm --filter @dsfr-kit/cli run generate accordion --output packages/web-components/src/components/accordion
+pnpm --filter @dsfr-kit/cli run generate accordion --output packages/lit/src/components/accordion
 ```
 
 ## Troubleshooting

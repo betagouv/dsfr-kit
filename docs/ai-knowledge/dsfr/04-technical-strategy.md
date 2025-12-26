@@ -39,14 +39,14 @@ The user requested a mechanism to easily embed custom, interactive elements insi
     *   Events bubbled from inner elements (like a click on that embedded button) propagate naturally to the application root. React/Vue listeners on the container work as expected.
 
 ### Recommendation
-**Go with Web Components (TypeScript).**
+**Go with Lit.**
 *   **Tooling**: **Lit** (lightweight, standard).
 *   **Strategy**: **Light DOM** approach. wrappers around the HTML structure defined in our knowledge base.
 *   **Verification**: The **Badge** is the perfect candidate. It's simple, visual, and allows testing the build pipeline.
 
 ## Implementation Scope (PoC)
 1.  **Repository**: Monorepo using `pnpm` workspace (already set up).
-2.  **Package**: `packages/web-components` (or `dsfr-web`).
+2.  **Package**: `packages/lit` (or `dsfr-lit`).
 3.  **Tech**: TypeScript + Lit (Light DOM).
 4.  **Build**: Vite (fast, standard).
 5.  **Output**: ESM modules + Types.
@@ -55,10 +55,10 @@ The user requested a mechanism to easily embed custom, interactive elements insi
 | Approach | Pros | Cons |
 | :--- | :--- | :--- |
 | **Native Framework Libs** (React/Vue/Ang specific) | Perfect DX for that specific framework. | **Maintenance Nightmare**. 3x code. Python/Ruby users left behind. |
-| **Web Components** | **Write Once, Run Everywhere**. | Slightly strictly custom element usage in older layouts (minor). |
+| **Lit** | **Write Once, Run Everywhere**. | Slightly strictly custom element usage in older layouts (minor). |
 | **iframe / Micro-frontends** | Total isolation. | Overkill. Performance heavy. Bad for granular components like Badges. |
 
 ## Next Steps
 1.  Confirm this strategy.
-2.  Initialize `packages/web-components`.
+2.  Initialize `packages/lit`.
 3.  Implement `<dsfr-badge>` as the PoC.

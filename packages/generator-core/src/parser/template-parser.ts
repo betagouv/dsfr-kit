@@ -1,5 +1,5 @@
-import { HTMLElement, Node, NodeType, parse } from "node-html-parser";
-import { ElementNode, LogicNode, TextNode } from "../cid.js";
+import { type HTMLElement, type Node, NodeType, parse } from "node-html-parser";
+import type { ElementNode, LogicNode, TextNode } from "../cid.js";
 
 function convertNode(node: Node): LogicNode | null {
   if (node.nodeType === NodeType.ELEMENT_NODE) {
