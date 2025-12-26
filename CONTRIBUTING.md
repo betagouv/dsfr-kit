@@ -50,7 +50,7 @@ The monorepo is organized into three top-level directories:
 ```
 dsfr-kit/
 ├── apps/       # Deployable applications (CLI, etc.)
-├── packages/   # TypeScript/JavaScript libraries (Web Components, Generator, Core)
+├── packages/   # TypeScript/JavaScript libraries (Lits, Generator, Core)
 └── libs/       # Python libraries (Roadmap)
 ```
 
@@ -245,9 +245,9 @@ just test
 # Run tests with coverage
 just test-coverage
 
-### Web Component Testing
+### Lit Testing
 
-When contributing to Web Components:
+When contributing to Lits:
 1.  **Storybook**: Every component MUST have a `.stories.ts` file in `apps/storybook`.
 2.  **Visual Regression**: Ensure your component looks identical to the native DSFR reference in Storybook.
 3.  **Accessibility**: Run `pnpm test:a11y` (if configured) or use the Storybook a11y addon.

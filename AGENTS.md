@@ -36,7 +36,7 @@ Sync Impact Report:
 
 ### I. Multi-Framework Component Generation
 
-The dsfr-kit project MUST generate DSFR-compliant components for multiple target frameworks from a single source of truth. Target frameworks include but are not limited to: Web Components, Next.js, Solid, Streamlit, and Reflex.
+The dsfr-kit project MUST generate DSFR-compliant components for multiple target frameworks from a single source of truth. Target frameworks include but are not limited to: Lits, Next.js, Solid, Streamlit, and Reflex.
 
 **Rationale**: Maintaining consistency across multiple framework implementations requires a unified generation approach that ensures all components adhere to DSFR specifications while respecting framework-specific idioms.
 
@@ -206,7 +206,7 @@ All components MUST be documented and demonstrated in isolation using interactiv
 
 **Rationale**: Component libraries require more than code comments and static documentation. Interactive component explorers serve multiple critical purposes: they provide living documentation that stays synchronized with implementation, enable rapid development in isolation without full application context, facilitate visual regression testing, showcase DSFR compliance through interactive examples, and create AI-friendly reference material that demonstrates all component variants and usage patterns. DSFR's visual and behavioral complexity demands this level of documentation rigor.
 
-**Reference Implementation**: Storybook (https://storybook.js.org/) is the industry-standard tool for component documentation, supporting React, Vue, Angular, Web Components, Svelte, and other frameworks. It includes first-class Vite support, visual regression testing integrations, and accessibility testing capabilities. For Python frameworks like Reflex that compile to React/Next.js under the hood, standard React documentation tools apply to the generated components.
+**Reference Implementation**: Storybook (https://storybook.js.org/) is the industry-standard tool for component documentation, supporting React, Vue, Angular, Lits, Svelte, and other frameworks. It includes first-class Vite support, visual regression testing integrations, and accessibility testing capabilities. For Python frameworks like Reflex that compile to React/Next.js under the hood, standard React documentation tools apply to the generated components.
 
 **Documentation Principles**:
 - **Isolation**: Each component documented independently with all variants visible
@@ -247,7 +247,7 @@ All components MUST be documented and demonstrated in isolation using interactiv
 
 ### Target Frameworks
 
-- Web Components (vanilla JavaScript)
+- Lits (vanilla JavaScript)
 - Next.js (React framework)
 - Solid.js
 - Streamlit (Python)
@@ -280,7 +280,7 @@ All components MUST be documented and demonstrated in isolation using interactiv
 ```
 packages/
 ├── core/              # Shared types, utilities, DSFR asset processing
-├── web-components/    # Web Components implementation
+├── web-components/    # Lits implementation
 ├── nextjs/           # Next.js/React components
 ├── solid/            # Solid.js components
 ├── streamlit/        # Streamlit components (Python)

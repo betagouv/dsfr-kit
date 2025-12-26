@@ -14,7 +14,7 @@ program
 
 program
   .command("generate")
-  .description("Generate a DSFR web component")
+  .description("Generate a DSFR lit component")
   .argument("<component>", "Name of the component to generate")
   .option("-o, --output <dir>", "Output directory to write the file to")
   .action(async (component, options) => {

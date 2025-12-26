@@ -1,7 +1,7 @@
 import { devices, type PlaywrightTestConfig } from "@playwright/test";
 
 /**
- * Playwright configuration for DSFR vs Web Components VRT
+ * Playwright configuration for DSFR vs Lits VRT
  */
 const config: PlaywrightTestConfig = {
   testDir: "./tests",

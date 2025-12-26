@@ -30,7 +30,7 @@ The DSFR Accordion is constructed using a standard "HTML + SCSS + JS" separation
 
 ## 2. AST Extraction Strategy
 
-To generate components for other frameworks (React, Vue, Web Components), we need an intermediate **Abstract Syntax Tree (AST)** that represents the component's *intent* rather than its *implementation*.
+To generate components for other frameworks (React, Vue, Lit), we need an intermediate **Abstract Syntax Tree (AST)** that represents the component's *intent* rather than its *implementation*.
 
 ### Abstract Representation (Proposed Schema)
 

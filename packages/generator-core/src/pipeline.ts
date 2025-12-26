@@ -1,8 +1,8 @@
-import { ComponentInterfaceDescription } from "./cid.js";
+import type { ComponentInterfaceDescription } from "./cid.js";
 import { parseEjsSource } from "./parser/ejs-parser.js";
 import { parseTemplateToStructure } from "./parser/template-parser.js";
 // import { ComponentInterfaceDescriptionSchema } from './schema.js';
-import { GeneratorPlugin } from "./plugin.js";
+import type { GeneratorPlugin } from "./plugin.js";
 import { findSource } from "./source-locator.js";
 
 export async function runGeneratorPipeline(

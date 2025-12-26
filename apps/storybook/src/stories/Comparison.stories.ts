@@ -15,7 +15,7 @@ function createComparisonStory(
   return {
     render: () => {
       const nativeStoryId = `dsfr-${component}--${component}-story`;
-      const wcStoryId = `web-components-${component}--${component}-story`;
+      const wcStoryId = `lit-${component}--${component}-story`;
       return renderComparison(nativeStoryId, wcStoryId, genStoryId);
     },
   };
@@ -23,7 +23,7 @@ function createComparisonStory(
 
 export const Accordion = createComparisonStory(
   "accordion",
-  "generated-accordion--accordion-story",
+  "lit-generated-accordion--accordion-story",
 );
 export const Alert = createComparisonStory("alert");
 export const Badge = createComparisonStory("badge");

@@ -3,8 +3,8 @@
 ## Goal
 Establish the simplest, most effective technical scope for implementing DSFR components that can be consumed by diverse ecosystems (Node.js/React/Vue, Python/Django, Ruby/Rails, etc.).
 
-## Proposal Analysis: Web Components + TypeScript
-The user suggested **Web Components** built with **TypeScript**.
+## Proposal Analysis: Lit + TypeScript
+The user suggested **Lit** built with **TypeScript**.
 
 ### Strengths (Why this is the right choice)
 1.  **Framework Agnostic**: Custom Elements (`<dsfr-badge>`) work natively in browsers. They can be used inside React, Vue, Angular, Svelte, or plain HTML templates (Rails/Django).
@@ -17,7 +17,7 @@ The user suggested **Web Components** built with **TypeScript**.
 ### Challenges & Mitigations
 1.  **Global Styles vs. Shadow DOM**:
     - *Challenge*: DSFR relies heavily on logical global utility classes (`.fr-badge`, `.fr-badge--success`) and a global CSS reset. Shadow DOM isolates styles, breaking external CSS.
-    - *Solution*: **Light DOM Web Components**. We use Custom Elements for *behavior* and *templating*, but render markup into the Light DOM (or copy styles). This allows the standard DSFR CSS to apply naturally without complex injection hacks.
+    - *Solution*: **Light DOM Lit**. We use Custom Elements for *behavior* and *templating*, but render markup into the Light DOM (or copy styles). This allows the standard DSFR CSS to apply naturally without complex injection hacks.
 2.  **SSR (Server Side Rendering)**:
     - *Challenge*: Hydration and painting content before JS loads.
     - *Solution*: Declarative Shadow DOM (if using Shadow) or simply ensuring the components render semantically meaningful layouts that upgrade progressively.
@@ -26,7 +26,7 @@ The user suggested **Web Components** built with **TypeScript**.
 The user requested a mechanism to easily embed custom, interactive elements inside components (e.g., a button inside a Badge) across any framework.
 
 1.  **Mechanism: Native Composition (Slots)**
-    *   Web Components standardizes this via **Slots**.
+    *   Lit standardizes this via **Slots**.
     *   In **Light DOM** (our chosen strategy), this is even simpler: standard HTML nesting.
     *   *Example*: `<dsfr-badge> <span>Custom Text</span> <button>Action</button> </dsfr-badge>`
     *   **Frameworks**: React, Vue, Django all natively support nesting children. The "Integration Layer" is just the browser's DOM.
@@ -39,14 +39,14 @@ The user requested a mechanism to easily embed custom, interactive elements insi
     *   Events bubbled from inner elements (like a click on that embedded button) propagate naturally to the application root. React/Vue listeners on the container work as expected.
 
 ### Recommendation
-**Go with Web Components (TypeScript).**
+**Go with Lit.**
 *   **Tooling**: **Lit** (lightweight, standard).
 *   **Strategy**: **Light DOM** approach. wrappers around the HTML structure defined in our knowledge base.
 *   **Verification**: The **Badge** is the perfect candidate. It's simple, visual, and allows testing the build pipeline.
 
 ## Implementation Scope (PoC)
 1.  **Repository**: Monorepo using `pnpm` workspace (already set up).
-2.  **Package**: `packages/web-components` (or `dsfr-web`).
+2.  **Package**: `packages/lit` (or `dsfr-lit`).
 3.  **Tech**: TypeScript + Lit (Light DOM).
 4.  **Build**: Vite (fast, standard).
 5.  **Output**: ESM modules + Types.
@@ -55,10 +55,10 @@ The user requested a mechanism to easily embed custom, interactive elements insi
 | Approach | Pros | Cons |
 | :--- | :--- | :--- |
 | **Native Framework Libs** (React/Vue/Ang specific) | Perfect DX for that specific framework. | **Maintenance Nightmare**. 3x code. Python/Ruby users left behind. |
-| **Web Components** | **Write Once, Run Everywhere**. | Slightly strictly custom element usage in older layouts (minor). |
+| **Lit** | **Write Once, Run Everywhere**. | Slightly strictly custom element usage in older layouts (minor). |
 | **iframe / Micro-frontends** | Total isolation. | Overkill. Performance heavy. Bad for granular components like Badges. |
 
 ## Next Steps
 1.  Confirm this strategy.
-2.  Initialize `packages/web-components`.
+2.  Initialize `packages/lit`.
 3.  Implement `<dsfr-badge>` as the PoC.
