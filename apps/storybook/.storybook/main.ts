@@ -1,5 +1,5 @@
 // This file has been automatically migrated to valid ESM format by Storybook.
-import path, { dirname } from "node:path";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from "@storybook/web-components-vite";
 import { mergeConfig } from "vite";
@@ -26,7 +26,22 @@ const config: StorybookConfig = {
   ],
   async viteFinal(config) {
     return mergeConfig(config, {
+      optimizeDeps: {
+        include: [
+          "@dsfr-kit/web-components",
+          "lit",
+          "lit/decorators.js",
+          "lit/directives/class-map.js",
+          "lit/directives/if-defined.js",
+          "lit/directives/unsafe-html.js",
+          "lit/static-html.js",
+        ],
+      },
       resolve: {
+        // Ensure symlinks resolve to same physical path for pnpm deduplication
+        preserveSymlinks: false,
+        // Deduplicate lit to ensure single instance
+        dedupe: ["lit"],
         alias: [
           {
             find: /.*\/tool\/example\/decorator\.ejs\?raw$/,
