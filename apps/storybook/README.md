@@ -1,6 +1,6 @@
 # Storybook
 
-This project contains the Storybook configuration for `dsfr-kit`. It includes both our custom web components and the native DSFR stories (from `@gouvfr/dsfr`).
+This project contains the Storybook configuration for `dsfr-kit`. It includes both our custom lit components and the native DSFR stories (from `@gouvfr/dsfr`).
 
 ## Setup
 

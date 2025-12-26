@@ -161,7 +161,7 @@ export class DsfrHeader extends LitElement {
                 ${
                   linkPosition === "service"
                     ? html`<a href="${this.brandLinkHref}" title="${this.brandLinkTitle}"></a>`
-                    : nothing // In our web component we just put a transparent link on top if simplified, but let's try to match native logic
+                    : nothing // In our Lit component we just put a transparent link on top if simplified, but let's try to match native logic
                 }
               </div>
               <div class="fr-header__tools">

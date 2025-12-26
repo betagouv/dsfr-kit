@@ -3,11 +3,11 @@ import { html, LitElement } from "lit";
 import { addons } from "storybook/internal/preview-api";
 
 /**
- * Renders a side-by-side comparison of a native DSFR component and a Web Component.
+ * Renders a side-by-side comparison of a native DSFR component and a Lit component.
  */
 /**
- * Renders a side-by-side comparison of a native DSFR component, a hand-written Web Component,
- * and optionally a generated Web Component using iframes.
+ * Renders a side-by-side comparison of a native DSFR component, a hand-written Lit component,
+ * and optionally a generated Lit component using iframes.
  */
 const EVENTS = {
   SNAPSHOT_REQUESTED: "COMPARISON_SNAPSHOT_REQUESTED",
@@ -300,8 +300,8 @@ export class DsfrComparisonView extends LitElement {
         }
 
         ${this.renderRow("Native DSFR", nativeUrl)}
-        ${this.renderRow("Web Component (Hand-written)", wcUrl)}
-        ${genUrl ? this.renderRow("Web Component (Generated)", genUrl) : ""}
+        ${this.renderRow("Lit (Hand-written)", wcUrl)}
+        ${genUrl ? this.renderRow("Lit (Generated)", genUrl) : ""}
       </div>
     `;
   }

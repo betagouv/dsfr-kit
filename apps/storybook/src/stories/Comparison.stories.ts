@@ -15,7 +15,7 @@ function createComparisonStory(
   return {
     render: () => {
       const nativeStoryId = `dsfr-${component}--${component}-story`;
-      const wcStoryId = `web-components-${component}--${component}-story`;
+      const wcStoryId = `lit-${component}--${component}-story`;
       return renderComparison(nativeStoryId, wcStoryId, genStoryId);
     },
   };

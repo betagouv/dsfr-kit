@@ -33,7 +33,7 @@ const commonComponents = [
   "tooltip",
 ];
 
-test.describe("DSFR vs Web Components Comparison", () => {
+test.describe("DSFR vs Lits Comparison", () => {
   const mode = process.env.VRT_MODE || "compare"; // 'baseline' (DSFR) or 'compare' (WC)
 
   for (const component of commonComponents) {
@@ -44,7 +44,7 @@ test.describe("DSFR vs Web Components Comparison", () => {
         // Native DSFR URL
         url = `/iframe.html?id=dsfr-${component}--${component}-story&viewMode=story`;
       } else {
-        // Web Component URL
+        // Lit URL
         url = `/iframe.html?id=web-components-${component}--${component}-story&viewMode=story`;
       }
 
@@ -65,5 +65,5 @@ test.describe("DSFR vs Web Components Comparison", () => {
 /**
  * Note: To use DSFR as the reference, we first need to generate baseline screenshots from the DSFR stories.
  * 1. Run with a flag to capture DSFR baselines: `pnpx playwright test --update-snapshots` (pointing at DSFR URLs)
- * 2. Run standard tests to compare Web Components against those baselines.
+ * 2. Run standard tests to compare Lits against those baselines.
  */

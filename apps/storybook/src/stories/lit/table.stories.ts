@@ -180,7 +180,7 @@ export const FixedColumnStory: Story = {
     <style>
         /* Styles to simulate fixed columns if not provided by DSFR global CSS effectively in shadow/light DOM mixture without logic */
         /* Note: Real DSFR Fixed Column often requires specific JS or Layout structure.
-           Here we demonstrate the structure. If the web component doesn't fully support it, this story serves as a target. */
+           Here we demonstrate the structure. If the lit component doesn't fully support it, this story serves as a target. */
     </style>
     <dsfr-table .caption=${args.caption}>
        <thead>

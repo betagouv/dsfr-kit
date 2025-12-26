@@ -1,6 +1,6 @@
 # Contributor Guide: Component Generation
 
-This guide explains how `dsfr-kit` automates the creation of Lit-based Web Components from upstream DSFR source files.
+This guide explains how `dsfr-kit` automates the creation of Lit-based Lit from upstream DSFR source files.
 
 ## Overview: The Hybrid AST Strategy
 
@@ -17,7 +17,7 @@ graph TD
     JP --> Logic["Computed states & logic"]
     LG --> Template["render() method"]
 
-    Props & Logic & Template --> Output["Lit Web Component (.ts)"]
+    Props & Logic & Template --> Output["Lit Lit component (.ts)"]
 ```
 
 ## Generation Pipeline

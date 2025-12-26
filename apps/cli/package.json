@@ -1,7 +1,7 @@
 {
   "name": "@dsfr-kit/cli",
   "version": "0.0.1",
-  "description": "CLI for generating DSFR web components",
+  "description": "CLI for generating DSFR lit components",
   "type": "module",
   "bin": {
     "dsfr-kit": "./dist/index.js"

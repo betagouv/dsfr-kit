@@ -3,8 +3,8 @@
 ## Goal
 Establish the simplest, most effective technical scope for implementing DSFR components that can be consumed by diverse ecosystems (Node.js/React/Vue, Python/Django, Ruby/Rails, etc.).
 
-## Proposal Analysis: Web Components + TypeScript
-The user suggested **Web Components** built with **TypeScript**.
+## Proposal Analysis: Lit + TypeScript
+The user suggested **Lit** built with **TypeScript**.
 
 ### Strengths (Why this is the right choice)
 1.  **Framework Agnostic**: Custom Elements (`<dsfr-badge>`) work natively in browsers. They can be used inside React, Vue, Angular, Svelte, or plain HTML templates (Rails/Django).
@@ -17,7 +17,7 @@ The user suggested **Web Components** built with **TypeScript**.
 ### Challenges & Mitigations
 1.  **Global Styles vs. Shadow DOM**:
     - *Challenge*: DSFR relies heavily on logical global utility classes (`.fr-badge`, `.fr-badge--success`) and a global CSS reset. Shadow DOM isolates styles, breaking external CSS.
-    - *Solution*: **Light DOM Web Components**. We use Custom Elements for *behavior* and *templating*, but render markup into the Light DOM (or copy styles). This allows the standard DSFR CSS to apply naturally without complex injection hacks.
+    - *Solution*: **Light DOM Lit**. We use Custom Elements for *behavior* and *templating*, but render markup into the Light DOM (or copy styles). This allows the standard DSFR CSS to apply naturally without complex injection hacks.
 2.  **SSR (Server Side Rendering)**:
     - *Challenge*: Hydration and painting content before JS loads.
     - *Solution*: Declarative Shadow DOM (if using Shadow) or simply ensuring the components render semantically meaningful layouts that upgrade progressively.
@@ -26,7 +26,7 @@ The user suggested **Web Components** built with **TypeScript**.
 The user requested a mechanism to easily embed custom, interactive elements inside components (e.g., a button inside a Badge) across any framework.
 
 1.  **Mechanism: Native Composition (Slots)**
-    *   Web Components standardizes this via **Slots**.
+    *   Lit standardizes this via **Slots**.
     *   In **Light DOM** (our chosen strategy), this is even simpler: standard HTML nesting.
     *   *Example*: `<dsfr-badge> <span>Custom Text</span> <button>Action</button> </dsfr-badge>`
     *   **Frameworks**: React, Vue, Django all natively support nesting children. The "Integration Layer" is just the browser's DOM.

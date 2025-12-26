@@ -7,7 +7,7 @@ This is the command-line interface for `dsfr-kit`.
 
 ## Current Role: Component Generator (Internal)
 
-The CLI uses the `@dsfr-kit/generator` package to scaffold Web Components from official DSFR source files.
+The CLI uses the `@dsfr-kit/generator` package to scaffold Lits from official DSFR source files.
 
 ### Usage
 
