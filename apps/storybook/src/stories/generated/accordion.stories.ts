@@ -48,7 +48,7 @@ const render = (args: AccordionArgs) => html`
 `;
 
 const meta: Meta<AccordionArgs> = {
-  title: "Generated/Accordion",
+  title: "Lit (Generated)/Accordion",
   component: "dsfr-accordion-gen",
   tags: ["autodocs"],
   argTypes: accordionArgTypes,
