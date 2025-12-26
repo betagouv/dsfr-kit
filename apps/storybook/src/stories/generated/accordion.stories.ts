@@ -60,6 +60,6 @@ export default meta;
 type Story = StoryObj<AccordionArgs>;
 
 export const AccordionStory: Story = {
-  name: "Generated Accordion",
+  name: "Accordion Story",
   args: {},
 };
