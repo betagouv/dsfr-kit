@@ -9,7 +9,9 @@ describe("TreeSitterMapper", () => {
 
     // Expect a content node or text node
     expect(result.type).toBe("text");
-    expect((result as any).content).toBe("Hello World");
+    if (result.type === "text") {
+      expect(result.content).toBe("Hello World");
+    }
   });
 
   it("parses output directive", () => {
@@ -17,7 +19,9 @@ describe("TreeSitterMapper", () => {
     const mapper = new TreeSitterMapper(input);
     const result = mapper.parse();
     expect(result.type).toBe("text");
-    expect((result as any).content).toContain("props.title");
+    if (result.type === "text") {
+      expect(result.content).toContain("props.title");
+    }
   });
 
   it("parses simple conditional", () => {
@@ -30,20 +34,27 @@ describe("TreeSitterMapper", () => {
     const result = mapper.parse();
 
     // Should return a Fragment or similar, checking children
-    const children = (result as any).children || [result];
-    const nodes = children.filter(
-      (n: any) => n.type !== "text" || n.content.trim().length > 0,
-    );
+    let nodes: any[] = [];
+    if (result.type === "element" && result.tag === "fragment") {
+      nodes =
+        result.children?.filter(
+          (n) => n.type !== "text" || n.content.trim().length > 0,
+        ) || [];
+    } else {
+      nodes = [result];
+    }
 
     expect(nodes[0].type).toBe("conditional");
-    expect(nodes[0].condition).toContain("props.show");
-    expect(nodes[0].trueBranch).toBeDefined();
+    const conditional = nodes[0] as import("../src/cid.js").ConditionalNode;
+    expect(conditional.condition).toContain("props.show");
+    expect(conditional.trueBranch).toBeDefined();
 
-    const branchNodes = (nodes[0] as any).trueBranch.filter(
-      (n: any) => n.type !== "text" || n.content.trim(),
+    const branchNodes = conditional.trueBranch.filter(
+      (n) => n.type !== "text" || n.content.trim(),
     );
-    expect(branchNodes[0].type).toBe("element");
-    expect(branchNodes[0].tag).toBe("div");
+    const div = branchNodes[0] as import("../src/cid.js").ElementNode;
+    expect(div.type).toBe("element");
+    expect(div.tag).toBe("div");
   });
 
   it("parses simple loop", () => {
@@ -59,7 +70,7 @@ describe("TreeSitterMapper", () => {
     let targetNode = result;
     if (result.type === "element" && result.tag === "fragment") {
       const nodes = result.children?.filter(
-        (n: any) => n.type !== "text" || n.content.trim().length > 0,
+        (n) => n.type !== "text" || n.content.trim().length > 0,
       );
       if (nodes && nodes.length > 0) targetNode = nodes[0];
     }
@@ -74,5 +85,30 @@ describe("TreeSitterMapper", () => {
 
     expect(targetNode.type).toBe("loop");
     expect((targetNode as any).children).toBeDefined();
+  });
+
+  it("parses accordion snippet with attribute interpolation", () => {
+    const input = `
+<section class="<%= prefix %>-accordion">
+  <h3 class="<%= prefix %>-accordion__title">
+  </h3>
+</section>
+`;
+    const mapper = new TreeSitterMapper(input);
+    const result = mapper.parse();
+
+    let element: any = result;
+    if (element.type === "element" && element.tag === "fragment") {
+      element = element.children.find(
+        (c: any) => c.type === "element" && c.tag !== "fragment",
+      );
+    }
+
+    expect(element).toBeDefined();
+    expect(element.type).toBe("element");
+    expect(element.tag).toBe("section");
+
+    const classAttr = element.attributes?.class || element.classes?.join(" ");
+    expect(classAttr).toContain("${prefix}-accordion");
   });
 });

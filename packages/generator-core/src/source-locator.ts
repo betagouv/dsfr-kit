@@ -19,13 +19,13 @@ export function findSource(
   // Strategy 1: Standard resolution (from this package's node_modules)
   try {
     pkgPath = require.resolve("@gouvfr/dsfr/package.json");
-  } catch (e) {
+  } catch (_e) {
     // Strategy 2: Look in rootDir (monorepo root)
     try {
       pkgPath = require.resolve("@gouvfr/dsfr/package.json", {
         paths: [rootDir],
       });
-    } catch (e2) {
+    } catch (_e2) {
       console.error(
         "Failed to resolve @gouvfr/dsfr from both default and root paths.",
       );

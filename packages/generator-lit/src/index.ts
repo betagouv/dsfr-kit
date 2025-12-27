@@ -129,48 +129,85 @@ export class ${className}Gen extends LitElement {
   }
 
   private renderNode(node: any, componentName: string): string {
-    if (node.type === "text") {
-      return this.replaceEjsVars(node.content, componentName);
-    }
-    if (node.type === "element") {
-      if (node.tag === "fragment") {
-        return node.children
+    if (!node) return "";
+
+    switch (node.type) {
+      case "text": {
+        // Strip raw EJS logic blocks that are not output directives
+        // If it starts with <% but not <%= or <%-
+        if (node.content.trim().match(/^<%[^=-]/)) {
+          return "";
+        }
+        return this.replaceEjsVars(node.content, componentName);
+      }
+
+      case "element": {
+        if (node.tag === "fragment") {
+          return node.children
+            ? node.children
+                .map((c: any) => this.renderNode(c, componentName))
+                .join("")
+            : "";
+        }
+
+        const attrs = node.attributes
+          ? Object.entries(node.attributes)
+              .map(([k, v]) => {
+                if (k.includes("includeClasses")) {
+                  return `class="\${this.dsfrClasses || ''}"`;
+                }
+                if (k.includes("includeAttrs")) {
+                  return `\${this.dsfrAttributes || ''}`;
+                }
+                return `${k}="${this.replaceEjsVars(String(v), componentName)}"`;
+              })
+              .join(" ")
+          : "";
+
+        const classes = node.classes ? `class="${node.classes.join(" ")}"` : "";
+        const allAttrs = [classes, attrs].filter(Boolean).join(" ");
+
+        const children = node.children
           ? node.children
               .map((c: any) => this.renderNode(c, componentName))
               .join("")
           : "";
+
+        // Self-closing handling if needed, but standard HTML is fine
+        return `<${node.tag} ${allAttrs}>${children}</${node.tag}>`;
       }
 
-      const attrs = node.attributes
-        ? Object.entries(node.attributes)
-            .map(([k, v]) => {
-              // Handle special logic attributes (includeClasses)
-              if (k.includes("includeClasses")) {
-                return `class="\${this.dsfrClasses || ''}"`; // Placeholder
-              }
-              if (k.includes("includeAttrs")) {
-                return `\${this.dsfrAttributes || ''}`; // Placeholder
-              }
+      case "conditional": {
+        const condition = this.replaceEjsVars(node.condition, componentName);
+        // We wrap the branches in html`` to allow Lit to render sequences
+        const trueContent = node.trueBranch
+          .map((c: any) => this.renderNode(c, componentName))
+          .join("");
 
-              return `${k}="${this.replaceEjsVars(String(v), componentName)}"`;
-            })
-            .join(" ")
-        : "";
+        const falseContent = node.falseBranch
+          ? node.falseBranch
+              .map((c: any) => this.renderNode(c, componentName))
+              .join("")
+          : "";
 
-      const classes = node.classes ? `class="${node.classes.join(" ")}"` : "";
+        // Use standard Lit conditional: condition ? html`...` : html`...`
+        return `\${${condition} ? html\`${trueContent}\` : ${falseContent ? `html\`${falseContent}\`` : "null"}}`;
+      }
 
-      // Merge strategies (simplistic)
-      const allAttrs = [classes, attrs].filter(Boolean).join(" ");
+      case "loop": {
+        const items = this.replaceEjsVars(node.items, componentName);
+        const variable = node.variable;
+        const children = node.children
+          .map((c: any) => this.renderNode(c, componentName))
+          .join("");
 
-      const children = node.children
-        ? node.children
-            .map((c: any) => this.renderNode(c, componentName))
-            .join("")
-        : "";
+        // items.map(variable => html`...`)
+        return `\${${items}.map(${variable} => html\`${children}\`)}`;
+      }
 
-      return `<${node.tag} ${allAttrs}>${children}</${node.tag}>`;
+      default:
+        return "";
     }
-    return "";
   }
 }
 
