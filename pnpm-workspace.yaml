@@ -4,3 +4,7 @@ packages:
 
 onlyBuiltDependencies:
   - esbuild
+  - tree-sitter
+  - tree-sitter-embedded-template
+  - tree-sitter-html
+  - tree-sitter-javascript

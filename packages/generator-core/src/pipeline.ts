@@ -1,6 +1,5 @@
 import type { ComponentInterfaceDescription } from "./cid.js";
 import { parseEjsSource } from "./parser/ejs-parser.js";
-import { parseTemplateToStructure } from "./parser/template-parser.js";
 // import { ComponentInterfaceDescriptionSchema } from './schema.js';
 import type { GeneratorPlugin } from "./plugin.js";
 import { findSource } from "./source-locator.js";
@@ -14,12 +13,9 @@ export async function runGeneratorPipeline(
   if (!source) throw new Error(`Source not found for ${componentName}`);
 
   // 2. Parse EJS
-  const { props, template } = parseEjsSource(source.ejsPath);
+  const { props, structure } = parseEjsSource(source.ejsPath);
 
-  // 3. Parse Structure
-  const structure = parseTemplateToStructure(template);
-
-  // 4. Construct CID
+  // 3. Construct CID
   const cid: ComponentInterfaceDescription = {
     name: componentName,
     tier: 2, // TOOD: Infer complexity tier
