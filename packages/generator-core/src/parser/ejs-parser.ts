@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import { parse as parseComments } from "comment-parser";
 import type { PropDefinition } from "../cid.js";
+import { TreeSitterMapper } from "./tree-sitter-mapper.js";
 
 export interface ParsedEjs {
   props: PropDefinition[];
@@ -15,7 +16,6 @@ export function parseEjsSource(ejsPath: string): ParsedEjs {
   const match = commentBlockRegex.exec(content);
 
   const props: PropDefinition[] = [];
-  let template = content;
 
   if (match) {
     const rawComment = match[1] || match[2];
@@ -55,13 +55,21 @@ export function parseEjsSource(ejsPath: string): ParsedEjs {
         }
       }
     }
-
-    // Remove the comment block from template to get just the HTML
-    template = content.replace(match[0], "").trim();
   }
+
+  // Use Tree Sitter for the template structure
+  const mapper = new TreeSitterMapper(content);
+  const structure = mapper.parse();
+
+  // Convert structure to string template for legacy compatibility
+  // OR: update ParsedEjs interface to support structure
+  // For now, we keep 'template' as string but we really want logical structure in CID
+  // But parseEjsSource return type is ParsedEjs which has 'template: string'.
+  // We need to return the structure.
 
   return {
     props,
-    template,
-  };
+    template: content, // Keep raw template for now
+    structure, // New field!
+  } as any;
 }
