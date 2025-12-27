@@ -6,7 +6,45 @@ import type {
   LoopNode,
   TextNode,
 } from "../cid.js";
-import { ejsParser, htmlParser, jsParser } from "./tree-sitter-setup.js";
+import { ejsParser, htmlParser } from "./tree-sitter-setup.js";
+
+// Helper to clean EJS tags
+function cleanEjs(text: string): string {
+  let clean = text.trim();
+  // Remove opening tag
+  clean = clean.replace(/^<%[-_=]?\s*/, "");
+  // Remove closing tag
+  clean = clean.replace(/\s*[-_]?%>$/, "");
+  return clean.trim();
+}
+
+// Helper to check if a node is an EJS opener/closer
+function isControlFlowStart(
+  text: string,
+): { type: "conditional" | "loop"; condition: string } | null {
+  const clean = cleanEjs(text);
+
+  // Simple heuristic for now
+  if (/^if\s*\(/.test(clean) && clean.endsWith("{")) {
+    return {
+      type: "conditional",
+      condition: clean.match(/^if\s*\((.*)\)/)?.[1] || "unknown",
+    };
+  }
+  if (
+    (/\.forEach/.test(clean) || /^for\s*\(/.test(clean)) &&
+    clean.endsWith("{")
+  ) {
+    return { type: "loop", condition: clean };
+  }
+  return null;
+}
+
+function isControlFlowEnd(text: string): boolean {
+  const clean = cleanEjs(text);
+  // A closer "}" might be accompanied by ");" in forEach
+  return clean === "}" || clean === "});" || clean === "})";
+}
 
 export class TreeSitterMapper {
   private source: string;
@@ -17,59 +55,133 @@ export class TreeSitterMapper {
 
   public parse(): LogicNode {
     const tree = ejsParser.parse(this.source);
-    return this.mapRoot(tree.rootNode);
+    // embedded-template root children are a flat list of content and code
+    // We must iterate them and build a tree
+    return this.buildTree(tree.rootNode.namedChildren);
   }
 
-  private mapRoot(node: SyntaxNode): LogicNode {
-    const children = this.mapChildren(node);
+  private buildTree(nodes: SyntaxNode[]): LogicNode {
+    const rootChildren: LogicNode[] = [];
+    const stack: {
+      type: "conditional" | "loop";
+      node: any;
+      children: LogicNode[];
+    }[] = [];
 
-    if (children.length === 1) return children[0];
+    // We process nodes linearly
+    for (const node of nodes) {
+      if (node.type === "code" || node.type === "directive") {
+        // Analyze code
+        const text = node.text;
+        const startInfo = isControlFlowStart(text);
+        const isEnd = isControlFlowEnd(text);
+
+        if (startInfo) {
+          // Push new container to stack
+          const newNode =
+            startInfo.type === "conditional"
+              ? ({
+                  type: "conditional",
+                  condition: startInfo.condition,
+                  trueBranch: [],
+                  falseBranch: undefined,
+                } as ConditionalNode)
+              : ({
+                  type: "loop",
+                  items: "items",
+                  variable: "item",
+                  children: [],
+                } as LoopNode); // TODO: Parse loop vars
+
+          stack.push({ type: startInfo.type, node: newNode, children: [] });
+        } else if (isEnd) {
+          // Pop from stack
+          const context = stack.pop();
+          if (context) {
+            // Assign collected children to the node
+            if (context.type === "conditional") {
+              (context.node as ConditionalNode).trueBranch = context.children;
+            } else {
+              (context.node as LoopNode).children = context.children;
+            }
+
+            // Add completed node to parent (or root)
+            const parentEntry = stack[stack.length - 1];
+            if (parentEntry) {
+              parentEntry.children.push(context.node);
+            } else {
+              rootChildren.push(context.node);
+            }
+          } else {
+            // Unbalanced closing brace? Treat as TextNode if it's not structural
+            const mapped = this.mapNode(node);
+            if (mapped) {
+              const targetList =
+                stack.length > 0
+                  ? stack[stack.length - 1].children
+                  : rootChildren;
+              if (Array.isArray(mapped)) targetList.push(...mapped);
+              else targetList.push(mapped);
+            }
+          }
+        } else {
+          // Not start or end. Maybe 'else'?
+          // Or just code. Check mapNode for fallback
+          // If mapNode returns specific text logic?
+          // If we treat it as code, mapNode currently returns "TextNode".
+          // We probably want to add it as TextNode if it's not structural logic.
+
+          const mapped = this.mapNode(node);
+          if (mapped) {
+            const targetList =
+              stack.length > 0
+                ? stack[stack.length - 1].children
+                : rootChildren;
+            if (Array.isArray(mapped)) {
+              targetList.push(...mapped);
+            } else {
+              targetList.push(mapped);
+            }
+          }
+        }
+      } else {
+        // Convert the node to LogicNode(s)
+        const mapped = this.mapNode(node);
+        if (mapped) {
+          const targetList =
+            stack.length > 0 ? stack[stack.length - 1].children : rootChildren;
+          if (Array.isArray(mapped)) {
+            targetList.push(...mapped);
+          } else {
+            targetList.push(mapped);
+          }
+        }
+      }
+    }
+
+    // If root children > 1, wrap
+    if (rootChildren.length === 1) return rootChildren[0];
 
     return {
       type: "element",
       tag: "fragment",
-      children,
+      children: rootChildren,
     } as ElementNode;
   }
 
-  private mapChildren(node: SyntaxNode): LogicNode[] {
-    const nodes: LogicNode[] = [];
-    for (const child of node.namedChildren) {
-      const mapped = this.mapNode(child);
-      if (mapped) {
-        if (Array.isArray(mapped)) {
-          nodes.push(...mapped);
-        } else {
-          nodes.push(mapped);
-        }
-      }
-    }
-    return nodes;
-  }
-
+  // Reusing existing mapNode logic for content/directives
   private mapNode(node: SyntaxNode): LogicNode | LogicNode[] | null {
     if (node.type === "content") {
       return this.parseHtmlFragment(node.text);
-    } else if (node.type === "code") {
-      // <% code %> - usually control flow
-      // We need to parse the content of the code tag
-      const code = node.text
-        .replace(/^<%_?|-?/, "")
-        .replace(/-?%_?>$/, "")
-        .trim();
-      return this.analyzeJsCode(code);
     } else if (node.type === "directive") {
-      // <%- include() %>
       return { type: "text", content: node.text } as TextNode;
     } else if (node.type === "output_directive") {
-      // <%= ... %> or <%- ... %>
       const code = node.text
-        .replace(/^<%-?|=/, "")
+        .replace(/^<%[-=]?/, "")
         .replace(/-?%>$/, "")
         .trim();
       return { type: "text", content: `\${${code}}` } as TextNode;
     }
-
     return null;
   }
 
@@ -80,12 +192,12 @@ export class TreeSitterMapper {
 
   private mapHtmlNodes(nodes: SyntaxNode[]): LogicNode[] {
     const result: LogicNode[] = [];
-
     for (const node of nodes) {
       if (node.type === "element") {
         result.push(this.mapHtmlElement(node));
       } else if (node.type === "text") {
         if (node.text) {
+          // Clean newlines/spaces if needed?
           result.push({ type: "text", content: node.text } as TextNode);
         }
       }
@@ -111,10 +223,8 @@ export class TreeSitterMapper {
             const name = nameNode.text;
             let value = "";
             if (valueNode) {
-              // Clean quotes
               value = valueNode.text.replace(/^['"]|['"]$/g, "");
             }
-
             if (name === "class") {
               classes = value.split(" ").filter(Boolean);
             } else {
@@ -125,59 +235,27 @@ export class TreeSitterMapper {
       }
     }
 
+    // We need to map children of the ELEMENT too
+    // However, tree-sitter-html gives us full element structure.
+    // E.g. <div><span>text</span></div> -> Element(div) with children Element(span).
+    // So checking namedChildren recursively is correct.
+
     const children: LogicNode[] = [];
     for (const child of node.namedChildren) {
       if (child.type !== "start_tag" && child.type !== "end_tag") {
-        // Basic text content inside element
-        // But valid HTML tree structure does not recurse into nested EJS if it was split by embedded-template top-level?
-        // Actually, if we parse a fragment "<div>HELLO</div>", it works.
-        // If we parse "<div>HELLO <%= world %></div>", embedded-template splits it:
-        // [content("<div>HELLO "), output_directive, content("</div>")]
-        // So our MapRoot loop handles the sequence.
-        // Issues arise when tags are split across EJS blocks.
-        // e.g. <div <% if(x) { %> class="a" <% } %>>
-        // embedded-template: content("<div "), code, content(" class..."), code, content(">")
-        // The simple "mapRoot" treats them as siblings.
-        // Implementing FULL robustness requires a custom state machine consuming the stream of tokens.
+        // Recursive map
+        const mapped = this.mapHtmlNodes([child]);
+        // mapHtmlNodes returns array, push them
+        children.push(...mapped);
       }
     }
 
-    // For this step, we just assume HTML fragments are mostly text/simple elements for now
-    // This implementation is still "Text" heavy
-
-    // TODO: Implement children mapping
     return {
       type: "element",
       tag: tagName,
       classes: classes.length ? classes : undefined,
       attributes: Object.keys(attributes).length ? attributes : undefined,
-      children: undefined, // TODO
+      children: children.length ? children : undefined,
     };
-  }
-
-  private analyzeJsCode(code: string): LogicNode {
-    // Analyze if it's a loop start, end, or conditional
-    // Simple regex heuristic for now to map to CID types
-    // Real impl would parse JS AST
-
-    if (code.match(/if\s*\(/)) {
-      return {
-        type: "conditional",
-        condition: code, // Extract condition
-        trueBranch: [],
-        falseBranch: undefined,
-      } as ConditionalNode;
-    }
-
-    if (code.match(/\.forEach|\.map|for\s*\(/)) {
-      return {
-        type: "loop",
-        items: "items", // placeholder
-        variable: "item", // placeholder
-        children: [],
-      } as LoopNode;
-    }
-
-    return { type: "text", content: `\${ /* ${code} */ }` } as TextNode;
   }
 }
