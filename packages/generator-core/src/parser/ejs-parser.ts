@@ -1,11 +1,12 @@
 import fs from "node:fs";
 import { parse as parseComments } from "comment-parser";
-import type { PropDefinition } from "../cid.js";
+import type { LogicNode, PropDefinition } from "../cid.js";
 import { TreeSitterMapper } from "./tree-sitter-mapper.js";
 
 export interface ParsedEjs {
   props: PropDefinition[];
   template: string;
+  structure: LogicNode;
 }
 
 export function parseEjsSource(ejsPath: string): ParsedEjs {
@@ -69,7 +70,7 @@ export function parseEjsSource(ejsPath: string): ParsedEjs {
 
   return {
     props,
-    template: content, // Keep raw template for now
-    structure, // New field!
-  } as any;
+    template: content,
+    structure,
+  };
 }
