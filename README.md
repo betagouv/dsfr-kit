@@ -1,5 +1,14 @@
 # dsfr-kit
 
+> [!IMPORTANT]
+> **This repository has been archived and is no longer actively maintained.**
+> 
+> The project is no longer under active development. The code remains available for reference and educational purposes, but no further updates, bug fixes, or support will be provided.
+>
+> Feel free to fork this repository if you wish to continue development.
+
+---
+
 > Multi-framework DSFR component library following the Open Code approach
 
 **dsfr-kit** generates DSFR-compliant components for multiple frameworks from official French government design system assets. Components are distributed as customizable source code, not as locked dependencies.
@@ -23,13 +32,13 @@ Traditional component libraries lock you into their APIs. When you need customiz
 - ✅ **No Black Boxes** - All logic is visible and modifiable
 - ✅ **AI-Friendly** - LLMs can read, understand, and improve your components
 
-## Project Status: Work-In-Progress 🚧
+## Project Status: Archived
 
-This project is currently in active development. The initial focus is on delivering a robust, high-fidelity library of **Lit components** that can be used everywhere.
+This project is no longer actively maintained. The code remains available for reference purposes.
 
-### Target Platforms
+### Historical Target Platforms
 
-- **Active**: [Lit](file:///Users/luis/Code/betagouv/dsfr-kit/packages/lit) (Vanilla JS/Lit)
+- **Active**: [Lit](packages/lit) (Vanilla JS/Lit)
 - **Roadmap**: Next.js, Solid.js, Streamlit (Python), Reflex (Python)
 
 ## Key Features
